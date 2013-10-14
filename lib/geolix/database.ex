@@ -44,7 +44,10 @@ defmodule Geolix.Database do
 
   defp stream_countries(stream) do
     meta_stream = drop_until_meta(stream)
-    meta_data   = read_meta(meta_stream, [])
+    meta_data   = decode(meta_stream)
+
+    IO.inspect(meta_data)
+    []
   end
 
   defp drop_until_meta(stream) do
@@ -58,33 +61,84 @@ defmodule Geolix.Database do
     end
   end
 
-  defp read_meta(stream, meta_data) do
-    ctrl_byte = Enum.take(stream, 1) |> hd()
-    ctrl_code = :io_lib.format("~w", bitstring_to_list(ctrl_byte)) |> hd() |> list_to_integer()
-    ctrl_type = Enum.at(@ctrl_types, ctrl_code >>> 5)
+  defp decode(stream) do
+    case Enum.take(stream, 1) do
+      ctrl_byte when is_list(ctrl_byte) and 1 == length(ctrl_byte) ->
+        ctrl_byte = hd(ctrl_byte)
+        ctrl_code = :io_lib.format("~w", bitstring_to_list(ctrl_byte)) |> hd() |> list_to_integer()
+        ctrl_type = Enum.at(@ctrl_types, ctrl_code >>> 5)
 
-    read_size = get_meta_size(ctrl_code, stream)
+        { stream, read_size } = get_meta_size(Enum.drop(stream, 1), ctrl_code)
 
-    IO.puts inspect(ctrl_byte) <> " => " <> inspect(ctrl_type) <> " | size: " <> inspect(read_size)
-
-    #decode_meta(stream, ctrl_type, read_size)
-    read_meta(Enum.drop(stream, 1 + read_size), [])
-  end
-
-  defp get_meta_size(ctrl_code, stream) do
-    # bitwise and with 0x1f
-    case ctrl_code &&& 31 do
-      _size when 29 == _size -> 29  + (Enum.take(stream, 2) |> tl() |> decode_uint32)
-      _size when 30 == _size -> 285 + (Enum.take(stream, 3) |> tl() |> decode_uint32)
-      _size when 31 == _size  ->
-        IO.puts("multi byte")
-        0
-      _ -> ctrl_code &&& 31
+        decode_type(stream, ctrl_type, read_size)
+      _ -> nil
     end
   end
 
-  defp decode_uint32(bytes) do
-    IO.inspect(bytes)
-    0
+  defp get_meta_size(stream, code) do
+    # bitwise and with 0x1f
+    case code &&& 31 do
+      _size when 29 == _size ->
+        { stream, size } = decode_uint32(stream, 1)
+        { stream, 29 + size }
+      _size when 30 == _size ->
+        { stream, size } = decode_uint32(stream, 2)
+        { stream, 285 + size }
+      _ -> { stream, code &&& 31 }
+    end
+  end
+
+  defp decode_type(stream, type, size) do
+    case type do
+      :double      -> decode_double(stream, size)
+      :map         -> decode_map(stream, size)
+      :utf8_string -> decode_utf8_string(stream, size)
+      :uint16      -> decode_uint16(stream, size)
+      _            -> { Enum.drop(stream, size), type }
+    end
+  end
+
+  defp decode_double(stream, size) do
+    { Enum.drop(stream, size), :double }
+  end
+
+  defp decode_map(stream, size) do
+    decode_map(stream, [], size)
+  end
+
+  defp decode_map(stream, map, size) when 0 < size do
+    { stream, key } = decode(stream)
+    { stream, val } = decode(stream)
+
+    decode_map(stream, map ++ [{ key, val }], size - 1)
+  end
+  defp decode_map(stream, map, 0) do
+    { stream, map }
+  end
+
+  defp decode_uint16(stream, size) do
+    decode_uint32(stream, size)
+  end
+
+  defp decode_uint32(stream, size) when 0 < size do
+    bytes  = Enum.take(stream, size) |> Enum.join()
+    stream = Enum.drop(stream, size)
+
+    uint   =  Enum.map(bitstring_to_list(bytes), fn(x) -> integer_to_binary(x, 16) end)
+              |> Enum.join()
+              |> String.to_char_list!()
+              |> list_to_integer(16)
+
+    { stream, uint }
+  end
+  defp decode_uint32(stream, 0) do
+    { stream, 0 }
+  end
+
+  defp decode_utf8_string(stream, size) do
+    string = Enum.take(stream, size) |> Enum.join()
+    stream = Enum.drop(stream, size)
+
+    { stream, string }
   end
 end
