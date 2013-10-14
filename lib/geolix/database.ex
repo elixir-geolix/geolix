@@ -5,7 +5,7 @@ defmodule Geolix.Database do
 
   @ctrl_types [ :extended,  :pointer,    :utf8_string, :double,
                 :bytes,     :uint16,     :uint32,      :map,
-                :int32,     :uint32,     :uint128,     :array,
+                :int32,     :uint64,     :uint128,     :array,
                 :container, :end_marker, :boolean,     :float ]
 
   def read(db_dir) do
@@ -64,15 +64,25 @@ defmodule Geolix.Database do
   defp decode(stream) do
     case Enum.take(stream, 1) do
       ctrl_byte when is_list(ctrl_byte) and 1 == length(ctrl_byte) ->
-        ctrl_byte = hd(ctrl_byte)
-        ctrl_code = :io_lib.format("~w", bitstring_to_list(ctrl_byte)) |> hd() |> list_to_integer()
+        ctrl_code = hd(ctrl_byte) |> byte_to_code()
         ctrl_type = Enum.at(@ctrl_types, ctrl_code >>> 5)
+
+        if :extended == ctrl_type do
+          ext_code  = Enum.take(Enum.drop(stream, 1), 1) |> hd() |> byte_to_code()
+          ctrl_type = Enum.at(@ctrl_types, ext_code + 7)
+        end
 
         { stream, read_size } = get_meta_size(Enum.drop(stream, 1), ctrl_code)
 
         decode_type(stream, ctrl_type, read_size)
       _ -> nil
     end
+  end
+
+  defp byte_to_code(byte) do
+    :io_lib.format("~w", bitstring_to_list(byte))
+        |> hd()
+        |> list_to_integer()
   end
 
   defp get_meta_size(stream, code) do
@@ -94,6 +104,7 @@ defmodule Geolix.Database do
       :map         -> decode_map(stream, size)
       :utf8_string -> decode_utf8_string(stream, size)
       :uint16      -> decode_uint16(stream, size)
+      :uint32      -> decode_uint32(stream, size)
       _            -> { Enum.drop(stream, size), type }
     end
   end
