@@ -1,12 +1,11 @@
 defmodule Geolix.Server do
   use GenServer.Behaviour
 
-  def start_link(data_path) do
-    :gen_server.start_link({ :local, :geolix }, __MODULE__, data_path, [])
+  def start_link(db_dir) do
+    :gen_server.start_link({ :local, :geolix }, __MODULE__, db_dir, [])
   end
 
-  def init(data_path) do
-    IO.inspect(data_path)
-    { :ok, [] }
+  def init(db_dir) do
+    Geolix.Database.read(db_dir)
   end
 end
