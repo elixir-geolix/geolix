@@ -6,6 +6,16 @@ defmodule Geolix.Server do
   end
 
   def init(db_dir) do
-    Geolix.Database.read(db_dir)
+    case Geolix.Database.read_cities(db_dir) do
+      { :error, reason } -> IO.inspect(reason)
+      { metadata, _} -> IO.inspect(metadata)
+    end
+
+    case Geolix.Database.read_countries(db_dir) do
+      { :error, reason } -> IO.inspect(reason)
+      { metadata, _ } -> IO.inspect(metadata)
+    end
+
+    { :ok, [] }
   end
 end

@@ -8,46 +8,46 @@ defmodule Geolix.Database do
                 :int32,     :uint64,     :uint128,     :array,
                 :container, :end_marker, :boolean,     :float ]
 
-  def read(db_dir) do
-    cities    = read_cities(db_dir)
-    countries = read_countries(db_dir)
+  @doc """
+  Returns city data from file found in directory.
+  """
+  def read_cities(db_dir) do
+    db_file    = db_dir <> "GeoLite2-City.mmdb"
+    db_file_gz = db_file <> ".gz"
 
     cond do
-      is_list(cities) and is_list(countries) -> cities ++ countries
-      is_tuple(cities)    -> cities
-      is_tuple(countries) -> countries
-      true -> { :error, "Unknown error" }
+      File.regular?(db_file)    -> parse_file({ :regular, db_file })
+      File.regular?(db_file_gz) -> parse_file({ :gzip , db_file_gz})
+      true -> { :error, "Failed to find 'GeoLite2-City.mmdb[.gz]' in given path '#{db_dir}' !" }
     end
   end
 
-  defp read_cities(_) do
-    []
-  end
-
-  defp read_countries(db_dir) do
+  @doc """
+  Returns country data from file found in directory.
+  """
+  def read_countries(db_dir) do
     db_file    = db_dir <> "GeoLite2-Country.mmdb"
     db_file_gz = db_file <> ".gz"
 
     cond do
-      File.regular?(db_file)    -> parse_countries({ :regular, db_file })
-      File.regular?(db_file_gz) -> parse_countries({ :gzip , db_file_gz})
-      true -> { :error, "Failed to find 'GeoLite2-Country.mmdb[.gz]' in given path '#{db_dir}'!" }
+      File.regular?(db_file)    -> parse_file({ :regular, db_file })
+      File.regular?(db_file_gz) -> parse_file({ :gzip , db_file_gz})
+      true -> { :error, "Failed to find 'GeoLite2-Country.mmdb[.gz]' in given path '#{db_dir}' !" }
     end
   end
 
-  defp parse_countries({ :regular, db_file }) do
-    stream_countries(File.binstream!(db_file, [:read], 1))
+  defp parse_file({ :regular, db_file }) do
+    File.binstream!(db_file, [:read], 1) |> parse_stream()
   end
-  defp parse_countries({ :gzip, db_file }) do
-    stream_countries(File.binstream!(db_file, [:read, :compressed], 1))
+  defp parse_file({ :gzip, db_file }) do
+    File.binstream!(db_file, [:read, :compressed], 1) |> parse_stream()
   end
 
-  defp stream_countries(stream) do
-    meta_stream = drop_until_meta(stream)
-    meta_data   = decode(meta_stream)
+  defp parse_stream(stream) do
+    { _, metadata } = drop_until_meta(stream) |> decode()
+    metadata        = HashDict.new(metadata)
 
-    IO.inspect(meta_data)
-    []
+    { metadata, [] }
   end
 
   defp drop_until_meta(stream) do
@@ -57,7 +57,7 @@ defmodule Geolix.Database do
     if marker == @metadata_marker do
       Enum.drop(stream, byte_size(@metadata_marker))
     else
-      drop_until_meta(Enum.drop(stream, 1))
+      Enum.drop(stream, 1) |> drop_until_meta()
     end
   end
 
