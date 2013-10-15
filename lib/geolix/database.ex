@@ -68,14 +68,17 @@ defmodule Geolix.Database do
         ctrl_type = Enum.at(@ctrl_types, ctrl_code >>> 5)
 
         if :extended == ctrl_type do
-          ext_code  = Enum.take(Enum.drop(stream, 1), 1) |> hd() |> byte_to_code()
+          stream    = Enum.drop(stream, 1)
+          ext_code  = Enum.take(stream, 1) |> hd() |> byte_to_code()
           ctrl_type = Enum.at(@ctrl_types, ext_code + 7)
         end
 
         { stream, read_size } = get_meta_size(Enum.drop(stream, 1), ctrl_code)
 
         decode_type(stream, ctrl_type, read_size)
-      _ -> nil
+      _ ->
+        IO.puts("Invalid byte read from stream?!")
+        { stream, nil }
     end
   end
 
@@ -89,10 +92,10 @@ defmodule Geolix.Database do
     # bitwise and with 0x1f
     case code &&& 31 do
       _size when 29 == _size ->
-        { stream, size } = decode_uint32(stream, 1)
+        { stream, size } = decode_uint(stream, 1)
         { stream, 29 + size }
       _size when 30 == _size ->
-        { stream, size } = decode_uint32(stream, 2)
+        { stream, size } = decode_uint(stream, 2)
         { stream, 285 + size }
       _ -> { stream, code &&& 31 }
     end
@@ -100,13 +103,30 @@ defmodule Geolix.Database do
 
   defp decode_type(stream, type, size) do
     case type do
+      :array       -> decode_array(stream, size)
       :double      -> decode_double(stream, size)
       :map         -> decode_map(stream, size)
       :utf8_string -> decode_utf8_string(stream, size)
-      :uint16      -> decode_uint16(stream, size)
-      :uint32      -> decode_uint32(stream, size)
-      _            -> { Enum.drop(stream, size), type }
+      :uint16      -> decode_uint(stream, size)
+      :uint32      -> decode_uint(stream, size)
+      :uint64      -> decode_uint(stream, size)
+      _ ->
+        IO.puts "unhandled type #{type}: " <> inspect(Enum.take(stream, size))
+        { Enum.drop(stream, size), type }
     end
+  end
+
+  defp decode_array(stream, size) do
+    decode_array(stream, [], size)
+  end
+
+  defp decode_array(stream, arr, size) when 0 < size do
+    { stream, elem } = decode(stream)
+
+    decode_array(stream, arr ++ [elem], size - 1)
+  end
+  defp decode_array(stream, arr, 0) do
+    { stream, arr }
   end
 
   defp decode_double(stream, size) do
@@ -127,11 +147,7 @@ defmodule Geolix.Database do
     { stream, map }
   end
 
-  defp decode_uint16(stream, size) do
-    decode_uint32(stream, size)
-  end
-
-  defp decode_uint32(stream, size) when 0 < size do
+  defp decode_uint(stream, size) when 0 < size do
     bytes  = Enum.take(stream, size) |> Enum.join()
     stream = Enum.drop(stream, size)
 
@@ -142,7 +158,7 @@ defmodule Geolix.Database do
 
     { stream, uint }
   end
-  defp decode_uint32(stream, 0) do
+  defp decode_uint(stream, 0) do
     { stream, 0 }
   end
 
