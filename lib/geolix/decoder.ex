@@ -11,69 +11,74 @@ defmodule Geolix.Decoder do
                 :container, :end_marker, :boolean,     :float ]
 
   @doc """
-  Decodes the datatype found at the current position of the stream.
+  Decodes the datatype found at the start of the stream.
   """
   def decode(stream) do
-    case Enum.take(stream, 1) do
+    decode(stream, 0)
+  end
+
+  @doc """
+  Decodes the datatype found at the given offset of the stream.
+  """
+  def decode(stream, offset) do
+    mod_stream = stream |> Enum.drop(offset)
+
+    case Enum.take(mod_stream, 1) do
       ctrl_byte when is_list(ctrl_byte) and 1 == length(ctrl_byte) ->
         ctrl_code = hd(ctrl_byte) |> byte_to_code()
         ctrl_type = Enum.at(@ctrl_types, ctrl_code >>> 5)
 
-        decode_by_type(ctrl_type, ctrl_code, stream)
+        decode_by_type(ctrl_type, ctrl_code, stream, 1 + offset)
       _ ->
         IO.puts("Invalid byte read from stream?!")
-        { stream, nil }
+        { nil, offset }
     end
   end
 
-  defp decode_by_type(:array, ctrl_code, stream) do
-    { stream, size } = stream |> Enum.drop(1) |> get_meta_size(ctrl_code)
+  defp decode_by_type(:array, ctrl_code, stream, offset) do
+    { size, offset } = ctrl_code |> get_meta_size(stream, offset)
 
-    decode_array(stream, [], size)
+    decode_array([], size, stream, offset)
   end
+  defp decode_by_type(:extended, ctrl_code, stream, offset) do
+    mod_stream = stream |> Enum.drop(offset)
+    ext_code   = mod_stream |> Enum.take(1) |> hd() |> byte_to_code()
+    ctrl_type  = Enum.at(@ctrl_types, ext_code + 7)
 
-  defp decode_by_type(:extended, ctrl_code, stream) do
-    stream    = Enum.drop(stream, 1)
-    ext_code  = Enum.take(stream, 1) |> hd() |> byte_to_code()
-    ctrl_type = Enum.at(@ctrl_types, ext_code + 7)
-
-    decode_by_type(ctrl_type, ctrl_code, stream)
+    decode_by_type(ctrl_type, ctrl_code, stream, 1 + offset)
   end
+  defp decode_by_type(:map, ctrl_code, stream, offset) do
+    { size, offset } = ctrl_code |> get_meta_size(stream, offset)
 
-  defp decode_by_type(:map, ctrl_code, stream) do
-    { stream, size } = stream |> Enum.drop(1) |> get_meta_size(ctrl_code)
-
-    decode_map(stream, [], size)
+    decode_map([], size, stream, offset)
   end
-
-  defp decode_by_type(:pointer, _, stream) do
+  defp decode_by_type(:pointer, _, _, offset) do
     IO.puts("Pointers not handled yet!")
-    { stream, nil }
+    { nil, 1 + offset }
   end
-
-  defp decode_by_type(:uint16, ctrl_code, stream) do
-    decode_by_type(:uint64, ctrl_code, stream)
+  defp decode_by_type(:uint16, ctrl_code, stream, offset) do
+    decode_by_type(:uint64, ctrl_code, stream, offset)
   end
-  defp decode_by_type(:uint32, ctrl_code, stream) do
-    decode_by_type(:uint64, ctrl_code, stream)
+  defp decode_by_type(:uint32, ctrl_code, stream, offset) do
+    decode_by_type(:uint64, ctrl_code, stream, offset)
   end
-  defp decode_by_type(:uint64, ctrl_code, stream) do
-    { stream, size } = stream |> Enum.drop(1) |> get_meta_size(ctrl_code)
+  defp decode_by_type(:uint64, ctrl_code, stream, offset) do
+    { size, offset } = ctrl_code |> get_meta_size(stream, offset)
 
-    decode_uint(stream, size)
+    decode_uint(size, stream, offset)
   end
+  defp decode_by_type(:utf8_string, ctrl_code, stream, offset) do
+    { size, offset } = ctrl_code |> get_meta_size(stream, offset)
 
-  defp decode_by_type(:utf8_string, ctrl_code, stream) do
-    { stream, size } = stream |> Enum.drop(1) |> get_meta_size(ctrl_code)
-
-    decode_utf8_string(stream, size)
+    decode_utf8_string(size, stream, offset)
   end
+  defp decode_by_type(ctrl_type, ctrl_code, stream, offset) do
+    { size, offset } = ctrl_code |> get_meta_size(stream, offset)
+    mod_stream       = stream |> Enum.drop(offset)
 
-  defp decode_by_type(ctrl_type, ctrl_code, stream) do
-    IO.puts "unhandled type #{ctrl_type}: " <> inspect(Enum.take(stream, 16))
+    IO.puts "unhandled type #{ctrl_type}: " <> inspect(Enum.take(mod_stream, 16))
 
-    { stream, size } = stream |> Enum.drop(1) |> get_meta_size(ctrl_code)
-    { Enum.drop(stream, size), nil }
+    { nil, offset }
   end
 
   defp byte_to_code(byte) do
@@ -82,57 +87,52 @@ defmodule Geolix.Decoder do
       |> list_to_integer()
   end
 
-  defp get_meta_size(stream, code) do
+  defp get_meta_size(code, stream, offset) do
     case code &&& 0x1f do
       _size when 29 == _size ->
-        { stream, size } = decode_uint(stream, 1)
-        { stream, 29 + size }
+        { size, offset } = decode_uint(1, stream, offset)
+        { 29 + size, offset }
       _size when 30 == _size ->
-        { stream, size } = decode_uint(stream, 2)
-        { stream, 285 + size }
-      _ -> { stream, code &&& 0x1f }
+        { size, offset } = decode_uint(2, stream, offset)
+        { 285 + size, offset }
+      _ -> { code &&& 0x1f, offset }
     end
   end
 
-  defp decode_array(stream, arr, size) when 0 < size do
-    { stream, elem } = stream |> decode()
+  defp decode_array(arr, size, stream, offset) when 0 < size do
+    { elem, offset } = stream |> decode(offset)
 
-    decode_array(stream, arr ++ [elem], size - 1)
+    decode_array(arr ++ [elem], size - 1, stream, offset)
   end
-  defp decode_array(stream, arr, 0) do
-    { stream, arr }
-  end
-
-  defp decode_map(stream, map, size) when 0 < size do
-    { stream, key } = stream |> decode()
-    { stream, val } = stream |> decode()
-
-    decode_map(stream, map ++ [{ key, val }], size - 1)
-  end
-  defp decode_map(stream, map, 0) do
-    { stream, map }
+  defp decode_array(arr, _, _, offset) do
+    { arr, offset }
   end
 
-  defp decode_uint(stream, size) when 0 < size do
-    bytes  = stream |> Enum.take(size) |> Enum.join()
-    stream = stream |> Enum.drop(size)
+  defp decode_map(map, size, stream, offset) when 0 < size do
+    { key, offset } = stream |> decode(offset)
+    { val, offset } = stream |> decode(offset)
 
-    uint = bitstring_to_list(bytes)
+    decode_map(map ++ [{ key, val }], size - 1, stream, offset)
+  end
+  defp decode_map(map, _, _, offset) do
+    { map, offset }
+  end
+
+  defp decode_uint(size, stream, offset) when 0 < size do
+    bytes = stream |> Enum.drop(offset) |> Enum.take(size) |> Enum.join()
+    uint  = bitstring_to_list(bytes)
       |> Enum.map(fn(x) -> integer_to_binary(x, 16) end)
       |> Enum.join()
       |> String.to_char_list!()
       |> list_to_integer(16)
 
-    { stream, uint }
+    { uint, size + offset }
   end
-  defp decode_uint(stream, 0) do
-    { stream, 0 }
+  defp decode_uint(_, _, offset) do
+    { 0, offset }
   end
 
-  defp decode_utf8_string(stream, size) do
-    string = stream |> Enum.take(size) |> Enum.join()
-    stream = stream |> Enum.drop(size)
-
-    { stream, string }
+  defp decode_utf8_string(size, stream, offset) do
+    { stream |> Enum.drop(offset) |> Enum.take(size) |> Enum.join(), size + offset }
   end
 end

@@ -37,7 +37,7 @@ defmodule Geolix.Database do
   end
 
   defp parse_stream(stream) do
-    { _, metadata } = drop_until_meta(stream) |> Geolix.Decoder.decode()
+    { metadata, _ } = drop_until_meta(stream) |> Geolix.Decoder.decode()
     metadata        = HashDict.new(metadata)
     metadata        = HashDict.put(metadata, "node_byte_size", div(HashDict.get(metadata, "record_size", 0), 4))
     metadata        = HashDict.put(
