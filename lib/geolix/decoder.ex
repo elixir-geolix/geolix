@@ -52,9 +52,31 @@ defmodule Geolix.Decoder do
 
     decode_map([], size, stream, offset)
   end
-  defp decode_by_type(:pointer, _, _, offset) do
-    IO.puts("Pointers not handled yet!")
-    { nil, 1 + offset }
+  defp decode_by_type(:pointer, ctrl_code, stream, offset) do
+    size   = ((ctrl_code >>> 3) &&& 0x3) + 1
+    buffer = stream |> Enum.drop(offset) |> Enum.take(size)
+
+    if 4 > size do
+      buffer = [<<ctrl_code &&& 0x7>>] ++ buffer
+    end
+
+    pointer =
+      buffer
+      |> Enum.join()
+      |> bitstring_to_list()
+      |> Enum.map(fn(x) -> integer_to_binary(x, 16) end)
+      |> Enum.join()
+      |> String.to_char_list!()
+      |> list_to_integer(16)
+
+    case size do
+      2 -> pointer = pointer + 2048
+      3 -> pointer = pointer + 526336
+      _ -> nil
+    end
+
+    { data, _ } = decode(stream, pointer)
+    { data, offset + size }
   end
   defp decode_by_type(:uint16, ctrl_code, stream, offset) do
     decode_by_type(:uint64, ctrl_code, stream, offset)
@@ -73,8 +95,8 @@ defmodule Geolix.Decoder do
     decode_utf8_string(size, stream, offset)
   end
   defp decode_by_type(ctrl_type, ctrl_code, stream, offset) do
-    { size, offset } = ctrl_code |> get_meta_size(stream, offset)
-    mod_stream       = stream |> Enum.drop(offset)
+    { _, offset } = ctrl_code |> get_meta_size(stream, offset)
+    mod_stream    = stream |> Enum.drop(offset)
 
     IO.puts "unhandled type #{ctrl_type}: " <> inspect(Enum.take(mod_stream, 16))
 
