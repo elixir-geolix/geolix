@@ -1,21 +1,41 @@
 defmodule Geolix.Database do
   use Bitwise, only_operators: true
 
+  def lookup(_, nil) do
+    nil
+  end
+  def lookup(ip, database) do
+    case parse_lookup_tree(ip, database[:tree], database[:meta]) do
+      0   -> nil
+      ptr ->
+        offset        = ptr - HashDict.fetch!(database[:meta], "node_count") - 16
+        { result, _ } = Geolix.Decoder.decode(database[:data], offset)
+
+        result
+    end
+  end
+
   def read_cities(db_dir) do
     case Geolix.Reader.read_cities(db_dir) do
-      { :ok, data, meta } -> test_read(data, meta)
+      { :ok, data, meta } -> split_data(data, meta)
       { :error, reason }  -> { :error, reason }
     end
   end
 
   def read_countries(db_dir) do
     case Geolix.Reader.read_countries(db_dir) do
-      { :ok, data, meta } -> test_read(data, meta)
+      { :ok, data, meta } -> split_data(data, meta)
       { :error, reason }  -> { :error, reason }
     end
   end
 
-  defp test_read(data, meta) do
+  def parse_lookup_tree(ip, tree, meta) do
+    start_node = get_start_node(32, meta)
+
+    parse_lookup_tree_bitwise(ip, 0, 32, start_node, tree, meta)
+  end
+
+  defp split_data(data, meta) do
     { meta, _ } = meta |> Geolix.Decoder.decode()
 
     meta = meta |> HashDict.new()
@@ -27,19 +47,7 @@ defmodule Geolix.Database do
     tree = data |> binary_part(0, treesize)
     data = data |> binary_part(treesize + 16, size(data) - size(tree) - 16)
 
-    #ip = {207,  97, 227, 245} # elixir-lang.org
-    ip = {108, 168, 255, 243} # maxmind.com
-
-    case parse_lookup_tree(ip, tree, meta) do
-      0   -> { :ok, "Nothing found for: " <> inspect(ip) }
-      ptr -> { :ok, Geolix.Decoder.decode(data, ptr - HashDict.fetch!(meta, "node_count") - 16) }
-    end
-  end
-
-  defp parse_lookup_tree(ip, tree, meta) do
-    start_node = get_start_node(32, meta)
-
-    parse_lookup_tree_bitwise(ip, 0, 32, start_node, tree, meta)
+    { :ok, tree, data, meta }
   end
 
   defp parse_lookup_tree_bitwise(ip, bit, bit_count, node, tree, meta) when bit < bit_count do
