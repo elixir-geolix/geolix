@@ -87,12 +87,28 @@ defmodule Geolix.Database do
     offset = node * HashDict.fetch!(meta, "node_byte_size")
     size   = HashDict.fetch!(meta, "record_size")
 
-    if 24 < size do
+    if 28 < size do
       IO.puts "Unhandled record_size '#{size}'!"
     end
 
     case size do
       24 -> tree |> binary_part(offset + index * 3, 3) |> decode_uint
+      28 ->
+        middle = tree
+          |> binary_part(offset + 3, 1)
+          |> bitstring_to_list()
+          |> hd()
+
+        middle = 0xF0 &&& middle
+
+        if 0 == index do
+          middle = middle >>> 4
+        end
+
+        middle = middle |> List.wrap() |> list_to_bitstring()
+        bytes  = tree |> binary_part(offset + index * 4, 3)
+
+        (middle <> bytes) |> decode_uint()
       _  -> 0
     end
   end
