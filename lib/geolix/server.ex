@@ -30,6 +30,14 @@ defmodule Geolix.Server do
     end
   end
 
+  def handle_call({ :city, ip }, _, state) do
+    { :reply, Geolix.Database.lookup(ip, state[:cities]), state }
+  end
+
+  def handle_call({ :country, ip }, _, state) do
+    { :reply, Geolix.Database.lookup(ip, state[:countries]), state }
+  end
+
   def handle_call({ :lookup, ip }, _, state) do
     reply = [ city:    Geolix.Database.lookup(ip, state[:cities]),
               country: Geolix.Database.lookup(ip, state[:countries]) ]
