@@ -43,6 +43,11 @@ defmodule Geolix.Decoder do
 
     decode_by_type(ctrl_type, ctrl_code, data, 1 + offset)
   end
+  defp decode_by_type(:float, ctrl_code, data, offset) do
+    { size, offset } = ctrl_code |> get_meta_size(data, offset)
+
+    decode_float(size, data, offset)
+  end
   defp decode_by_type(:map, ctrl_code, data, offset) do
     { size, offset } = ctrl_code |> get_meta_size(data, offset)
 
@@ -131,6 +136,17 @@ defmodule Geolix.Decoder do
     { data |> binary_part(offset, size) |> fun.(), offset + size }
   end
   defp decode_double(_, _, offset) do
+    { 0.0, offset }
+  end
+
+  defp decode_float(size, data, offset) when 0 < size do
+    { :ok, tokens, _ } = :erl_scan.string('fun (FL) -> << V:32/float >> = FL, V end.')
+    { :ok, [form] }    = :erl_parse.parse_exprs(tokens)
+    { :value, fun, _ } = :erl_eval.expr(form, [])
+
+    { data |> binary_part(offset, size) |> fun.(), offset + size }
+  end
+  defp decode_float(_, _, offset) do
     { 0.0, offset }
   end
 
