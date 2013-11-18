@@ -116,7 +116,7 @@ defmodule Geolix.Database do
   defp decode_uint(bin) do
     bin
       |> :binary.bin_to_list()
-      |> Enum.map(fn(x) -> integer_to_binary(x, 16) end)
+      |> Enum.map( &(integer_to_binary(&1, 16)) )
       |> Enum.join()
       |> String.to_char_list!()
       |> list_to_integer(16)

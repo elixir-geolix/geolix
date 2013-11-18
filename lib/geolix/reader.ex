@@ -1,5 +1,4 @@
 defmodule Geolix.Reader do
-  @data_marker <<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>>
   @metadata_marker <<171, 205, 239>> <> "MaxMind.com"
 
   @doc """
@@ -43,25 +42,27 @@ defmodule Geolix.Reader do
     { :ok, data, Enum.join(meta) }
   end
 
+  # <<171>> == first char of @metadata_marker
+  # 14      == byte_size of @metadata_marker
   defp split_data(nil, stream) do
-    split_data((stream |> Enum.take(1) |> Enum.join()), Enum.drop(stream, 1))
+    split_data(( stream |> Enum.take(1) |> Enum.join() ), ( stream |> Enum.drop(1) ))
   end
   defp split_data(data, stream) do
     size_old  = byte_size(data)
-    data      = data <> (stream |> Enum.take_while(fn(c) -> c != String.at(@metadata_marker, 0) end) |> Enum.join())
+    data      = data <> (stream |> Enum.take_while( &(&1 != <<171>>) ) |> Enum.join())
     size_read = byte_size(data) - size_old
 
     if 0 < size_read do
       stream = stream |> Enum.drop(size_read)
     end
 
-    marker = stream |> Enum.take(byte_size(@metadata_marker)) |> Enum.join()
-    stream = stream |> Enum.drop(byte_size(@metadata_marker))
+    maybe_marker = stream |> Enum.take(14) |> Enum.join()
+    stream       = stream |> Enum.drop(14)
 
-    if marker == @metadata_marker do
+    if maybe_marker == @metadata_marker do
       { data, stream }
     else
-      split_data(data <> marker, stream)
+      split_data(data <> maybe_marker, stream)
     end
   end
 end

@@ -63,7 +63,7 @@ defmodule Geolix.Decoder do
 
     ptr = buffer
       |> bitstring_to_list()
-      |> Enum.map(fn(x) -> integer_to_binary(x, 16) end)
+      |> Enum.map( &(integer_to_binary(&1, 16)) )
       |> Enum.join()
       |> String.to_char_list!()
       |> list_to_integer(16)
@@ -164,7 +164,7 @@ defmodule Geolix.Decoder do
     uint = data
       |> binary_part(offset, size)
       |> :binary.bin_to_list()
-      |> Enum.map(fn(x) -> integer_to_binary(x, 16) end)
+      |> Enum.map( &(integer_to_binary(&1, 16)) )
       |> Enum.join()
       |> String.to_char_list!()
       |> list_to_integer(16)
