@@ -30,10 +30,10 @@ defmodule Geolix.Reader do
   end
 
   defp parse_file({ :regular, db_file }) do
-    File.binstream!(db_file, [:read], 1) |> split_stream()
+    db_file |> File.stream!([:read], 1) |> split_stream()
   end
   defp parse_file({ :gzip, db_file }) do
-    File.binstream!(db_file, [:read, :compressed], 1) |> split_stream()
+    db_file |> File.stream!([:read, :compressed], 1) |> split_stream()
   end
 
   defp split_stream(stream) do
