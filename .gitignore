@@ -1,3 +1,5 @@
 _build/
+_deps/
 data/
 data.gz/
+docs/
