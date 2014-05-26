@@ -62,11 +62,11 @@ defmodule Geolix.Decoder do
     end
 
     ptr = buffer
-      |> bitstring_to_list()
-      |> Enum.map( &(integer_to_binary(&1, 16)) )
+      |> :erlang.bitstring_to_list()
+      |> Enum.map( &(Integer.to_string(&1, 16)) )
       |> Enum.join()
-      |> String.to_char_list!()
-      |> list_to_integer(16)
+      |> String.to_char_list()
+      |> List.to_integer(16)
 
     case size do
       2 -> ptr = ptr + 2048
@@ -102,9 +102,9 @@ defmodule Geolix.Decoder do
   end
 
   defp byte_to_code(byte) do
-    :io_lib.format("~w", bitstring_to_list(byte))
+    :io_lib.format("~w", :erlang.bitstring_to_list(byte))
       |> hd()
-      |> list_to_integer()
+      |> List.to_integer()
   end
 
   defp get_meta_size(code, data, offset) do
@@ -164,10 +164,10 @@ defmodule Geolix.Decoder do
     uint = data
       |> binary_part(offset, size)
       |> :binary.bin_to_list()
-      |> Enum.map( &(integer_to_binary(&1, 16)) )
+      |> Enum.map( &(Integer.to_string(&1, 16)) )
       |> Enum.join()
-      |> String.to_char_list!()
-      |> list_to_integer(16)
+      |> String.to_char_list()
+      |> List.to_integer(16)
 
     { uint, size + offset }
   end

@@ -4,7 +4,7 @@ defmodule Geolix.Mixfile do
   def project do
     [ app: :geolix,
       version: "0.0.1",
-      elixir: "~> 0.12.3",
+      elixir: "~> 0.13.1",
       deps: [] ]
   end
 

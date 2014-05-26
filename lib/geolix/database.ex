@@ -38,7 +38,8 @@ defmodule Geolix.Database do
   defp split_data(data, meta) do
     { meta, _ } = meta |> Geolix.Decoder.decode()
 
-    meta = meta |> HashDict.new()
+
+    meta = meta |> Enum.into( HashDict.new() )
     meta = meta |> HashDict.put("node_byte_size", div(HashDict.fetch!(meta, "record_size"), 4))
     meta = meta |> HashDict.put("tree_size", HashDict.fetch!(meta, "node_count") * HashDict.fetch!(meta, "node_byte_size"))
 
@@ -96,7 +97,7 @@ defmodule Geolix.Database do
       28 ->
         middle = tree
           |> binary_part(offset + 3, 1)
-          |> bitstring_to_list()
+          |> :erlang.bitstring_to_list()
           |> hd()
 
         middle = 0xF0 &&& middle
@@ -105,7 +106,7 @@ defmodule Geolix.Database do
           middle = middle >>> 4
         end
 
-        middle = middle |> List.wrap() |> list_to_bitstring()
+        middle = middle |> List.wrap() |> :erlang.list_to_bitstring()
         bytes  = tree |> binary_part(offset + index * 4, 3)
 
         (middle <> bytes) |> decode_uint()
@@ -116,9 +117,9 @@ defmodule Geolix.Database do
   defp decode_uint(bin) do
     bin
       |> :binary.bin_to_list()
-      |> Enum.map( &(integer_to_binary(&1, 16)) )
+      |> Enum.map( &(Integer.to_string(&1, 16)) )
       |> Enum.join()
-      |> String.to_char_list!()
-      |> list_to_integer(16)
+      |> String.to_char_list()
+      |> List.to_integer(16)
   end
 end
