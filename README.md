@@ -28,23 +28,23 @@ return nil for their depending database (city, country, or both).
 Now you should be able to lookup IPs using plain gen_server calls:
 
 ```elixir
-iex> :gen_server.call(:geolix, { :lookup, {127, 0, 0, 1} })
-[ city:    ... ,
-  country: ... ]
-iex> :gen_server.call(:geolix, { :city, {127, 0, 0, 1} })
-[ ... ]
-iex> :gen_server.call(:geolix, { :country, {127, 0, 0, 1} })
-[ ... ]
+iex(1)> :gen_server.call(:geolix, { :lookup, {127, 0, 0, 1} })
+%{ city:    ... ,
+   country: ... }
+iex(2)> :gen_server.call(:geolix, { :city, {127, 0, 0, 1} })
+%{ ... }
+iex(3)> :gen_server.call(:geolix, { :country, {127, 0, 0, 1} })
+%{ ... }
 ```
 
 If you are curious on how long a lookup of an IP takes, you can simply measure
 it using the erlang :timer module:
 
 ```elixir
-iex> :timer.tc(fn() -> :gen_server.call(:geolix, { :lookup, {108, 168, 255, 243} }) end)
+iex(1)> :timer.tc(fn() -> :gen_server.call(:geolix, { :lookup, {108, 168, 255, 243} }) end)
 { 1337,
-  [ city:    ... ,
-    country: ... ] }
+  %{ city:    ... ,
+     country: ... } }
 ```
 
 ### As Mix-Dependency

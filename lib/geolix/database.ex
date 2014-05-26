@@ -4,12 +4,16 @@ defmodule Geolix.Database do
   def lookup(_, nil) do
     nil
   end
+  def lookup(ip, %{ cities: cities, countries: countries }) do
+    %{ city:    lookup(ip, cities),
+       country: lookup(ip, countries) }
+  end
   def lookup(ip, database) do
-    case parse_lookup_tree(ip, database[:tree], database[:meta]) do
+    case parse_lookup_tree(ip, database.tree, database.meta) do
       0   -> nil
       ptr ->
-        offset        = ptr - HashDict.fetch!(database[:meta], "node_count") - 16
-        { result, _ } = Geolix.Decoder.decode(database[:data], offset)
+        offset        = ptr - database.meta.node_count - 16
+        { result, _ } = Geolix.Decoder.decode(database.data, offset)
 
         result
     end
@@ -38,21 +42,18 @@ defmodule Geolix.Database do
   defp split_data(data, meta) do
     { meta, _ } = meta |> Geolix.Decoder.decode()
 
+    meta = meta |> Enum.into( %{} )
+    meta = meta |> Map.put(:node_byte_size, div(meta.record_size, 4))
+    meta = meta |> Map.put(:tree_size, meta.node_count * meta.node_byte_size)
 
-    meta = meta |> Enum.into( HashDict.new() )
-    meta = meta |> HashDict.put("node_byte_size", div(HashDict.fetch!(meta, "record_size"), 4))
-    meta = meta |> HashDict.put("tree_size", HashDict.fetch!(meta, "node_count") * HashDict.fetch!(meta, "node_byte_size"))
-
-    treesize = meta |> HashDict.fetch!("tree_size")
-
-    tree = data |> binary_part(0, treesize)
-    data = data |> binary_part(treesize + 16, size(data) - size(tree) - 16)
+    tree = data |> binary_part(0, meta.tree_size)
+    data = data |> binary_part(meta.tree_size + 16, size(data) - size(tree) - 16)
 
     { :ok, tree, data, meta }
   end
 
   defp parse_lookup_tree_bitwise(ip, bit, bit_count, node, tree, meta) when bit < bit_count do
-    if node >= HashDict.fetch!(meta, "node_count") do
+    if node >= meta.node_count do
       parse_lookup_tree_bitwise(nil, nil, nil, node, nil, meta)
     else
       temp_bit = 0xFF &&& elem(ip, bit >>> 3)
@@ -63,7 +64,7 @@ defmodule Geolix.Database do
     end
   end
   defp parse_lookup_tree_bitwise(_, _, _, node, _, meta) do
-    node_count = HashDict.fetch!(meta, "node_count")
+    node_count = meta.node_count
 
     cond do
       node >  node_count -> node
@@ -75,7 +76,7 @@ defmodule Geolix.Database do
   end
 
   defp get_start_node(32, meta) do
-    case HashDict.fetch!(meta, "ip_version") do
+    case meta.ip_version do
       6 -> 96
       _ -> 0
     end
@@ -85,8 +86,8 @@ defmodule Geolix.Database do
   end
 
   defp read_node(node, index, tree, meta) do
-    offset = node * HashDict.fetch!(meta, "node_byte_size")
-    size   = HashDict.fetch!(meta, "record_size")
+    offset = node * meta.node_byte_size
+    size   = meta.record_size
 
     if 28 < size do
       IO.puts "Unhandled record_size '#{size}'!"

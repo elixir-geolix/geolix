@@ -51,7 +51,7 @@ defmodule Geolix.Decoder do
   defp decode_by_type(:map, ctrl_code, data, offset) do
     { size, offset } = ctrl_code |> get_meta_size(data, offset)
 
-    decode_map([], size, data, offset)
+    decode_map(%{}, size, data, offset)
   end
   defp decode_by_type(:pointer, ctrl_code, data, offset) do
     size   = ((ctrl_code >>> 3) &&& 0x3) + 1
@@ -154,7 +154,7 @@ defmodule Geolix.Decoder do
     { key, offset } = data |> decode(offset)
     { val, offset } = data |> decode(offset)
 
-    decode_map(map ++ [{ key, val }], size - 1, data, offset)
+    decode_map(Map.put(map, String.to_atom(key), val), size - 1, data, offset)
   end
   defp decode_map(map, _, _, offset) do
     { map, offset }

@@ -6,28 +6,24 @@ defmodule Geolix.Server do
   end
 
   def init(db_dir) do
-    state = [ cities:    init_cities(db_dir),
-              countries: init_countries(db_dir) ]
-
-    { :ok, state }
+    { :ok, %{ cities:    init_cities(db_dir),
+              countries: init_countries(db_dir) } }
   end
 
   defp init_cities(db_dir) do
-    case Geolix.Database.read_cities(db_dir) do
-      { :ok, tree, data, meta } -> [ tree: tree, data: data, meta: meta ]
-      { :error, reason }        ->
-        IO.inspect(reason)
-        nil
-    end
+    Geolix.Database.read_cities(db_dir) |> maybe_init_dataset()
   end
 
   defp init_countries(db_dir) do
-    case Geolix.Database.read_countries(db_dir) do
-      { :ok, tree, data, meta } -> [ tree: tree, data: data, meta: meta ]
-      { :error, reason }        ->
-        IO.inspect(reason)
-        nil
-    end
+    Geolix.Database.read_countries(db_dir) |> maybe_init_dataset()
+  end
+
+  defp maybe_init_dataset({ :ok, tree, data, meta }) do
+    %{ tree: tree, data: data, meta: meta }
+  end
+  defp maybe_init_dataset({ :error, reason }) do
+    IO.inspect(reason)
+    nil
   end
 
   def handle_call({ :city, ip }, _, state) do
@@ -39,9 +35,6 @@ defmodule Geolix.Server do
   end
 
   def handle_call({ :lookup, ip }, _, state) do
-    reply = [ city:    Geolix.Database.lookup(ip, state[:cities]),
-              country: Geolix.Database.lookup(ip, state[:countries]) ]
-
-    { :reply, reply, state }
+    { :reply, Geolix.Database.lookup(ip, state), state }
   end
 end
