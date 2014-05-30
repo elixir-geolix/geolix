@@ -18,14 +18,20 @@ variant).
 Startup a iex console and start the supervisor:
 
 ```elixir
-Geolix.start_link("/path/to/folder/with/databases")
+iex(1)> Geolix.start_link()
+{ :ok, #PID }
+iex(2)> Geolix.set_db_cities("/path/to/cities/db")
+:ok
+iex(3)> Geolix.set_db_countries("/path/to/countries/db")
+:ok
 ```
 
-If geolix cannot find a suitable database it will output a message onto your
-console, but won't stop itself from starting. Lookups for an IP will simply
-return nil for their depending database (city, country, or both).
+If Geolix cannot find the database to add it will output a message onto your
+console but still return `:ok`. Lookups for an IP with no suitable database
+return nil (city, country, or both).
 
-Now you should be able to lookup IPs using plain gen_server calls:
+Now you should be able to lookup IPs using plain gen_server calls or the
+available convencience methods:
 
 ```elixir
 iex(1)> Geolix.lookup({ 127, 0, 0, 1 })

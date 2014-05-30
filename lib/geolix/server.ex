@@ -1,21 +1,40 @@
 defmodule Geolix.Server do
   use GenServer.Behaviour
 
-  def start_link(db_dir) do
-    :gen_server.start_link({ :local, :geolix }, __MODULE__, db_dir, [])
+  def start_link() do
+    :gen_server.start_link({ :local, :geolix }, __MODULE__, nil, [])
   end
 
-  def init(db_dir) do
-    { :ok, %{ cities:    init_cities(db_dir),
-              countries: init_countries(db_dir) } }
+  def init(_) do
+    { :ok, %{ cities: nil, countries: nil }}
   end
 
-  defp init_cities(db_dir) do
-    Geolix.Database.read_cities(db_dir) |> maybe_init_dataset()
+  def handle_call({ :city, ip }, _, state) do
+    { :reply, Geolix.Database.lookup(ip, state.cities), state }
   end
 
-  defp init_countries(db_dir) do
-    Geolix.Database.read_countries(db_dir) |> maybe_init_dataset()
+  def handle_call({ :country, ip }, _, state) do
+    { :reply, Geolix.Database.lookup(ip, state.countries), state }
+  end
+
+  def handle_call({ :lookup, ip }, _, state) do
+    { :reply, Geolix.Database.lookup(ip, state), state }
+  end
+
+  def handle_call({ :set_db, :cities, db_dir }, _, state) do
+    cities = Geolix.Database.read_cities(db_dir) |> maybe_init_dataset()
+    state  = %{ state | :cities => cities }
+
+    { :reply, :ok, state }
+  end
+  def handle_call({ :set_db, :countries, db_dir }, _, state) do
+    countries = Geolix.Database.read_countries(db_dir) |> maybe_init_dataset()
+    state     = %{ state | :countries => countries }
+
+    { :reply, :ok, state }
+  end
+  def handle_call({ :set_db, which, _ }, _, state) do
+    { :reply, { :error, "Invalid database type '#{ which }' given!" }, state }
   end
 
   defp maybe_init_dataset({ :ok, tree, data, meta }) do
@@ -24,17 +43,5 @@ defmodule Geolix.Server do
   defp maybe_init_dataset({ :error, reason }) do
     IO.inspect(reason)
     nil
-  end
-
-  def handle_call({ :city, ip }, _, state) do
-    { :reply, Geolix.Database.lookup(ip, state[:cities]), state }
-  end
-
-  def handle_call({ :country, ip }, _, state) do
-    { :reply, Geolix.Database.lookup(ip, state[:countries]), state }
-  end
-
-  def handle_call({ :lookup, ip }, _, state) do
-    { :reply, Geolix.Database.lookup(ip, state), state }
   end
 end
