@@ -28,12 +28,12 @@ return nil for their depending database (city, country, or both).
 Now you should be able to lookup IPs using plain gen_server calls:
 
 ```elixir
-iex(1)> :gen_server.call(:geolix, { :lookup, {127, 0, 0, 1} })
+iex(1)> Geolix.lookup({ 127, 0, 0, 1 })
 %{ city:    ... ,
    country: ... }
-iex(2)> :gen_server.call(:geolix, { :city, {127, 0, 0, 1} })
+iex(2)> Geolix.lookup(:city, { 127, 0, 0, 1 })
 %{ ... }
-iex(3)> :gen_server.call(:geolix, { :country, {127, 0, 0, 1} })
+iex(3)> Geolix.lookup(:country, { 127, 0, 0, 1 })
 %{ ... }
 ```
 

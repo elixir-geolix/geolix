@@ -22,4 +22,8 @@ defmodule Geolix do
 
     supervise(children, strategy: :one_for_one)
   end
+
+  def city(ip),    do: :gen_server.call(:geolix, { :city,    ip })
+  def country(ip), do: :gen_server.call(:geolix, { :country, ip })
+  def lookup(ip),  do: :gen_server.call(:geolix, { :lookup,  ip })
 end
