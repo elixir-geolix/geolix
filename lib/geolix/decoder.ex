@@ -13,6 +13,7 @@ defmodule Geolix.Decoder do
   @doc """
   Decodes the datatype found at the start of the datastring.
   """
+  @spec decode(binary) :: map
   def decode(data) do
     decode(data, 0)
   end
@@ -20,6 +21,7 @@ defmodule Geolix.Decoder do
   @doc """
   Decodes the datatype found at the given offset of the data.
   """
+  @spec decode(binary, integer) :: float | integer | list | map | String.t
   def decode(data, offset) do
     ctrl_code = data |> binary_part(offset, 1) |> byte_to_code()
     ctrl_type = Enum.at(@ctrl_types, ctrl_code >>> 5)
@@ -94,10 +96,9 @@ defmodule Geolix.Decoder do
     decode_utf8_string(size, data, offset)
   end
   defp decode_by_type(ctrl_type, ctrl_code, data, offset) do
-    { _, offset } = ctrl_code |> get_meta_size(data, offset)
+    IO.puts "unhandled type: #{ctrl_type}"
 
-    IO.puts "unhandled type #{ctrl_type}: " <> inspect(binary_part(data, offset, 16))
-
+    { _,   offset } = ctrl_code |> get_meta_size(data, offset)
     { nil, offset }
   end
 

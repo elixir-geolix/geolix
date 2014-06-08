@@ -4,6 +4,7 @@ defmodule Geolix.Reader do
   @doc """
   Returns data from city database file.
   """
+  @spec read_cities(String.t) :: tuple
   def read_cities(db_dir) do
     db_file    = db_dir <> "GeoLite2-City.mmdb"
     db_file_gz = db_file <> ".gz"
@@ -18,6 +19,7 @@ defmodule Geolix.Reader do
   @doc """
   Returns data from country database file.
   """
+  @spec read_cities(String.t) :: tuple
   def read_countries(db_dir) do
     db_file    = db_dir  <> "GeoLite2-Country.mmdb"
     db_file_gz = db_file <> ".gz"
@@ -45,7 +47,10 @@ defmodule Geolix.Reader do
   # <<171>> == first char of @metadata_marker
   # 14      == byte_size of @metadata_marker
   defp split_data(nil, stream) do
-    split_data(( stream |> Enum.take(1) |> Enum.join() ), ( stream |> Enum.drop(1) ))
+    split_data(
+      ( stream |> Enum.take(1) |> Enum.join() ),
+      ( stream |> Enum.drop(1) )
+    )
   end
   defp split_data(data, stream) do
     size_old  = byte_size(data)
