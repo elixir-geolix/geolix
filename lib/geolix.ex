@@ -1,11 +1,13 @@
 defmodule Geolix do
-  use Supervisor.Behaviour
+  use Supervisor
 
   def start_link() do
-    :supervisor.start_link(__MODULE__, nil)
+    Supervisor.start_link(__MODULE__, [])
   end
 
-  def init(_) do
+  def init([]) do
+    import Supervisor.Spec
+
     supervise([ worker(Geolix.Server, []) ], strategy: :one_for_one)
   end
 
@@ -18,13 +20,13 @@ defmodule Geolix do
       db_dir = db_dir <> "/"
     end
 
-    :gen_server.call(:geolix, { :set_db, which, db_dir }, :infinity)
+    GenServer.call(:geolix, { :set_db, which, db_dir }, :infinity)
   end
 
   def set_db_cities(db_dir),    do: set_db(:cities,    db_dir)
   def set_db_countries(db_dir), do: set_db(:countries, db_dir)
 
-  def city(ip),    do: :gen_server.call(:geolix, { :city,    ip })
-  def country(ip), do: :gen_server.call(:geolix, { :country, ip })
-  def lookup(ip),  do: :gen_server.call(:geolix, { :lookup,  ip })
+  def city(ip),    do: GenServer.call(:geolix, { :city,    ip })
+  def country(ip), do: GenServer.call(:geolix, { :country, ip })
+  def lookup(ip),  do: GenServer.call(:geolix, { :lookup,  ip })
 end

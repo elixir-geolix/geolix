@@ -1,4 +1,3 @@
-ExUnit.start
+Code.require_file("helpers/suite.exs", __DIR__)
 
-defmodule Geolix.TestHelpers do
-end
+ExUnit.start
