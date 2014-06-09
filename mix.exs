@@ -5,8 +5,8 @@ defmodule Geolix.Mixfile do
     [ app:        :geolix,
       name:       "Geolix",
       source_url: "https://github.com/mneudert/geolix",
-      version:    "0.0.1",
-      elixir:     "~> 0.13.3",
+      version:    "0.0.2",
+      elixir:     "~> 0.14.0",
       deps:       deps(Mix.env),
       deps_path:  "_deps",
       docs:       &docs/0 ]
