@@ -1,13 +1,14 @@
 defmodule Geolix.TestHelper.Suite do
   defmacro __using__(_) do
     quote do
-      setup_all do
+      setup do
         { :ok, _ } = Geolix.Server.start_link([])
-        :ok
-      end
 
-      teardown_all do
-        :ok = Geolix.Server.stop()
+        on_exit fn ->
+          :ok = Geolix.Server.stop()
+        end
+
+        :ok
       end
     end
   end
