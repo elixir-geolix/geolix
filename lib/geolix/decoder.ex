@@ -130,22 +130,18 @@ defmodule Geolix.Decoder do
   end
 
   defp decode_double(size, data, offset) when 0 < size do
-    { :ok, tokens, _ } = :erl_scan.string('fun (FL) -> << V:64/float >> = FL, V end.')
-    { :ok, [form] }    = :erl_parse.parse_exprs(tokens)
-    { :value, fun, _ } = :erl_eval.expr(form, [])
+    << decoded :: [ size(64), float ] >> = binary_part(data, offset, size)
 
-    { data |> binary_part(offset, size) |> fun.(), offset + size }
+    { decoded, offset + size }
   end
   defp decode_double(_, _, offset) do
     { 0.0, offset }
   end
 
   defp decode_float(size, data, offset) when 0 < size do
-    { :ok, tokens, _ } = :erl_scan.string('fun (FL) -> << V:32/float >> = FL, V end.')
-    { :ok, [form] }    = :erl_parse.parse_exprs(tokens)
-    { :value, fun, _ } = :erl_eval.expr(form, [])
+    << decoded :: [ size(32), float ] >> = binary_part(data, offset, size)
 
-    { data |> binary_part(offset, size) |> fun.(), offset + size }
+    { decoded, offset + size }
   end
   defp decode_float(_, _, offset) do
     { 0.0, offset }
