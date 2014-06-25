@@ -2,10 +2,12 @@ defmodule Geolix.TestHelper.Suite do
   defmacro __using__(_) do
     quote do
       setup do
-        { :ok, _ } = Geolix.Server.start_link([])
+        { :ok, pid } = Geolix.Server.start_link([])
 
         on_exit fn ->
-          :ok = Geolix.Server.stop()
+          if Process.alive?(pid) do
+            Process.exit(pid, :kill)
+          end
         end
 
         :ok
