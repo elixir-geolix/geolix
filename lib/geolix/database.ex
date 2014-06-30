@@ -59,7 +59,7 @@ defmodule Geolix.Database do
     meta = meta |> Map.put(:tree_size, meta.node_count * meta.node_byte_size)
 
     tree      = data |> binary_part(0, meta.tree_size)
-    data_size = byte_size(data) - size(tree) - 16
+    data_size = byte_size(data) - byte_size(tree) - 16
     data      = data |> binary_part(meta.tree_size + 16, data_size)
 
     { :ok, tree, data, meta }
