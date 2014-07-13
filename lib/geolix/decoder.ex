@@ -130,7 +130,7 @@ defmodule Geolix.Decoder do
   end
 
   defp decode_double(size, data, offset) when 0 < size do
-    << decoded :: [ size(64), float ] >> = binary_part(data, offset, size)
+    << decoded :: size(64)-float >> = binary_part(data, offset, size)
 
     { decoded, offset + size }
   end
@@ -139,7 +139,7 @@ defmodule Geolix.Decoder do
   end
 
   defp decode_float(size, data, offset) when 0 < size do
-    << decoded :: [ size(32), float ] >> = binary_part(data, offset, size)
+    << decoded :: size(32)-float >> = binary_part(data, offset, size)
 
     { decoded, offset + size }
   end
