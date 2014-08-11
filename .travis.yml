@@ -4,6 +4,7 @@ otp_release: 17.0
 env:
   - ELIXIR=v0.14.3 MIX_ENV=test
   - ELIXIR=v0.15.0 MIX_ENV=test
+  - ELIXIR=v0.15.1 MIX_ENV=test
 
 before_install:
   - mkdir -p vendor/elixir
