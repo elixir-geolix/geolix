@@ -11,53 +11,47 @@ defmodule Geolix.Decoder do
                 :container, :end_marker, :boolean,     :float ]
 
   @doc """
-  Decodes the datatype found at the start of the datastring.
-  """
-  @spec decode(binary) :: map
-  def decode(data) do
-    decode(data, 0)
-  end
-
-  @doc """
   Decodes the datatype found at the given offset of the data.
   """
   @spec decode(binary, integer) :: float | integer | list | map | String.t
+  def decode(_data, _offset \\ 0)
+
   def decode(data, offset) do
-    ctrl_code = data |> binary_part(offset, 1) |> byte_to_code()
+    ctrl_code = binary_part(data, offset, 1) |> byte_to_code()
     ctrl_type = Enum.at(@ctrl_types, ctrl_code >>> 5)
 
     decode_by_type(ctrl_type, ctrl_code, data, 1 + offset)
   end
 
   defp decode_by_type(:array, ctrl_code, data, offset) do
-    { size, offset } = ctrl_code |> get_meta_size(data, offset)
+    { size, offset } = get_meta_size(ctrl_code, data, offset)
 
     decode_array([], size, data, offset)
   end
   defp decode_by_type(:double, ctrl_code, data, offset) do
-    { size, offset } = ctrl_code |> get_meta_size(data, offset)
+    { size, offset } = get_meta_size(ctrl_code, data, offset)
 
     decode_double(size, data, offset)
   end
   defp decode_by_type(:extended, ctrl_code, data, offset) do
-    ext_code  = data |> binary_part(offset, 1) |> byte_to_code()
+    ext_code  = binary_part(data, offset, 1) |> byte_to_code()
     ctrl_type = Enum.at(@ctrl_types, ext_code + 7)
 
     decode_by_type(ctrl_type, ctrl_code, data, 1 + offset)
   end
   defp decode_by_type(:float, ctrl_code, data, offset) do
-    { size, offset } = ctrl_code |> get_meta_size(data, offset)
+    { size, offset } = get_meta_size(ctrl_code, data, offset)
 
     decode_float(size, data, offset)
   end
   defp decode_by_type(:map, ctrl_code, data, offset) do
-    { size, offset } = ctrl_code |> get_meta_size(data, offset)
+    { size, offset } = get_meta_size(ctrl_code, data, offset)
 
     decode_map(%{}, size, data, offset)
   end
   defp decode_by_type(:pointer, ctrl_code, data, offset) do
     size   = ((ctrl_code >>> 3) &&& 0x3) + 1
-    buffer = data |> binary_part(offset, size)
+    buffer = binary_part(data, offset, size)
 
     if 4 > size do
       buffer = <<ctrl_code &&& 0x7>> <> buffer
@@ -70,10 +64,10 @@ defmodule Geolix.Decoder do
       |> String.to_char_list()
       |> List.to_integer(16)
 
-    case size do
-      2 -> ptr = ptr + 2048
-      3 -> ptr = ptr + 526336
-      _ -> nil
+    ptr = case size do
+      2 -> ptr + 2048
+      3 -> ptr + 526336
+      _ -> ptr
     end
 
     { ptr_data, _ } = decode(data, ptr)
@@ -86,19 +80,19 @@ defmodule Geolix.Decoder do
     decode_by_type(:uint64, ctrl_code, data, offset)
   end
   defp decode_by_type(:uint64, ctrl_code, data, offset) do
-    { size, offset } = ctrl_code |> get_meta_size(data, offset)
+    { size, offset } = get_meta_size(ctrl_code, data, offset)
 
     decode_uint(size, data, offset)
   end
   defp decode_by_type(:utf8_string, ctrl_code, data, offset) do
-    { size, offset } = ctrl_code |> get_meta_size(data, offset)
+    { size, offset } = get_meta_size(ctrl_code, data, offset)
 
     decode_utf8_string(size, data, offset)
   end
   defp decode_by_type(ctrl_type, ctrl_code, data, offset) do
     IO.puts "unhandled type: #{ctrl_type}"
 
-    { _,   offset } = ctrl_code |> get_meta_size(data, offset)
+    { _,   offset } = get_meta_size(ctrl_code, data, offset)
     { nil, offset }
   end
 
@@ -121,35 +115,29 @@ defmodule Geolix.Decoder do
   end
 
   defp decode_array(arr, size, data, offset) when 0 < size do
-    { elem, offset } = data |> decode(offset)
+    { elem, offset } = decode(data, offset)
 
     decode_array(arr ++ [elem], size - 1, data, offset)
   end
-  defp decode_array(arr, _, _, offset) do
-    { arr, offset }
-  end
+  defp decode_array(arr, 0, _, offset), do: { arr, offset }
 
   defp decode_double(size, data, offset) when 0 < size do
     << decoded :: size(64)-float >> = binary_part(data, offset, size)
 
     { decoded, offset + size }
   end
-  defp decode_double(_, _, offset) do
-    { 0.0, offset }
-  end
+  defp decode_double(0, _, offset), do: { 0.0, offset }
 
   defp decode_float(size, data, offset) when 0 < size do
     << decoded :: size(32)-float >> = binary_part(data, offset, size)
 
     { decoded, offset + size }
   end
-  defp decode_float(_, _, offset) do
-    { 0.0, offset }
-  end
+  defp decode_float(0, _, offset), do: { 0.0, offset }
 
   defp decode_map(map, size, data, offset) when 0 < size do
-    { key, offset } = data |> decode(offset)
-    { val, offset } = data |> decode(offset)
+    { key, offset } = decode(data, offset)
+    { val, offset } = decode(data, offset)
 
     decode_map(Map.put(map, String.to_atom(key), val), size - 1, data, offset)
   end
@@ -173,6 +161,6 @@ defmodule Geolix.Decoder do
   end
 
   defp decode_utf8_string(size, data, offset) do
-    { data |> binary_part(offset, size), size + offset }
+    { binary_part(data, offset, size), size + offset }
   end
 end
