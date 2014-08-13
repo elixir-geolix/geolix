@@ -5,33 +5,66 @@ MaxMind GeoIP2 database reader/decoder.
 
 ## Installation
 
-Fetch both the geolix repository and a distribution of the
+Fetch both the Geolix repository and a distribution of the
 [MaxMind GeoIP2](http://dev.maxmind.com/geoip/geoip2/downloadable/)
 databases (or the free [GeoLite2](http://dev.maxmind.com/geoip/geoip2/geolite2/)
 variant).
 
 
-## Usage
+## Setup
 
-### Standalone
+### Dependency
 
-Startup a iex console and start the supervisor:
+To use Geolix with your projects, edit your `mix.exs` file and add the project
+as a dependency:
 
 ```elixir
-iex(1)> Geolix.start_link()
-{ :ok, #PID }
-iex(2)> Geolix.set_db_cities("/path/to/cities/db")
+defp deps do
+  [ { :geolix, github: "mneudert/geolix" } ]
+end
+```
+
+You should also update your applications to include all necessary projects:
+
+```elixir
+def application do
+  [ applications: [ :geolix ] ]
+end
+```
+
+### Configuration
+
+Add the paths of the MaxMind databases you want to use to your project
+configuration:
+
+```elixir
+use Mix.Config
+
+config :geolix,
+  db_cities: "/path/to/cities/db",
+  db_countries: "/path/to/countries/db"
+```
+
+An appropriate filename will be automatically appended to the path.
+
+It is also possible to (re-) configure the loaded databases during runtime:
+
+```elixir
+iex(1)> Geolix.set_db_cities("/path/to/cities/db")
 :ok
-iex(3)> Geolix.set_db_countries("/path/to/countries/db")
+iex(2)> Geolix.set_db_countries("/path/to/countries/db")
 :ok
 ```
 
-If Geolix cannot find the database to add it will output a message onto your
+If Geolix cannot find the database it will output a message onto your
 console but still return `:ok`. Lookups for an IP with no suitable database
-return nil (city, country, or both).
+loaded always return `nil` (city, country, or both).
 
-Now you should be able to lookup IPs using plain gen_server calls or the
-available convencience methods:
+
+## Usage
+
+Geolix can be used via direct GenServer calls or the available convencience
+methods:
 
 ```elixir
 iex(1)> Geolix.lookup({ 127, 0, 0, 1 })
@@ -52,18 +85,6 @@ iex(1)> :timer.tc(fn() -> :gen_server.call(:geolix, { :lookup, {108, 168, 255, 2
   %{ city:    ... ,
      country: ... } }
 ```
-
-### As Mix-Dependency
-
-Add the following part to your `mix.exs`:
-
-```elixir
-def deps do
-    [ { :geolix, github: "mneudert/geolix" } ]
-end
-```
-
-Then start the supervisor somewhere in your code and use it.
 
 
 ## License

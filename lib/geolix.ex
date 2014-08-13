@@ -1,14 +1,18 @@
 defmodule Geolix do
-  use Supervisor
+  use Application
 
-  def start_link() do
-    Supervisor.start_link(__MODULE__, [])
-  end
+  def start(_, _) do
+    Geolix.Supervisor.start_link()
 
-  def init([]) do
-    import Supervisor.Spec
+    if Application.get_env(:geolix, :db_countries) do
+      set_db_countries(Application.get_env(:geolix, :db_countries))
+    end
 
-    supervise([ worker(Geolix.Server, []) ], strategy: :one_for_one)
+    if Application.get_env(:geolix, :db_cities) do
+      set_db_cities(Application.get_env(:geolix, :db_cities))
+    end
+
+    { :ok, self() }
   end
 
   def set_db(which, db_dir) do

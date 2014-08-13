@@ -1,6 +1,5 @@
 defmodule GeolixTest do
   use ExUnit.Case, async: false
-  use Geolix.TestHelper.Suite
 
   test "set_db valid" do
     assert :ok == Geolix.set_db_cities("/tmp")
