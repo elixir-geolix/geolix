@@ -8,26 +8,20 @@ defmodule Geolix.Mixfile do
       version:    "0.2.0",
       elixir:     "~> 1.0",
       deps:       deps(Mix.env),
-      docs:       &docs/0 ]
+      docs:       [ readme: true, main: "README" ]]
   end
 
   def application do
     [ mod: { Geolix, [] }]
   end
 
-  defp deps(:docs) do
+  def deps(:docs) do
     deps(:prod) ++
-      [ { :ex_doc,   github: "elixir-lang/ex_doc" },
-        { :markdown, github: "devinus/markdown" } ]
+      [ { :earmark, "~> 0.1" },
+        { :ex_doc,  "~> 0.6" } ]
   end
 
-  defp deps(_) do
+  def deps(_) do
     []
-  end
-
-  defp docs do
-    [ readme:     true,
-      main:       "README",
-      source_ref: System.cmd("git rev-parse --verify --quiet HEAD") ]
   end
 end
