@@ -21,6 +21,11 @@ defmodule Geolix.Mixfile do
         { :ex_doc,  "~> 0.6" } ]
   end
 
+  def deps(:test) do
+    deps(:prod) ++
+      [ { :dialyze, "~> 0.1" } ]
+  end
+
   def deps(_) do
     []
   end

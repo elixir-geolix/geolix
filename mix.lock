@@ -1,2 +1,3 @@
-%{"earmark": {:package, "0.1.10"},
+%{"dialyze": {:package, "0.1.3"},
+  "earmark": {:package, "0.1.10"},
   "ex_doc": {:package, "0.6.0"}}
