@@ -13,7 +13,7 @@ defmodule Geolix.Decoder do
   @doc """
   Decodes the datatype found at the given offset of the data.
   """
-  @spec decode(binary, integer) :: float | integer | list | map | String.t
+  @spec decode(binary, integer) :: any
   def decode(_data, _offset \\ 0)
 
   def decode(data, offset) do

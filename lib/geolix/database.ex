@@ -55,12 +55,12 @@ defmodule Geolix.Database do
     { meta, _ } = meta |> Geolix.Decoder.decode()
 
     meta = meta |> Enum.into( %{} )
-    meta = meta |> Map.put(:node_byte_size, div(meta.record_size, 4))
-    meta = meta |> Map.put(:tree_size, meta.node_count * meta.node_byte_size)
+    meta = meta |> Map.put(:node_byte_size, div(meta[:record_size], 4))
+    meta = meta |> Map.put(:tree_size, meta[:node_count] * meta[:node_byte_size])
 
-    tree      = data |> binary_part(0, meta.tree_size)
+    tree      = data |> binary_part(0, meta[:tree_size])
     data_size = byte_size(data) - byte_size(tree) - 16
-    data      = data |> binary_part(meta.tree_size + 16, data_size)
+    data      = data |> binary_part(meta[:tree_size] + 16, data_size)
 
     { :ok, tree, data, meta }
   end

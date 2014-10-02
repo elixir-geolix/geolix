@@ -19,7 +19,7 @@ defmodule Geolix.Reader do
   @doc """
   Returns data from country database file.
   """
-  @spec read_cities(String.t) :: tuple
+  @spec read_countries(String.t) :: tuple
   def read_countries(db_dir) do
     db_file    = db_dir  <> "GeoLite2-Country.mmdb"
     db_file_gz = db_file <> ".gz"
