@@ -117,7 +117,7 @@ defmodule Geolix.Decoder do
   defp decode_array(arr, size, data, offset) when 0 < size do
     { elem, offset } = decode(data, offset)
 
-    decode_array(arr ++ [elem], size - 1, data, offset)
+    decode_array([ elem | arr ], size - 1, data, offset)
   end
   defp decode_array(arr, 0, _, offset), do: { arr, offset }
 
