@@ -5,6 +5,8 @@ defmodule Geolix.Decoder do
 
   use Bitwise, only_operators: true
 
+  require Logger
+
   @ctrl_types [ :extended,  :pointer,    :utf8_string, :double,
                 :bytes,     :uint16,     :uint32,      :map,
                 :int32,     :uint64,     :uint128,     :array,
@@ -90,7 +92,7 @@ defmodule Geolix.Decoder do
     decode_utf8_string(size, data, offset)
   end
   defp decode_by_type(ctrl_type, ctrl_code, data, offset) do
-    IO.puts "unhandled type: #{ctrl_type}"
+    Logger.warn "Unhandled type: #{ctrl_type}"
 
     { _,   offset } = get_meta_size(ctrl_code, data, offset)
     { nil, offset }

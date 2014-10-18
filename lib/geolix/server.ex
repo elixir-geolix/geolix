@@ -1,6 +1,8 @@
 defmodule Geolix.Server do
   use GenServer
 
+  require Logger
+
   def start_link(default \\ []) do
     GenServer.start_link(__MODULE__, default, [ name: :geolix ])
   end
@@ -49,7 +51,7 @@ defmodule Geolix.Server do
     %{ tree: tree, data: data, meta: meta }
   end
   defp maybe_init_dataset({ :error, reason }) do
-    IO.inspect(reason)
+    Logger.warn(reason)
     nil
   end
 end

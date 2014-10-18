@@ -1,6 +1,8 @@
 defmodule Geolix.Database do
   use Bitwise, only_operators: true
 
+  require Logger
+
   @doc """
   Looks up the city and country information in all registered databases.
   """
@@ -85,7 +87,7 @@ defmodule Geolix.Database do
       node >  node_count -> node
       node == node_count -> 0
       true ->
-        IO.puts "Invalid node below node_count: #{node}"
+        Logger.error "Invalid node below node_count: #{node}"
         0
     end
   end
@@ -124,7 +126,7 @@ defmodule Geolix.Database do
     decode_uint(middle <> bytes)
   end
   defp read_node_by_size(size, _, _, _) do
-    IO.puts "Unhandled record_size '#{ size }'!"
+    Logger.error "Unhandled record_size '#{ size }'!"
     0
   end
 
