@@ -70,9 +70,9 @@ methods:
 iex(1)> Geolix.lookup({ 127, 0, 0, 1 })
 %{ city:    ... ,
    country: ... }
-iex(2)> Geolix.lookup(:city, { 127, 0, 0, 1 })
+iex(2)> Geolix.city({ 127, 0, 0, 1 })
 %{ ... }
-iex(3)> Geolix.lookup(:country, { 127, 0, 0, 1 })
+iex(3)> Geolix.country({ 127, 0, 0, 1 })
 %{ ... }
 ```
 
