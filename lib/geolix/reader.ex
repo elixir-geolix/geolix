@@ -32,16 +32,26 @@ defmodule Geolix.Reader do
   end
 
   defp parse_file({ :regular, db_file }) do
-    db_file |> File.stream!([:read], 1) |> split_stream()
+    { data, meta } =
+         db_file
+      |> File.stream!([:read], 1)
+      |> split_stream()
+
+    { :ok, db_file, data, meta }
   end
   defp parse_file({ :gzip, db_file }) do
-    db_file |> File.stream!([:read, :compressed], 1) |> split_stream()
+    { data, meta } =
+         db_file
+      |> File.stream!([:read, :compressed], 1)
+      |> split_stream()
+
+    { :ok, db_file, data, meta }
   end
 
   defp split_stream(stream) do
     { data, meta } = split_data(nil, stream)
 
-    { :ok, data, Enum.join(meta) }
+    { data, Enum.join(meta) }
   end
 
   # <<171>> == first char of @metadata_marker

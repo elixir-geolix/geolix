@@ -9,7 +9,10 @@ defmodule Geolix do
     import Supervisor.Spec
 
     options  = [ strategy: :one_for_one, name: Geolix.Supervisor ]
-    children = [ worker(Geolix.Server, []) ]
+    children = [
+      worker(Geolix.Server, []),
+      worker(Geolix.MetadataStorage, [])
+    ]
 
     { :ok, sup } = Supervisor.start_link(children, options)
 

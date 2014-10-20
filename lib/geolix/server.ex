@@ -3,6 +3,8 @@ defmodule Geolix.Server do
 
   require Logger
 
+  alias Geolix.MetadataStorage
+
   @doc """
   Starts the server.
   """
@@ -43,8 +45,10 @@ defmodule Geolix.Server do
     { :reply, { :error, "Invalid database type '#{ which }' given!" }, state }
   end
 
-  defp maybe_init_dataset({ :ok, tree, data, meta }) do
-    %{ tree: tree, data: data, meta: meta }
+  defp maybe_init_dataset({ :ok, file, tree, data, meta }) do
+    MetadataStorage.set(file, meta)
+
+    %{ file: file, tree: tree, data: data }
   end
   defp maybe_init_dataset({ :error, reason }) do
     Logger.warn(reason)

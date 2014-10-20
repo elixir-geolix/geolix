@@ -3,6 +3,9 @@ defmodule Geolix.Database do
 
   require Logger
 
+  alias Geolix.Metadata
+  alias Geolix.MetadataStorage
+
   @doc """
   Looks up the city and country information in all registered databases.
   """
@@ -13,13 +16,15 @@ defmodule Geolix.Database do
        country: lookup(ip, countries) }
   end
   def lookup(ip, database) do
-    parse_lookup_tree(ip, database.tree, database.meta)
-      |> lookup_pointer(database)
+    meta = MetadataStorage.get(database.file)
+
+    parse_lookup_tree(ip, database.tree, meta)
+      |> lookup_pointer(database, meta.node_count)
   end
 
-  defp lookup_pointer(0, _), do: nil
-  defp lookup_pointer(ptr, database) do
-    offset        = ptr - database.meta.node_count - 16
+  defp lookup_pointer(0, _, _), do: nil
+  defp lookup_pointer(ptr, database, node_count) do
+    offset        = ptr - node_count - 16
     { result, _ } = Geolix.Decoder.decode(database.data, offset)
 
     result
@@ -31,8 +36,8 @@ defmodule Geolix.Database do
   @spec read_cities(String.t) :: tuple
   def read_cities(db_dir) do
     case Geolix.Reader.read_cities(db_dir) do
-      { :ok, data, meta } -> split_data(data, meta)
-      { :error, reason }  -> { :error, reason }
+      { :ok, file, data, meta } -> split_data(file, data, meta)
+      { :error, reason }        -> { :error, reason }
     end
   end
 
@@ -42,8 +47,8 @@ defmodule Geolix.Database do
   @spec read_countries(String.t) :: tuple
   def read_countries(db_dir) do
     case Geolix.Reader.read_countries(db_dir) do
-      { :ok, data, meta } -> split_data(data, meta)
-      { :error, reason }  -> { :error, reason }
+      { :ok, file, data, meta } -> split_data(file, data, meta)
+      { :error, reason }        -> { :error, reason }
     end
   end
 
@@ -53,18 +58,23 @@ defmodule Geolix.Database do
     parse_lookup_tree_bitwise(ip, 0, 32, start_node, tree, meta)
   end
 
-  defp split_data(data, meta) do
+  defp split_data(file, data, meta) do
     { meta, _ } = meta |> Geolix.Decoder.decode()
 
-    meta = meta |> Enum.into( %{} )
-    meta = meta |> Map.put(:node_byte_size, div(meta[:record_size], 4))
-    meta = meta |> Map.put(:tree_size, meta[:node_count] * meta[:node_byte_size])
+    meta           = struct(%Metadata{}, meta)
+    record_size    = Map.get(meta, :record_size)
+    node_count     = Map.get(meta, :node_count)
+    node_byte_size = div(record_size, 4)
+    tree_size      = node_count * node_byte_size
 
-    tree      = data |> binary_part(0, meta[:tree_size])
+    meta = %Metadata{ meta | node_byte_size: node_byte_size }
+    meta = %Metadata{ meta | tree_size:      tree_size }
+
+    tree      = data |> binary_part(0, tree_size)
     data_size = byte_size(data) - byte_size(tree) - 16
-    data      = data |> binary_part(meta[:tree_size] + 16, data_size)
+    data      = data |> binary_part(tree_size + 16, data_size)
 
-    { :ok, tree, data, meta }
+    { :ok, file, tree, data, meta }
   end
 
   defp parse_lookup_tree_bitwise(ip, bit, bit_count, node, tree, meta)
