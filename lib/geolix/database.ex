@@ -16,7 +16,7 @@ defmodule Geolix.Database do
        country: lookup(ip, countries) }
   end
   def lookup(ip, database) do
-    meta = MetadataStorage.get(database.file)
+    meta = MetadataStorage.get(database.filename)
 
     parse_lookup_tree(ip, database.tree, meta)
       |> lookup_pointer(database, meta.node_count)
@@ -31,25 +31,13 @@ defmodule Geolix.Database do
   end
 
   @doc """
-  Proxy method for Geolix.Reader.read_cities/1
+  Proxy method for Geolix.Reader.read_db/1
   """
-  @spec read_cities(String.t) :: tuple
-  def read_cities(db_dir) do
-    case Geolix.Reader.read_cities(db_dir) do
-      { :ok, file, data, meta } -> split_data(file, data, meta)
-      { :error, reason }        -> { :error, reason }
-    end
-  end
-
-  @doc """
-  Proxy method for Geolix.Reader.read_countries/1
-  """
-  @spec read_countries(String.t) :: tuple
-  def read_countries(db_dir) do
-    case Geolix.Reader.read_countries(db_dir) do
-      { :ok, file, data, meta } -> split_data(file, data, meta)
-      { :error, reason }        -> { :error, reason }
-    end
+  @spec read_db(String.t) :: { String.t, binary, binary, Geolix.Metadata.t }
+  def read_db(filename) do
+         filename
+      |> Geolix.Reader.read_db()
+      |> split_data()
   end
 
   defp parse_lookup_tree(ip, tree, meta) do
@@ -58,7 +46,7 @@ defmodule Geolix.Database do
     parse_lookup_tree_bitwise(ip, 0, 32, start_node, tree, meta)
   end
 
-  defp split_data(file, data, meta) do
+  defp split_data({ filename, data, meta }) do
     { meta, _ } = meta |> Geolix.Decoder.decode()
 
     meta           = struct(%Metadata{}, meta)
@@ -74,7 +62,7 @@ defmodule Geolix.Database do
     data_size = byte_size(data) - byte_size(tree) - 16
     data      = data |> binary_part(tree_size + 16, data_size)
 
-    { :ok, file, tree, data, meta }
+    { filename, tree, data, meta }
   end
 
   defp parse_lookup_tree_bitwise(ip, bit, bit_count, node, tree, meta)

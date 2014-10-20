@@ -29,14 +29,14 @@ defmodule Geolix.Server do
     { :reply, Geolix.Database.lookup(ip, state), state }
   end
 
-  def handle_call({ :set_db, :cities, db_dir }, _, state) do
-    cities = Geolix.Database.read_cities(db_dir) |> maybe_init_dataset()
+  def handle_call({ :set_db, :cities, filename }, _, state) do
+    cities = Geolix.Database.read_db(filename) |> init_dataset()
     state  = %{ state | :cities => cities }
 
     { :reply, :ok, state }
   end
-  def handle_call({ :set_db, :countries, db_dir }, _, state) do
-    countries = Geolix.Database.read_countries(db_dir) |> maybe_init_dataset()
+  def handle_call({ :set_db, :countries, filename }, _, state) do
+    countries = Geolix.Database.read_db(filename) |> init_dataset()
     state     = %{ state | :countries => countries }
 
     { :reply, :ok, state }
@@ -45,13 +45,9 @@ defmodule Geolix.Server do
     { :reply, { :error, "Invalid database type '#{ which }' given!" }, state }
   end
 
-  defp maybe_init_dataset({ :ok, file, tree, data, meta }) do
-    MetadataStorage.set(file, meta)
+  defp init_dataset({ filename, tree, data, meta }) do
+    MetadataStorage.set(filename, meta)
 
-    %{ file: file, tree: tree, data: data }
-  end
-  defp maybe_init_dataset({ :error, reason }) do
-    Logger.warn(reason)
-    nil
+    %{ filename: filename, tree: tree, data: data }
   end
 end

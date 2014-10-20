@@ -31,15 +31,11 @@ defmodule Geolix do
   Sets the database used to lookup `:cities` or `:countries`.
   """
   @spec set_db(atom, String.t) :: :ok | { :error, String.t }
-  def set_db(which, db_dir) do
-    if not File.dir?(db_dir) do
-      { :error, "Given directory '#{db_dir}' is not a path?!" }
+  def set_db(which, filename) do
+    if not File.regular?(filename) do
+      { :error, "Given file '#{ filename }' does not exist?!" }
     else
-      unless String.ends_with?(db_dir, "/") do
-        db_dir = db_dir <> "/"
-      end
-
-      GenServer.call(:geolix, { :set_db, which, db_dir }, :infinity)
+      GenServer.call(:geolix, { :set_db, which, filename }, :infinity)
     end
   end
 

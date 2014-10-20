@@ -50,9 +50,9 @@ An appropriate filename will be automatically appended to the path.
 It is also possible to (re-) configure the loaded databases during runtime:
 
 ```elixir
-iex(1)> Geolix.set_db_cities("/path/to/cities/db")
+iex(1)> Geolix.set_db_cities("/path/to/cities/db.mmdb")
 :ok
-iex(2)> Geolix.set_db_countries("/path/to/countries/db")
+iex(2)> Geolix.set_db_countries("/path/to/countries/db.mmdb")
 :ok
 ```
 
