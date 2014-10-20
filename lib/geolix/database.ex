@@ -6,7 +6,7 @@ defmodule Geolix.Database do
   @doc """
   Looks up the city and country information in all registered databases.
   """
-  @spec lookup(tuple, map) :: map
+  @spec lookup(tuple, map) :: nil | map
   def lookup(_, nil), do: nil
   def lookup(ip, %{ cities: cities, countries: countries }) do
     %{ city:    lookup(ip, cities),
@@ -98,7 +98,6 @@ defmodule Geolix.Database do
       _ -> 0
     end
   end
-  defp get_start_node(_, _), do: 0
 
   defp read_node(node, index, tree, meta) do
     read_node_by_size(meta.record_size, tree, node * meta.node_byte_size, index)
@@ -133,7 +132,7 @@ defmodule Geolix.Database do
   defp decode_uint(bin) do
     bin
       |> :binary.bin_to_list()
-      |> Enum.map( &(Integer.to_string(&1, 16)) )
+      |> Enum.map( &Integer.to_string(&1, 16) )
       |> Enum.join()
       |> String.to_char_list()
       |> List.to_integer(16)

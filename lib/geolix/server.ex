@@ -3,16 +3,16 @@ defmodule Geolix.Server do
 
   require Logger
 
+  @doc """
+  Starts the server.
+  """
+  @spec start_link(any) :: GenServer.on_start
   def start_link(default \\ []) do
     GenServer.start_link(__MODULE__, default, [ name: :geolix ])
   end
 
   def init(_) do
     { :ok, %{ cities: nil, countries: nil }}
-  end
-
-  def stop() do
-    GenServer.call(:geolix, :stop)
   end
 
   def handle_call({ :city, ip }, _, state) do
@@ -42,10 +42,6 @@ defmodule Geolix.Server do
   def handle_call({ :set_db, which, _ }, _, state) do
     { :reply, { :error, "Invalid database type '#{ which }' given!" }, state }
   end
-
-  def handle_call(:stop, _from, state), do: { :stop, :normal, :ok, state }
-
-  def terminate(_, _), do: :ok
 
   defp maybe_init_dataset({ :ok, tree, data, meta }) do
     %{ tree: tree, data: data, meta: meta }

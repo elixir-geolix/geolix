@@ -11,7 +11,7 @@ defmodule Geolix.Reader do
 
     cond do
       File.regular?(db_file)    -> parse_file({ :regular, db_file })
-      File.regular?(db_file_gz) -> parse_file({ :gzip , db_file_gz})
+      File.regular?(db_file_gz) -> parse_file({ :gzip, db_file_gz })
       true -> { :error, "Failed to find 'GeoLite2-City.mmdb[.gz]' in given path '#{db_dir}' !" }
     end
   end
@@ -26,7 +26,7 @@ defmodule Geolix.Reader do
 
     cond do
       File.regular?(db_file)    -> parse_file({ :regular, db_file })
-      File.regular?(db_file_gz) -> parse_file({ :gzip , db_file_gz})
+      File.regular?(db_file_gz) -> parse_file({ :gzip, db_file_gz })
       true -> { :error, "Failed to find 'GeoLite2-Country.mmdb[.gz]' in given path '#{db_dir}' !" }
     end
   end
