@@ -32,36 +32,34 @@ defmodule Geolix.Reader do
   end
 
   defp parse_file({ :regular, db_file }) do
-    { data, meta } =
-         db_file
-      |> File.stream!([:read], 1)
-      |> split_stream()
+    { data, meta } = split_stream(db_file, [ :read ])
 
     { :ok, db_file, data, meta }
   end
   defp parse_file({ :gzip, db_file }) do
-    { data, meta } =
-         db_file
-      |> File.stream!([:read, :compressed], 1)
-      |> split_stream()
+    { data, meta } = split_stream(db_file, [ :read, :compressed ])
 
     { :ok, db_file, data, meta }
   end
 
-  defp split_stream(stream) do
-    { data, meta } = split_data(nil, stream)
+  defp split_stream(filename, stream_opts) do
+    { :ok, filestat } = File.stat(filename)
+    stream            = File.stream!(filename, stream_opts, 1)
 
-    { data, Enum.join(meta) }
+    data     = ""
+    max_meta = 128 * 1024
+
+    if filestat.size > max_meta do
+      meta_drop = filestat.size - max_meta
+      data      = stream |> Enum.take(meta_drop) |> Enum.join()
+      stream    = stream |> Enum.drop(meta_drop)
+    end
+
+    split_data(data, stream)
   end
 
   # <<171>> == first char of @metadata_marker
   # 14      == byte_size of @metadata_marker
-  defp split_data(nil, stream) do
-    split_data(
-      ( stream |> Enum.take(1) |> Enum.join() ),
-      ( stream |> Enum.drop(1) )
-    )
-  end
   defp split_data(data, stream) do
     size_old  = byte_size(data)
     data      = data <> (stream |> Enum.take_while( &(&1 != <<171>>) ) |> Enum.join())
@@ -75,7 +73,7 @@ defmodule Geolix.Reader do
     stream       = stream |> Enum.drop(14)
 
     if maybe_marker == @metadata_marker do
-      { data, stream }
+      { data, Enum.join(stream) }
     else
       split_data(data <> maybe_marker, stream)
     end
