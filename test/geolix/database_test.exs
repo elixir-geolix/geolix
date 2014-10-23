@@ -31,9 +31,10 @@ defmodule Geolix.DatabaseTest do
     MetadataStorage.set(@db_city,    @meta_city)
     MetadataStorage.set(@db_country, @meta_country)
 
+    expected = %{ city: nil, country: nil }
     database = %{ cities:    %{ filename: @db_city,    tree: @tree_city,    data: @data_city },
                   countries: %{ filename: @db_country, tree: @tree_country, data: @data_country }}
 
-    assert %{ city: nil, country: nil } == Database.lookup({ 10, 10, 10, 10 }, database)
+    assert expected == Database.lookup({ 10, 10, 10, 10 }, database)
   end
 end
