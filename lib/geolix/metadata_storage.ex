@@ -4,11 +4,16 @@ defmodule Geolix.MetadataStorage do
 
   ## Usage
 
-      iex> set(:some_database_name, %Geolix.Metadata{})
+      iex> set(:some_database_name, %Geolix.Metadata{ database_type: "doctest" })
       :ok
       iex> get(:some_database_name)
-      %Geolix.Metadata{}
-      iex> get("unregistered-database")
+      %Geolix.Metadata{ database_type: "doctest" }
+      iex> get(:some_database_name, :database_type)
+      "doctest"
+
+      iex> get(:unregistered_database)
+      nil
+      iex> get(:unregistered_database, :database_type)
       nil
   """
 
@@ -26,6 +31,20 @@ defmodule Geolix.MetadataStorage do
   @spec get(atom) :: Metadata.t | nil
   def get(database) do
     Agent.get(__MODULE__, &Map.get(&1, database, nil))
+  end
+
+  @doc """
+  Returns the value of the requested key from a metadata entry.
+
+  If either the key or the whole metadata entry are not found then `nil` will
+  be returned.
+  """
+  @spec get(atom, atom) :: any
+  def get(database, key) do
+    case get(database) do
+      nil      -> nil
+      metadata -> Map.get(metadata, key, nil)
+    end
   end
 
   @doc """
