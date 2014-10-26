@@ -3,46 +3,48 @@ defmodule Geolix.Database do
 
   require Logger
 
-  alias Geolix.Metadata
-  alias Geolix.Storage.Metadata
+  alias Geolix.Storage
 
   @doc """
   Looks up information for the given ip in all databases.
   """
-  @spec lookup(tuple, map) :: map
-  def lookup(ip, databases) do
-    lookup_all(ip, databases, Map.keys(databases), %{})
+  @spec lookup(tuple) :: map
+  def lookup(ip) do
+    lookup_all(ip, Storage.Metadata.registered(), %{})
   end
 
-  defp lookup_all(_, _, [], results), do: results
-  defp lookup_all(ip, databases, [ where | rest ], results) do
-    result  = lookup(where, ip, databases)
+  defp lookup_all(_, [], results), do: results
+  defp lookup_all(ip, [ where | rest ], results) do
+    result  = lookup(where, ip)
     results = Map.put(results, where, result)
 
-    lookup_all(ip, databases, rest, results)
+    lookup_all(ip, rest, results)
   end
 
   @doc """
   Looks up information for the given ip in the given database.
   """
-  @spec lookup(atom, tuple, map) :: nil | map
-  def lookup(where, ip, databases) do
-    meta     = Metadata.get(where)
-    database = Map.get(databases, where)
+  @spec lookup(atom, tuple) :: nil | map
+  def lookup(where, ip) do
+    data = Storage.Data.get(where)
+    meta = Storage.Metadata.get(where)
+    tree = Storage.Tree.get(where)
 
-    case { meta, database } do
-      { nil, _   }       -> nil
-      { _,   nil }       -> nil
-      { meta, database } ->
-        parse_lookup_tree(ip, database.tree, meta)
-          |> lookup_pointer(database, meta.node_count)
-    end
+    lookup(ip, data, meta, tree)
+  end
+
+  defp lookup(_, nil, _, _), do: nil
+  defp lookup(_, _, nil, _), do: nil
+  defp lookup(_, _, _, nil), do: nil
+  defp lookup(ip, data, meta, tree) do
+    parse_lookup_tree(ip, tree, meta)
+      |> lookup_pointer(data, meta.node_count)
   end
 
   defp lookup_pointer(0, _, _), do: nil
-  defp lookup_pointer(ptr, database, node_count) do
+  defp lookup_pointer(ptr, data, node_count) do
     offset        = ptr - node_count - 16
-    { result, _ } = Geolix.Decoder.decode(database.data, offset)
+    { result, _ } = Geolix.Decoder.decode(data, offset)
 
     result
   end
