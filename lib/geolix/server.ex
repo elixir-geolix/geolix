@@ -3,7 +3,7 @@ defmodule Geolix.Server do
 
   require Logger
 
-  alias Geolix.MetadataStorage
+  alias Geolix.Storage.Metadata
 
   @doc """
   Starts the server.
@@ -24,7 +24,7 @@ defmodule Geolix.Server do
   def handle_call({ :set_database, which, filename }, _, state) do
     { tree, data, meta } = Geolix.Database.read_database(filename)
 
-    MetadataStorage.set(which, meta)
+    Metadata.set(which, meta)
 
     state = Map.put(state, which, %{ tree: tree, data: data })
 

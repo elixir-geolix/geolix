@@ -1,6 +1,8 @@
 defmodule Geolix.FixturesTest do
   use ExUnit.Case, async: true
 
+  alias Geolix.Storage.Metadata
+
   test "fixtures readable" do
     fixtures = [
       { :fixture_city, "GeoIP2-City" },
@@ -11,7 +13,7 @@ defmodule Geolix.FixturesTest do
     Enum.each(
       fixtures,
       fn ({ name, type }) ->
-        assert type == Geolix.MetadataStorage.get(name, :database_type)
+        assert type == Metadata.get(name, :database_type)
       end
     )
   end

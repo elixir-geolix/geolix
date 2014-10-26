@@ -1,4 +1,4 @@
-defmodule Geolix.MetadataStorage do
+defmodule Geolix.Storage.Metadata do
   @moduledoc """
   Geolix metadata storage.
 
@@ -17,8 +17,6 @@ defmodule Geolix.MetadataStorage do
       nil
   """
 
-  alias Geolix.Metadata
-
   @doc """
   Starts the metadata agent.
   """
@@ -28,7 +26,7 @@ defmodule Geolix.MetadataStorage do
   @doc """
   Fetches a metadata entry for a database.
   """
-  @spec get(atom) :: Metadata.t | nil
+  @spec get(atom) :: Geolix.Metadata.t | nil
   def get(database) do
     Agent.get(__MODULE__, &Map.get(&1, database, nil))
   end
@@ -50,8 +48,8 @@ defmodule Geolix.MetadataStorage do
   @doc """
   Stores a set of metadata for a specific database.
   """
-  @spec set(atom, Metadata.t) :: :ok
-  def set(database, %Metadata{} = metadata) do
+  @spec set(atom, Geolix.Metadata.t) :: :ok
+  def set(database, %Geolix.Metadata{} = metadata) do
     Agent.update(__MODULE__, &Map.put(&1, database, metadata))
   end
 end

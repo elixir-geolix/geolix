@@ -11,7 +11,7 @@ defmodule Geolix do
     options  = [ strategy: :one_for_one, name: Geolix.Supervisor ]
     children = [
       worker(Geolix.Server, []),
-      worker(Geolix.MetadataStorage, [])
+      worker(Geolix.Storage.Metadata, [])
     ]
 
     { :ok, sup } = Supervisor.start_link(children, options)

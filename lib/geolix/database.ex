@@ -4,7 +4,7 @@ defmodule Geolix.Database do
   require Logger
 
   alias Geolix.Metadata
-  alias Geolix.MetadataStorage
+  alias Geolix.Storage.Metadata
 
   @doc """
   Looks up information for the given ip in all databases.
@@ -27,7 +27,7 @@ defmodule Geolix.Database do
   """
   @spec lookup(atom, tuple, map) :: nil | map
   def lookup(where, ip, databases) do
-    meta     = MetadataStorage.get(where)
+    meta     = Metadata.get(where)
     database = Map.get(databases, where)
 
     case { meta, database } do
@@ -66,14 +66,14 @@ defmodule Geolix.Database do
   defp split_data({ data, meta }) do
     { meta, _ } = meta |> Geolix.Decoder.decode()
 
-    meta           = struct(%Metadata{}, meta)
+    meta           = struct(%Geolix.Metadata{}, meta)
     record_size    = Map.get(meta, :record_size)
     node_count     = Map.get(meta, :node_count)
     node_byte_size = div(record_size, 4)
     tree_size      = node_count * node_byte_size
 
-    meta = %Metadata{ meta | node_byte_size: node_byte_size }
-    meta = %Metadata{ meta | tree_size:      tree_size }
+    meta = %Geolix.Metadata{ meta | node_byte_size: node_byte_size }
+    meta = %Geolix.Metadata{ meta | tree_size:      tree_size }
 
     tree      = data |> binary_part(0, tree_size)
     data_size = byte_size(data) - byte_size(tree) - 16
