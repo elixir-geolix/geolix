@@ -16,56 +16,37 @@ defmodule Geolix do
 
     { :ok, sup } = Supervisor.start_link(children, options)
 
-    if Application.get_env(:geolix, :db_countries) do
-      set_db_countries(Application.get_env(:geolix, :db_countries))
-    end
-
-    if Application.get_env(:geolix, :db_cities) do
-      set_db_cities(Application.get_env(:geolix, :db_cities))
+    if Application.get_env(:geolix, :databases) do
+      Enum.each(
+        Application.get_env(:geolix, :databases),
+        fn ({ which, filename }) -> set_database(which, filename) end
+      )
     end
 
     { :ok, sup }
   end
 
   @doc """
-  Sets the database used to lookup `:cities` or `:countries`.
+  Adds a database to lookup data from.
   """
-  @spec set_db(atom, String.t) :: :ok | { :error, String.t }
-  def set_db(which, filename) do
+  @spec set_database(atom, String.t) :: :ok | { :error, String.t }
+  def set_database(which, filename) do
     if not File.regular?(filename) do
       { :error, "Given file '#{ filename }' does not exist?!" }
     else
-      GenServer.call(:geolix, { :set_db, which, filename }, :infinity)
+      GenServer.call(:geolix, { :set_database, which, filename }, :infinity)
     end
   end
 
   @doc """
-  Convenience call for `set_db/2`.
+  Looks up information for the given ip in all registered databases.
   """
-  @spec set_db_cities(String.t) :: :ok | { :error, String.t }
-  def set_db_cities(db_dir), do: set_db(:cities, db_dir)
-
-  @doc """
-  Convenience call for `set_db/2`.
-  """
-  @spec set_db_countries(String.t) :: :ok | { :error, String.t }
-  def set_db_countries(db_dir), do: set_db(:countries, db_dir)
-
-  @doc """
-  Looks up the city information for the given ip.
-  """
-  @spec city(tuple) :: nil | map
-  def city(ip), do: GenServer.call(:geolix, { :city, ip })
-
-  @doc """
-  Looks up the country information for the given ip.
-  """
-  @spec country(tuple) :: nil | map
-  def country(ip), do: GenServer.call(:geolix, { :country, ip })
-
-  @doc """
-  Looks up the city and country information for the given ip.
-  """
-  @spec lookup(tuple) :: nil | map
+  @spec lookup(tuple) :: map
   def lookup(ip), do: GenServer.call(:geolix, { :lookup, ip })
+
+  @doc """
+  Looks up information for the given ip in the given database.
+  """
+  @spec lookup(atom, tuple) :: nil | map
+  def lookup(where, ip), do: GenServer.call(:geolix, { :lookup, where, ip })
 end

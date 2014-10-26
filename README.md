@@ -41,8 +41,10 @@ configuration:
 use Mix.Config
 
 config :geolix,
-  db_cities: "/path/to/cities/db",
-  db_countries: "/path/to/countries/db"
+  databases: [
+    { :city,    "/path/to/cities/db"    },
+    { :country, "/path/to/countries/db" }
+  ]
 ```
 
 An appropriate filename will be automatically appended to the path.
@@ -50,31 +52,31 @@ An appropriate filename will be automatically appended to the path.
 It is also possible to (re-) configure the loaded databases during runtime:
 
 ```elixir
-iex(1)> Geolix.set_db_cities("/path/to/cities/db.mmdb")
+iex(1)> Geolix.set_database(:city, "/path/to/cities/db.mmdb")
 :ok
-iex(2)> Geolix.set_db_countries("/path/to/countries/db.mmdb")
+iex(2)> Geolix.set_database(:country, "/path/to/countries/db.mmdb")
 :ok
 ```
 
-If Geolix cannot find the database it will output a message onto your
-console but still return `:ok`. Lookups for an IP with no suitable database
-loaded always return `nil` (city, country, or both).
+If Geolix cannot find the database it will return `{ :error, message }`,
+otherwise the return value will be `:ok`.
 
 
 ## Usage
 
-Geolix can be used via direct GenServer calls or the available convencience
-methods:
+Geolix can be used via a convenience GenServer calls:
 
 ```elixir
 iex(1)> Geolix.lookup({ 127, 0, 0, 1 })
 %{ city:    ... ,
    country: ... }
-iex(2)> Geolix.city({ 127, 0, 0, 1 })
-%{ ... }
-iex(3)> Geolix.country({ 127, 0, 0, 1 })
+iex(2)> Geolix.lookup(:city, { 127, 0, 0, 1 })
 %{ ... }
 ```
+
+Using `Geolix.lookup/1` will lookup the information on all registered databases,
+returning `nil` if the ip was not found. Using `Geolix.lookup/2` will only
+return the information in the given database.
 
 If you are curious on how long a lookup of an IP takes, you can simply measure
 it using the erlang :timer module:

@@ -4,9 +4,9 @@ defmodule Geolix.MetadataStorage do
 
   ## Usage
 
-      iex> set("some-database-filename", %Geolix.Metadata{})
+      iex> set(:some_database_name, %Geolix.Metadata{})
       :ok
-      iex> get("some-database-filename")
+      iex> get(:some_database_name)
       %Geolix.Metadata{}
       iex> get("unregistered-database")
       nil
@@ -23,7 +23,7 @@ defmodule Geolix.MetadataStorage do
   @doc """
   Fetches a metadata entry for a database.
   """
-  @spec get(String.t) :: Metadata.t | nil
+  @spec get(atom) :: Metadata.t | nil
   def get(database) do
     Agent.get(__MODULE__, &Map.get(&1, database, nil))
   end
@@ -31,7 +31,7 @@ defmodule Geolix.MetadataStorage do
   @doc """
   Stores a set of metadata for a specific database.
   """
-  @spec set(String.t, Metadata.t) :: :ok
+  @spec set(atom, Metadata.t) :: :ok
   def set(database, %Metadata{} = metadata) do
     Agent.update(__MODULE__, &Map.put(&1, database, metadata))
   end

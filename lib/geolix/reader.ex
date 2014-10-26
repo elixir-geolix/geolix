@@ -8,16 +8,10 @@ defmodule Geolix.Reader do
   @doc """
   Reads a database file and returns the data and metadata parts from it.
   """
-  @spec read_db(String.t) :: { String.t, binary, binary }
-  def read_db(filename) do
-    { data, meta } = split_stream(filename, [ :read ])
-
-    { filename, data, meta }
-  end
-
-  defp split_stream(filename, stream_opts) do
+  @spec read_database(String.t) :: { binary, binary }
+  def read_database(filename) do
     { :ok, filestat } = File.stat(filename)
-    stream            = File.stream!(filename, stream_opts, 1)
+    stream            = File.stream!(filename, [ :read ], 1)
 
     data     = ""
     max_meta = 128 * 1024

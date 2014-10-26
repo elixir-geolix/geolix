@@ -1,24 +1,12 @@
 defmodule Geolix.Database.DomainTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Database
-  alias Geolix.MetadataStorage
-
-  @db Path.join([ __DIR__, "../../fixtures/GeoIP2-Domain-Test.mmdb" ]) |> Path.expand()
-
-  { _, tree, data, meta } = Database.read_db(@db)
-
-  @data data
-  @meta meta
-  @tree tree
-
   test "reading domain" do
-    MetadataStorage.set(@db, @meta)
+    db_file = Path.join([ __DIR__, "../../fixtures/GeoIP2-Domain-Test.mmdb" ]) |> Path.expand()
+    db_name = :database_domain
 
-    expected = %{ city: %{ domain: "maxmind.com" }, country: nil }
-    database = %{ cities:    %{ filename: @db, tree: @tree, data: @data },
-                  countries: nil }
+    Geolix.set_database(db_name, db_file)
 
-    assert expected == Database.lookup({ 1, 2, 0, 0 }, database)
+    assert %{ domain: "maxmind.com" } == Geolix.lookup(db_name, { 1, 2, 0, 0 })
   end
 end
