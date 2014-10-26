@@ -9,17 +9,32 @@ defmodule Mix.Tasks.Geolix.Fixtures do
   use Mix.Task
 
   @shortdoc "Downloads fixture databases for tests"
-  @fixtures [
-    { "GeoIP2-City-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-City-Test.mmdb" },
-    { "GeoIP2-Country-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-Country-Test.mmdb" },
-    { "GeoIP2-Domain-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-Domain-Test.mmdb" }
-  ]
 
-  def run(_args) do
-    Enum.each(@fixtures, &download/1)
+  @doc """
+  Returns a list of all available/downloaded fixtures.
+
+  Each returned entry consists of the following values:
+
+      {
+        :name_as_atom,
+        "local_filename.mmdb",
+        "remote_url"
+      }
+  """
+  @spec list() :: list
+  def list do
+    [
+      { :fixture_city,    "GeoIP2-City-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-City-Test.mmdb" },
+      { :fixture_country, "GeoIP2-Country-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-Country-Test.mmdb" },
+      { :fixture_domain,  "GeoIP2-Domain-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-Domain-Test.mmdb" }
+    ]
   end
 
-  defp download({ filename, remote }) do
+  def run(_args) do
+    Enum.each(list(), &download/1)
+  end
+
+  defp download({ _name, filename, remote }) do
     local = local(filename)
 
     if not File.regular?(local) do
