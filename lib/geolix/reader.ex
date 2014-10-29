@@ -10,14 +10,14 @@ defmodule Geolix.Reader do
   """
   @spec read_database(String.t) :: { binary, binary }
   def read_database(filename) do
-    { :ok, filestat } = File.stat(filename)
-    stream            = File.stream!(filename, [ :read ], 1)
+    { :ok, %{ size: filesize }} = File.stat(filename)
 
+    stream   = File.stream!(filename, [ :read ], 1)
     data     = ""
     max_meta = 128 * 1024
 
-    if filestat.size > max_meta do
-      meta_drop = filestat.size - max_meta
+    if filesize > max_meta do
+      meta_drop = filesize - max_meta
       data      = stream |> Enum.take(meta_drop) |> Enum.join()
       stream    = stream |> Enum.drop(meta_drop)
     end

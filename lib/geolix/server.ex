@@ -1,9 +1,11 @@
 defmodule Geolix.Server do
+  @moduledoc """
+  Server to be called for reading a database and looking up ip information.
+  """
+
   use GenServer
 
   require Logger
-
-  alias Geolix.Storage
 
   @doc """
   Starts the server.
@@ -22,12 +24,6 @@ defmodule Geolix.Server do
   end
 
   def handle_call({ :set_database, which, filename }, _, state) do
-    { tree, data, meta } = Geolix.Database.read_database(filename)
-
-    Storage.Data.set(which, data)
-    Storage.Metadata.set(which, meta)
-    Storage.Tree.set(which, tree)
-
-    { :reply, :ok, state }
+    { :reply, Geolix.Database.read_database(which, filename), state }
   end
 end

@@ -1,4 +1,11 @@
 defmodule Geolix.Database do
+  @moduledoc """
+  Module to interact with the geo database.
+
+  This includes proxy methods for reading the database and lookup up
+  entries.
+  """
+
   use Bitwise, only_operators: true
 
   require Logger
@@ -50,13 +57,21 @@ defmodule Geolix.Database do
   end
 
   @doc """
-  Proxy method for Geolix.Reader.read_database/1
+  Reads a database using `Geolix.Reader.read_database/1` and stores the
+  parts in their respective storage agents.
   """
-  @spec read_database(String.t) :: { binary, binary, Geolix.Metadata.t }
-  def read_database(filename) do
+  @spec read_database(atom, String.t) :: :ok
+  def read_database(which, filename) do
+    { tree, data, meta } =
          filename
       |> Geolix.Reader.read_database()
       |> split_data()
+
+    Storage.Data.set(which, data)
+    Storage.Metadata.set(which, meta)
+    Storage.Tree.set(which, tree)
+
+    :ok
   end
 
   defp parse_lookup_tree(ip, tree, meta) do

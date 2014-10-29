@@ -1,6 +1,6 @@
 defmodule Geolix.Decoder do
   @moduledoc """
-  Decodes byte mddb2 format byte streams.
+  Module for decoding the mmdb2 format byte streams.
   """
 
   use Bitwise, only_operators: true
