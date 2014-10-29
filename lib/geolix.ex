@@ -10,7 +10,8 @@ defmodule Geolix do
 
     options  = [ strategy: :one_for_one, name: Geolix.Supervisor ]
     children = [
-      worker(Geolix.Server, []),
+      Geolix.Server.Pool.child_spec,
+
       worker(Geolix.Storage.Data, []),
       worker(Geolix.Storage.Metadata, []),
       worker(Geolix.Storage.Tree, [])
@@ -36,7 +37,10 @@ defmodule Geolix do
     if not File.regular?(filename) do
       { :error, "Given file '#{ filename }' does not exist?!" }
     else
-      GenServer.call(:geolix, { :set_database, which, filename }, :infinity)
+      :poolboy.transaction(
+        Geolix.Server.Pool,
+        &GenServer.call(&1, { :set_database, which, filename }, :infinity)
+      )
     end
   end
 
@@ -44,11 +48,21 @@ defmodule Geolix do
   Looks up information for the given ip in all registered databases.
   """
   @spec lookup(tuple) :: map
-  def lookup(ip), do: GenServer.call(:geolix, { :lookup, ip })
+  def lookup(ip) do
+    :poolboy.transaction(
+      Geolix.Server.Pool,
+      &GenServer.call(&1, { :lookup, ip })
+    )
+  end
 
   @doc """
   Looks up information for the given ip in the given database.
   """
   @spec lookup(atom, tuple) :: nil | map
-  def lookup(where, ip), do: GenServer.call(:geolix, { :lookup, where, ip })
+  def lookup(where, ip) do
+    :poolboy.transaction(
+      Geolix.Server.Pool,
+      &GenServer.call(&1, { :lookup, where, ip })
+    )
+  end
 end

@@ -1,18 +1,16 @@
-defmodule Geolix.Server do
+defmodule Geolix.Server.Worker do
   @moduledoc """
-  Server to be called for reading a database and looking up ip information.
+  Worker module reading a database and looking up ip information.
   """
 
   use GenServer
 
   require Logger
 
-  @doc """
-  Starts the server.
-  """
-  @spec start_link(any) :: GenServer.on_start
+  @behaviour :poolboy_worker
+
   def start_link(default \\ %{}) do
-    GenServer.start_link(__MODULE__, default, [ name: :geolix ])
+    GenServer.start_link(__MODULE__, default)
   end
 
   def handle_call({ :lookup, ip }, _, state) do

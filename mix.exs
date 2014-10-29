@@ -30,6 +30,6 @@ defmodule Geolix.Mixfile do
   end
 
   def deps(_) do
-    []
+    [ { :poolboy, "~> 1.0" } ]
   end
 end
