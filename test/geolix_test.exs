@@ -1,6 +1,10 @@
 defmodule GeolixTest do
   use ExUnit.Case, async: false
 
+  test "lookup connection type entry" do
+    assert %{ connection_type: "Cable/DSL" } == Geolix.lookup(:fixture_connection, { 1, 0, 1, 0 })
+  end
+
   test "lookup domain entry" do
     assert %{ domain: "maxmind.com" } == Geolix.lookup(:fixture_domain, { 1, 2, 0, 0 })
   end
