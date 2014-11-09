@@ -47,7 +47,15 @@ defmodule Geolix do
   @doc """
   Looks up information for the given ip in all registered databases.
   """
-  @spec lookup(tuple) :: map
+  @spec lookup(tuple | String.t) :: map
+  def lookup(ip) when is_binary(ip) do
+    ip = String.to_char_list(ip)
+
+    case :inet.parse_address(ip) do
+      { :ok, parsed } -> lookup(parsed)
+      { :error, _  }  -> nil
+    end
+  end
   def lookup(ip) do
     :poolboy.transaction(
       Geolix.Server.Pool,
@@ -58,7 +66,15 @@ defmodule Geolix do
   @doc """
   Looks up information for the given ip in the given database.
   """
-  @spec lookup(atom, tuple) :: nil | map
+  @spec lookup(atom, tuple | String.t) :: nil | map
+  def lookup(where, ip) when is_binary(ip) do
+    ip = String.to_char_list(ip)
+
+    case :inet.parse_address(ip) do
+      { :ok, parsed } -> lookup(where, parsed)
+      { :error, _  }  -> nil
+    end
+  end
   def lookup(where, ip) do
     :poolboy.transaction(
       Geolix.Server.Pool,

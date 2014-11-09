@@ -67,7 +67,7 @@ otherwise the return value will be `:ok`.
 Geolix can be used via a convenience GenServer calls:
 
 ```elixir
-iex(1)> Geolix.lookup({ 127, 0, 0, 1 })
+iex(1)> Geolix.lookup("127.0.0.1")
 %{ city:    ... ,
    country: ... }
 iex(2)> Geolix.lookup(:city, { 127, 0, 0, 1 })
@@ -78,7 +78,7 @@ Using `Geolix.lookup/1` will lookup the information on all registered databases,
 returning `nil` if the ip was not found. Using `Geolix.lookup/2` will only
 return the information in the given database.
 
-The queried ip will be included in every non-nil result returned.
+The queried ip will be included (as a tuple!) in every non-nil result returned.
 
 If you are curious on how long a lookup of an IP takes, you can simply measure
 it using the erlang :timer module:
