@@ -9,6 +9,15 @@ defmodule GeolixTest do
     assert %{ domain: "maxmind.com" } == Geolix.lookup(:fixture_domain, { 1, 2, 0, 0 })
   end
 
+  test "lookup isp entry" do
+    result = Geolix.lookup(:fixture_isp, { 1, 128, 0, 0 })
+
+    assert 1221 == result[:autonomous_system_number]
+    assert "Telstra Pty Ltd" == result[:autonomous_system_organization]
+    assert "Telstra Internet" == result[:isp]
+    assert "Telstra Internet" == result[:organization]
+  end
+
   test "lookup finds no entry" do
     assert nil == Geolix.lookup(:fixture_city,    { 10, 10, 10, 10 })
     assert nil == Geolix.lookup(:fixture_country, { 10, 10, 10, 10 })
