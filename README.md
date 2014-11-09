@@ -78,6 +78,8 @@ Using `Geolix.lookup/1` will lookup the information on all registered databases,
 returning `nil` if the ip was not found. Using `Geolix.lookup/2` will only
 return the information in the given database.
 
+The queried ip will be included in every non-nil result returned.
+
 If you are curious on how long a lookup of an IP takes, you can simply measure
 it using the erlang :timer module:
 

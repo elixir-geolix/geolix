@@ -46,6 +46,7 @@ defmodule Geolix.Database do
   defp lookup(ip, data, meta, tree) do
     parse_lookup_tree(ip, tree, meta)
       |> lookup_pointer(data, meta.node_count)
+      |> maybe_include_ip(ip)
   end
 
   defp lookup_pointer(0, _, _), do: nil
@@ -55,6 +56,9 @@ defmodule Geolix.Database do
 
     result
   end
+
+  defp maybe_include_ip(nil, _ip),   do: nil
+  defp maybe_include_ip(result, ip), do: Map.put(result, :ip, ip)
 
   @doc """
   Reads a database using `Geolix.Reader.read_database/1` and stores the

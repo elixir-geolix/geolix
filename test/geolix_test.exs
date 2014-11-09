@@ -2,11 +2,15 @@ defmodule GeolixTest do
   use ExUnit.Case, async: false
 
   test "lookup connection type entry" do
-    assert %{ connection_type: "Cable/DSL" } == Geolix.lookup(:fixture_connection, { 1, 0, 1, 0 })
+    result = Geolix.lookup(:fixture_connection, { 1, 0, 1, 0 })
+
+    assert "Cable/DSL" == result[:connection_type]
   end
 
   test "lookup domain entry" do
-    assert %{ domain: "maxmind.com" } == Geolix.lookup(:fixture_domain, { 1, 2, 0, 0 })
+    result = Geolix.lookup(:fixture_domain, { 1, 2, 0, 0 })
+
+    assert "maxmind.com" == result[:domain]
   end
 
   test "lookup isp entry" do
@@ -16,6 +20,13 @@ defmodule GeolixTest do
     assert "Telstra Pty Ltd" == result[:autonomous_system_organization]
     assert "Telstra Internet" == result[:isp]
     assert "Telstra Internet" == result[:organization]
+  end
+
+  test "lookup returns ip address" do
+    ip     = { 1, 2, 0, 0 }
+    result = Geolix.lookup(:fixture_domain, ip)
+
+    assert ip == result[:ip]
   end
 
   test "lookup finds no entry" do
