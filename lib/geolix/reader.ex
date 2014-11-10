@@ -39,10 +39,10 @@ defmodule Geolix.Reader do
     maybe_marker = stream |> Enum.take(14) |> Enum.join()
     stream       = stream |> Enum.drop(14)
 
-    if maybe_marker == @metadata_marker do
-      { data, Enum.join(stream) }
-    else
-      split_data(data <> maybe_marker, stream)
+    cond do
+      maybe_marker == @metadata_marker -> { data, Enum.join(stream) }
+      size_read == 0                   -> { :error, :no_metadata }
+      true -> split_data(data <> maybe_marker, stream)
     end
   end
 end

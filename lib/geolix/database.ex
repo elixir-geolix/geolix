@@ -64,26 +64,15 @@ defmodule Geolix.Database do
   Reads a database using `Geolix.Reader.read_database/1` and stores the
   parts in their respective storage agents.
   """
-  @spec read_database(atom, String.t) :: :ok
+  @spec read_database(atom, String.t) :: :ok | { :error, term }
   def read_database(which, filename) do
-    { tree, data, meta } =
-         filename
+    filename
       |> Geolix.Reader.read_database()
       |> split_data()
-
-    Storage.Data.set(which, data)
-    Storage.Metadata.set(which, meta)
-    Storage.Tree.set(which, tree)
-
-    :ok
+      |> store_data(which)
   end
 
-  defp parse_lookup_tree(ip, tree, meta) do
-    start_node = get_start_node(32, meta)
-
-    parse_lookup_tree_bitwise(ip, 0, 32, start_node, tree, meta)
-  end
-
+  defp split_data({ :error, _reason } = error), do: error
   defp split_data({ data, meta }) do
     { meta, _ } = meta |> Geolix.Decoder.decode()
 
@@ -101,6 +90,21 @@ defmodule Geolix.Database do
     data      = data |> binary_part(tree_size + 16, data_size)
 
     { tree, data, meta }
+  end
+
+  defp store_data({ :error, _reason } = error, _which), do: error
+  defp store_data({ tree, data, meta }, which) do
+    Storage.Data.set(which, data)
+    Storage.Metadata.set(which, meta)
+    Storage.Tree.set(which, tree)
+
+    :ok
+  end
+
+  defp parse_lookup_tree(ip, tree, meta) do
+    start_node = get_start_node(32, meta)
+
+    parse_lookup_tree_bitwise(ip, 0, 32, start_node, tree, meta)
   end
 
   defp parse_lookup_tree_bitwise(ip, bit, bit_count, node, tree, meta)
