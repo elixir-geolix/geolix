@@ -160,9 +160,8 @@ defmodule Geolix.Database do
 
     decode_uint(middle <> bytes)
   end
-  defp read_node_by_size(size, _, _, _) do
-    Logger.error "Unhandled record_size '#{ size }'!"
-    0
+  defp read_node_by_size(32, tree, offset, index) do
+    tree |> binary_part(offset + index * 4, 4) |> decode_uint()
   end
 
   defp decode_uint(bin) do
