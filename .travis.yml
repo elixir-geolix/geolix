@@ -1,5 +1,5 @@
 language:    erlang
-otp_release: 17.3
+otp_release: 17.0
 
 sudo: false
 env:  ELIXIR=v1.0.2 MIX_ENV=test
