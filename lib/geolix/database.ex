@@ -140,40 +140,21 @@ defmodule Geolix.Database do
   end
 
   defp read_node(node, index, tree, meta) do
-    read_node_by_size(meta.record_size, tree, node * meta.node_byte_size, index)
-  end
+    record_size = meta.record_size
+    record_half = rem(record_size, 8)
+    record_left = record_size - record_half
 
-  defp read_node_by_size(24, tree, offset, index) do
-    tree |> binary_part(offset + index * 3, 3) |> decode_uint
-  end
-  defp read_node_by_size(28, tree, offset, index) do
-    middle =
-         tree
-      |> binary_part(offset + 3, 1)
-      |> :erlang.bitstring_to_list()
-      |> hd()
+    node_start = div(node * record_size, 4)
+    node_len   = div(record_size, 4)
+    node_part  = binary_part(tree, node_start, node_len)
 
-    middle = 0xF0 &&& middle
+    << low   :: size(record_left),
+       high  :: size(record_half),
+       right :: size(record_size) >> = node_part
 
-    if 0 == index do
-      middle = middle >>> 4
+    case index do
+      0 -> low + (high <<< record_left)
+      1 -> right
     end
-
-    middle = middle |> List.wrap() |> :erlang.list_to_bitstring()
-    bytes  = tree |> binary_part(offset + index * 4, 3)
-
-    decode_uint(middle <> bytes)
-  end
-  defp read_node_by_size(32, tree, offset, index) do
-    tree |> binary_part(offset + index * 4, 4) |> decode_uint()
-  end
-
-  defp decode_uint(bin) do
-    bin
-      |> :binary.bin_to_list()
-      |> Enum.map( &Integer.to_string(&1, 16) )
-      |> Enum.join()
-      |> String.to_char_list()
-      |> List.to_integer(16)
   end
 end
