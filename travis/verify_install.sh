@@ -3,3 +3,5 @@ cd "${TRAVIS_BUILD_DIR}"
 
 mix local.hex --force
 mix deps.get
+
+pip install geoip2
