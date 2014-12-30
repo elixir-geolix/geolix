@@ -84,11 +84,15 @@ If you are curious on how long a lookup of an IP takes, you can simply measure
 it using the erlang :timer module:
 
 ```elixir
-iex(1)> :timer.tc(fn() -> :gen_server.call(:geolix, { :lookup, {108, 168, 255, 243} }) end)
+iex(1)> :timer.tc(fn -> Geolix.lookup({ 108, 168, 255, 243 }) end)
 { 1337,
   %{ city:    ... ,
      country: ... } }
 ```
+
+The time returned are the `microseconds` of the complete lookup including
+every overhead by for example the process pool. For more details refer to the
+[official erlang documentation](http://www.erlang.org/doc/man/timer.html#tc-1).
 
 
 ## License
