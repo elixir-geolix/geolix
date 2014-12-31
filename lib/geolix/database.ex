@@ -51,10 +51,9 @@ defmodule Geolix.Database do
 
   defp lookup_pointer(0, _, _), do: nil
   defp lookup_pointer(ptr, data, node_count) do
-    offset        = ptr - node_count - 16
-    { result, _ } = Geolix.Decoder.decode(data, offset)
+    offset = ptr - node_count - 16
 
-    result
+    Geolix.Decoder.value(data, offset)
   end
 
   defp maybe_include_ip(nil, _ip),   do: nil
@@ -74,8 +73,7 @@ defmodule Geolix.Database do
 
   defp split_data({ :error, _reason } = error), do: error
   defp split_data({ data, meta }) do
-    { meta, _ } = meta |> Geolix.Decoder.decode()
-
+    meta           = Geolix.Decoder.value(meta, 0)
     meta           = struct(%Geolix.Metadata{}, meta)
     record_size    = Map.get(meta, :record_size)
     node_count     = Map.get(meta, :node_count)

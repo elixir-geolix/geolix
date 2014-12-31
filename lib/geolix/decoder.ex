@@ -3,166 +3,200 @@ defmodule Geolix.Decoder do
   Module for decoding the mmdb2 format byte streams.
   """
 
-  use Bitwise, only_operators: true
-
-  require Logger
-
-  @ctrl_types [ :extended,  :pointer,    :utf8_string, :double,
-                :bytes,     :uint16,     :uint32,      :map,
-                :int32,     :uint64,     :uint128,     :array,
-                :container, :end_marker, :boolean,     :float ]
+  @array         4 # extended: 11
+  @bool          7 # extended: 14
+  @binary        2
+  @bytes         4
+  @cache         5 # extended: 12
+  @double        3
+  @end_marker    6 # extended: 13
+  @extended      0
+  @float         8 # extended: 15
+  @map           7
+  @signed_32     1 # extended:  8
+  @unsigned_16   5
+  @unsigned_32   6
+  @unsigned_64   2 # extended:  9
+  @unsigned_128  3 # extended: 10
+  @pointer       1
 
   @doc """
   Decodes the datatype found at the given offset of the data.
   """
-  @spec decode(binary, integer) :: any
-  def decode(_data, _offset \\ 0)
+  @spec decode(data :: binary, data_part :: binary) :: { value :: binary, rest :: binary }
 
-  def decode(data, offset) do
-    ctrl_code = binary_part(data, offset, 1) |> byte_to_code()
-    ctrl_type = Enum.at(@ctrl_types, ctrl_code >>> 5)
-
-    decode_by_type(ctrl_type, ctrl_code, data, 1 + offset)
+  def decode(_, << @binary :: size(3), len :: size(5), data_part :: binary >>) do
+    decode_binary(len, data_part)
   end
 
-  defp decode_by_type(:array, ctrl_code, data, offset) do
-    { size, offset } = get_meta_size(ctrl_code, data, offset)
-
-    decode_array([], size, data, offset)
-  end
-  defp decode_by_type(:double, ctrl_code, data, offset) do
-    { size, offset } = get_meta_size(ctrl_code, data, offset)
-
-    decode_double(size, data, offset)
-  end
-  defp decode_by_type(:extended, ctrl_code, data, offset) do
-    ext_code  = binary_part(data, offset, 1) |> byte_to_code()
-    ctrl_type = Enum.at(@ctrl_types, ext_code + 7)
-
-    decode_by_type(ctrl_type, ctrl_code, data, 1 + offset)
-  end
-  defp decode_by_type(:float, ctrl_code, data, offset) do
-    { size, offset } = get_meta_size(ctrl_code, data, offset)
-
-    decode_float(size, data, offset)
-  end
-  defp decode_by_type(:map, ctrl_code, data, offset) do
-    { size, offset } = get_meta_size(ctrl_code, data, offset)
-
-    decode_map(%{}, size, data, offset)
-  end
-  defp decode_by_type(:pointer, ctrl_code, data, offset) do
-    size   = ((ctrl_code >>> 3) &&& 0x3) + 1
-    buffer = binary_part(data, offset, size)
-
-    if 4 > size do
-      buffer = <<ctrl_code &&& 0x7>> <> buffer
-    end
-
-    ptr = buffer
-      |> :erlang.bitstring_to_list()
-      |> Enum.map( &(Integer.to_string(&1, 16)) )
-      |> Enum.join()
-      |> String.to_char_list()
-      |> List.to_integer(16)
-
-    ptr = case size do
-      2 -> ptr + 2048
-      3 -> ptr + 526336
-      _ -> ptr
-    end
-
-    { ptr_data, _ } = decode(data, ptr)
-    { ptr_data, offset + size }
-  end
-  defp decode_by_type(:uint16, ctrl_code, data, offset) do
-    decode_by_type(:uint64, ctrl_code, data, offset)
-  end
-  defp decode_by_type(:uint32, ctrl_code, data, offset) do
-    decode_by_type(:uint64, ctrl_code, data, offset)
-  end
-  defp decode_by_type(:uint64, ctrl_code, data, offset) do
-    { size, offset } = get_meta_size(ctrl_code, data, offset)
-
-    decode_uint(size, data, offset)
-  end
-  defp decode_by_type(:utf8_string, ctrl_code, data, offset) do
-    { size, offset } = get_meta_size(ctrl_code, data, offset)
-
-    decode_utf8_string(size, data, offset)
-  end
-  defp decode_by_type(ctrl_type, ctrl_code, data, offset) do
-    Logger.warn "Unhandled type: #{ctrl_type}"
-
-    { _,   offset } = get_meta_size(ctrl_code, data, offset)
-    { nil, offset }
+  def decode(_, << @bytes :: size(3), len :: size(5), data_part :: binary >>) do
+    decode_binary(len, data_part)
   end
 
-  defp byte_to_code(byte) do
-    :io_lib.format("~w", :erlang.bitstring_to_list(byte))
-      |> hd()
-      |> List.to_integer()
+  def decode(_, << @double :: size(3), 8 :: size(5), value :: size(64)-float, data_part :: binary >>) do
+    { value, data_part }
   end
 
-  defp get_meta_size(code, data, offset) do
-    case code &&& 0x1f do
-      _size when 29 == _size ->
-        { size, offset } = decode_uint(1, data, offset)
-        { 29 + size, offset }
-      _size when 30 == _size ->
-        { size, offset } = decode_uint(2, data, offset)
-        { 285 + size, offset }
-      _ -> { code &&& 0x1f, offset }
-    end
+  def decode(data, << @extended :: size(3), len :: size(5), @array, data_part :: binary >>) do
+    decode_array(len, data, data_part)
   end
 
-  defp decode_array(arr, size, data, offset) when 0 < size do
-    { elem, offset } = decode(data, offset)
-
-    decode_array([ elem | arr ], size - 1, data, offset)
-  end
-  defp decode_array(arr, 0, _, offset), do: { arr, offset }
-
-  defp decode_double(size, data, offset) when 0 < size do
-    << decoded :: size(64)-float >> = binary_part(data, offset, size)
-
-    { decoded, offset + size }
-  end
-  defp decode_double(0, _, offset), do: { 0.0, offset }
-
-  defp decode_float(size, data, offset) when 0 < size do
-    << decoded :: size(32)-float >> = binary_part(data, offset, size)
-
-    { decoded, offset + size }
-  end
-  defp decode_float(0, _, offset), do: { 0.0, offset }
-
-  defp decode_map(map, size, data, offset) when 0 < size do
-    { key, offset } = decode(data, offset)
-    { val, offset } = decode(data, offset)
-
-    decode_map(Map.put(map, String.to_atom(key), val), size - 1, data, offset)
-  end
-  defp decode_map(map, _, _, offset) do
-    { map, offset }
+  def decode(_, << @extended :: size(3), value :: size(5), @bool, data_part :: binary >>) do
+    { 1 == value, data_part }
   end
 
-  defp decode_uint(size, data, offset) when 0 < size do
-    uint = data
-      |> binary_part(offset, size)
-      |> :binary.bin_to_list()
-      |> Enum.map( &(Integer.to_string(&1, 16)) )
-      |> Enum.join()
-      |> String.to_char_list()
-      |> List.to_integer(16)
-
-    { uint, size + offset }
-  end
-  defp decode_uint(_, _, offset) do
-    { 0, offset }
+  def decode(_, << @extended :: size(3), _ :: size(5), @cache, data_part :: binary >>) do
+    { :cache, data_part }
   end
 
-  defp decode_utf8_string(size, data, offset) do
-    { binary_part(data, offset, size), size + offset }
+  def decode(_, << @extended :: size(3), 0 :: size(5), @end_marker, data_part :: binary >>) do
+    { :end, data_part }
   end
+
+  def decode(_, << @extended :: size(3), 4 :: size(5), @float, value :: size(32)-float, data_part :: binary >>) do
+    { value, data_part }
+  end
+
+  def decode(_, << @extended :: size(3), len :: size(5), @signed_32, data_part :: binary >>) do
+    decode_signed(len, data_part)
+  end
+
+  def decode(_, << @extended :: size(3), len :: size(5), @unsigned_64, data_part :: binary >>) do
+    decode_unsigned(len, data_part)
+  end
+
+  def decode(_, << @extended :: size(3), len :: size(5), @unsigned_128, data_part :: binary >>) do
+    decode_unsigned(len, data_part)
+  end
+
+  def decode(data, << @map :: size(3), len :: size(5), data_part :: binary>>) do
+    decode_map(len, data, data_part)
+  end
+
+  def decode(data, << @pointer :: size(3), len :: size(2), data_part :: bitstring >>) do
+    decode_pointer(len, data, data_part)
+  end
+
+  def decode(_, << @unsigned_16 :: size(3), len :: size(5), data_part :: binary >>) do
+    decode_unsigned(len, data_part)
+  end
+
+  def decode(_, << @unsigned_32 :: size(3), len :: size(5), data_part :: binary >>) do
+    decode_unsigned(len, data_part)
+  end
+
+  @doc """
+  Decodes the node at the given offset.
+  """
+  @spec value(data :: binary, offset :: non_neg_integer) :: any
+  def value(data, offset) do
+    << _ :: size(offset)-binary, rest :: binary >> = data
+
+    { value, _rest } = decode(data, rest)
+
+    value
+  end
+
+
+  # value decoding
+
+  defp decode_array(len, data, data_part) do
+    { size, data_part } = payload_len(len, data_part)
+
+    decode_array_rec(size, data, data_part, [])
+  end
+
+  defp decode_array_rec(0, _, data_part, acc) do
+    { Enum.reverse(acc), data_part }
+  end
+
+  defp decode_array_rec(size, data, data_part, acc) do
+    { value, rest } = decode(data, data_part)
+
+    decode_array_rec(size - 1, data, rest, [ value | acc ])
+  end
+
+  defp decode_binary(len, data_part) do
+    { len, data_part } = payload_len(len, data_part)
+
+    << value :: size(len)-binary, rest :: binary >> = data_part
+
+    { value, rest }
+  end
+
+  defp decode_map(len, data, data_part) do
+    { size, data_part} = payload_len(len, data_part)
+
+    decode_map_rec(size, data, data_part, %{})
+  end
+
+  defp decode_map_rec(0, _, data_part, acc) do
+    { acc, data_part }
+  end
+
+  defp decode_map_rec(size, data, data_part, acc) do
+    { key,   rest } = decode(data, data_part)
+    { value, rest } = decode(data, rest)
+
+    acc = Map.put(acc, String.to_atom(key), value)
+
+    decode_map_rec(size - 1, data, rest, acc)
+  end
+
+  defp decode_pointer(0, data, data_part) do
+    << offset :: size(11), rest :: binary >> = data_part
+
+    { value(data, offset), rest }
+  end
+
+  defp decode_pointer(1, data, data_part) do
+    << offset :: size(19), rest :: binary >> = data_part
+
+    { value(data, offset + 2048), rest }
+  end
+
+  defp decode_pointer(2, data, data_part) do
+    << offset :: size(27), rest :: binary >> = data_part
+
+    { value(data, offset + 526336), rest }
+  end
+
+  defp decode_pointer(3, data, data_part) do
+    << _ :: size(3), offset :: size(32), rest :: binary >> = data_part
+
+    { value(data, offset), rest }
+  end
+
+  defp decode_signed(len, data_part) do
+    bitlen = len * 8
+
+    << value :: size(bitlen)-integer-signed, rest :: binary >> = data_part
+
+    { value, rest }
+  end
+
+  defp decode_unsigned(len, data_part) do
+    bitlen = len * 8
+
+    << value :: size(bitlen)-integer-unsigned, rest :: binary >> = data_part
+
+    { value, rest }
+  end
+
+
+  # payload detection
+
+  defp payload_len(29, << len :: size(8), data :: binary >>) do
+    { 29 + len, data }
+  end
+
+  defp payload_len(30, << len :: size(16), data :: binary >>) do
+    { 285 + len, data }
+  end
+
+  defp payload_len(31, << len :: size(24), data :: binary >>) do
+    { 65821 + len, data }
+  end
+
+  defp payload_len(len, data), do: { len, data }
 end
