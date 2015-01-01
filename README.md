@@ -94,6 +94,22 @@ The time returned are the `microseconds` of the complete lookup including
 every overhead by for example the process pool. For more details refer to the
 [official erlang documentation](http://www.erlang.org/doc/man/timer.html#tc-1).
 
+### Result Verification
+
+For (ongoing) verification of the result accuracy a special test environment
+is configured for each travis run.
+
+This environment performs the following 4 steps:
+
+- generate a set of random IPs
+- lookup using geolix
+- lookup using python ([geoip2](https://github.com/maxmind/GeoIP2-python))
+- compare the results
+
+To run these tests on a local machine please refer to the travis scripts
+executed on each run
+(i.e. `./travis/verify_install.sh` and `./travis/verify_script.sh`).
+
 
 ## License
 

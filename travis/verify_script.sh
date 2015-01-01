@@ -15,3 +15,8 @@ mix geolix.verify
 cd "${TRAVIS_BUILD_DIR}/verify/python"
 
 python verify.py
+
+# diff results
+cd "${TRAVIS_BUILD_DIR}/verify"
+
+diff geolix_results.txt python_results.txt
