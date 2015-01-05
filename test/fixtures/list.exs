@@ -1,14 +1,5 @@
-defmodule Mix.Tasks.Geolix.Fixtures do
-  @moduledoc """
-  Fetches fixture databases used in tests from the official
-  [MaxMind-DB](https://github.com/maxmind/MaxMind-DB) project.
-
-  The files will be stored inside the `tests/fixtures/` folder.
-  """
-
-  use Mix.Task
-
-  @shortdoc "Downloads fixture databases for tests"
+defmodule Geolix.TestFixtures.List do
+  @moduledoc false
 
   @doc """
   Returns a list of all available/downloaded fixtures.
@@ -21,8 +12,8 @@ defmodule Mix.Tasks.Geolix.Fixtures do
         "remote_url"
       }
   """
-  @spec list() :: list
-  def list do
+  @spec get() :: list
+  def get() do
     [
       { :fixture_city, "GeoIP2-City-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-City-Test.mmdb" },
       { :fixture_connection, "GeoIP2-Connection-Type-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-Connection-Type-Test.mmdb" },
@@ -37,24 +28,5 @@ defmodule Mix.Tasks.Geolix.Fixtures do
       { :fixture_ipv6_28, "MaxMind-DB-test-ipv6-28.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/MaxMind-DB-test-ipv6-28.mmdb" },
       { :fixture_ipv6_32, "MaxMind-DB-test-ipv6-32.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/MaxMind-DB-test-ipv6-32.mmdb" }
     ]
-  end
-
-  def run(_args) do
-    Enum.each(list(), &download/1)
-  end
-
-  defp download({ _name, filename, remote }) do
-    local = local(filename)
-
-    if not File.regular?(local) do
-      Mix.shell.info [ :yellow, "Downloading fixture database: #{ filename }" ]
-      File.write! local, Mix.Utils.read_path!(remote)
-    end
-  end
-
-  defp local(filename) do
-    [ __DIR__, "../../../../test/fixtures", filename ]
-      |> Path.join()
-      |> Path.expand()
   end
 end

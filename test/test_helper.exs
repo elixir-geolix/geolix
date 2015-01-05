@@ -1,13 +1,17 @@
-Mix.Task.run("geolix.fixtures")
+Code.require_file("fixtures/list.exs", __DIR__)
+Code.require_file("fixtures/download.exs", __DIR__)
 
-Enum.each(
-  Mix.Tasks.Geolix.Fixtures.list(),
-  fn ({ name, filename, _remote }) ->
-    path = Path.join([ __DIR__, "fixtures", filename ]) |> Path.expand()
+
+Geolix.TestFixtures.Download.run()
+
+Geolix.TestFixtures.List.get() |> Enum.each fn({ name, filename, _remote}) ->
+    path =
+         [ __DIR__, "fixtures", filename ]
+      |> Path.join()
+      |> Path.expand()
 
     Geolix.set_database(name, path)
-  end
-)
+end
 
 
 ExUnit.start()
