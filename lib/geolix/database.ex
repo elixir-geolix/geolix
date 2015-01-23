@@ -13,40 +13,37 @@ defmodule Geolix.Database do
   alias Geolix.Storage
 
   @doc """
-  Looks up information for the given ip in all databases.
+  Looks up IP information.
   """
-  @spec lookup(tuple) :: map
-  def lookup(ip) do
-    lookup_all(ip, Storage.Metadata.registered(), %{})
+  @spec lookup(ip :: tuple, where :: nil | atom, opts :: Keyword.t) :: map
+  def lookup(ip, nil, opts) do
+    lookup_all(ip, opts, Storage.Metadata.registered(), %{})
   end
 
-  defp lookup_all(_, [], results), do: results
-  defp lookup_all(ip, [ where | rest ], results) do
-    result  = lookup(where, ip)
-    results = Map.put(results, where, result)
-
-    lookup_all(ip, rest, results)
-  end
-
-  @doc """
-  Looks up information for the given ip in the given database.
-  """
-  @spec lookup(atom, tuple) :: nil | map
-  def lookup(where, ip) do
+  def lookup(ip, where, opts) do
     data = Storage.Data.get(where)
     meta = Storage.Metadata.get(where)
     tree = Storage.Tree.get(where)
 
-    lookup(ip, data, meta, tree)
+    lookup(ip, data, meta, tree, opts[:as])
   end
 
-  defp lookup(_, nil, _, _), do: nil
-  defp lookup(_, _, nil, _), do: nil
-  defp lookup(_, _, _, nil), do: nil
-  defp lookup(ip, data, meta, tree) do
+  defp lookup_all(_, _, [], results), do: results
+  defp lookup_all(ip, opts, [ where | rest ], results) do
+    result  = lookup(ip, where, opts)
+    results = Map.put(results, where, result)
+
+    lookup_all(ip, opts, rest, results)
+  end
+
+  defp lookup(_, nil, _, _, _), do: nil
+  defp lookup(_, _, nil, _, _), do: nil
+  defp lookup(_, _, _, nil, _), do: nil
+  defp lookup(ip, data, meta, tree, as) do
     parse_lookup_tree(ip, tree, meta)
     |> lookup_pointer(data, meta.node_count)
     |> maybe_include_ip(ip)
+    |> maybe_to_struct(meta.database_type, as)
   end
 
   defp lookup_pointer(0, _, _), do: nil
@@ -58,6 +55,11 @@ defmodule Geolix.Database do
 
   defp maybe_include_ip(nil, _ip),   do: nil
   defp maybe_include_ip(result, ip), do: Map.put(result, :ip, ip)
+
+  defp maybe_to_struct(result, _type, :map),  do: result
+  defp maybe_to_struct(result, type, :struct) do
+    Geolix.Result.to_struct(type, result)
+  end
 
   @doc """
   Reads a database using `Geolix.Reader.read_database/1` and stores the

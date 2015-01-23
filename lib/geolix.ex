@@ -45,40 +45,26 @@ defmodule Geolix do
   end
 
   @doc """
-  Looks up information for the given ip in all registered databases.
+  Looks up IP information.
   """
-  @spec lookup(tuple | String.t) :: map
-  def lookup(ip) when is_binary(ip) do
+  @spec lookup(ip    :: tuple | String.t,
+               where :: atom,
+               opts  :: Keyword.t) :: nil | map
+  def lookup(ip, where \\ nil, opts \\ [ as: :struct ])
+
+  def lookup(ip, where, opts) when is_binary(ip) do
     ip = String.to_char_list(ip)
 
     case :inet.parse_address(ip) do
-      { :ok, parsed } -> lookup(parsed)
+      { :ok, parsed } -> lookup(parsed, where, opts)
       { :error, _  }  -> nil
     end
   end
-  def lookup(ip) do
+
+  def lookup(ip, where, opts) do
     :poolboy.transaction(
       Geolix.Server.Pool,
-      &GenServer.call(&1, { :lookup, ip })
-    )
-  end
-
-  @doc """
-  Looks up information for the given ip in the given database.
-  """
-  @spec lookup(atom, tuple | String.t) :: nil | map
-  def lookup(where, ip) when is_binary(ip) do
-    ip = String.to_char_list(ip)
-
-    case :inet.parse_address(ip) do
-      { :ok, parsed } -> lookup(where, parsed)
-      { :error, _  }  -> nil
-    end
-  end
-  def lookup(where, ip) do
-    :poolboy.transaction(
-      Geolix.Server.Pool,
-      &GenServer.call(&1, { :lookup, where, ip })
+      &GenServer.call(&1, { :lookup, ip, where, opts })
     )
   end
 end

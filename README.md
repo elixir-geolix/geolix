@@ -64,21 +64,28 @@ otherwise the return value will be `:ok`.
 
 ## Usage
 
-Geolix can be used via a convenience GenServer calls:
+Geolix can be used via convenience GenServer calls:
 
 ```elixir
 iex(1)> Geolix.lookup("127.0.0.1")
-%{ city:    ... ,
-   country: ... }
-iex(2)> Geolix.lookup(:city, { 127, 0, 0, 1 })
+%{ city:    %{ ... },
+   country: %{ ... }}
+iex(2)> Geolix.lookup({ 127, 0, 0, 1 }, :city, as: :map)
 %{ ... }
 ```
 
-Using `Geolix.lookup/1` will lookup the information on all registered databases,
-returning `nil` if the ip was not found. Using `Geolix.lookup/2` will only
-return the information in the given database.
+Using `Geolix.lookup/3` with only one parameter (the ip) will lookup the
+information on all registered databases, returning `nil` if the ip was not
+found. Using `Geolix.lookup/3` with 2 parameters will only return the
+information in the given database.
 
-The queried ip will be included (as a tuple!) in every non-nil result returned.
+The third parameter can be used to change the return value from a
+`Geolix.Result.*` struct to a raw map result. By default every struct-supported
+database will return a struct.
+
+Every non-nil result will include the ip as a tuple.
+
+### Benchmarking
 
 If you are curious on how long a lookup of an IP takes, you can simply measure
 it using the erlang :timer module:
