@@ -1,10 +1,15 @@
 defmodule Geolix.Mixfile do
   use Mix.Project
 
+  @url_docs "http://hexdocs.pm/geolix"
+  @url_github "https://github.com/mneudert/geolix"
+
   def project do
     [ app:           :geolix,
       name:          "Geolix",
-      source_url:    "https://github.com/mneudert/geolix",
+      description:   "MaxMind GeoIP2 database reader/decoder",
+      source_url:    @url_github,
+      package:       package,
       version:       "0.6.0-dev",
       elixir:        "~> 1.0",
       deps:          deps(Mix.env),
@@ -31,5 +36,12 @@ defmodule Geolix.Mixfile do
 
   def deps(_) do
     [ { :poolboy, "~> 1.0" } ]
+  end
+
+  def package do
+    %{ contributors: [ "Marc Neudert" ],
+       files:        [ "LICENSE", "mix.exs", "README.md", "lib" ],
+       licenses:     [ "Apache 2.0" ],
+       links:        %{ "Docs" => @url_docs, "Github" => @url_github }}
   end
 end
