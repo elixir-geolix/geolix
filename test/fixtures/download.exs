@@ -19,7 +19,7 @@ defmodule Geolix.TestFixtures.Download do
 
   defp local(filename) do
     [ __DIR__, filename ]
-      |> Path.join()
-      |> Path.expand()
+    |> Path.join()
+    |> Path.expand()
   end
 end

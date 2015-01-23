@@ -45,8 +45,8 @@ defmodule Geolix.Database do
   defp lookup(_, _, _, nil), do: nil
   defp lookup(ip, data, meta, tree) do
     parse_lookup_tree(ip, tree, meta)
-      |> lookup_pointer(data, meta.node_count)
-      |> maybe_include_ip(ip)
+    |> lookup_pointer(data, meta.node_count)
+    |> maybe_include_ip(ip)
   end
 
   defp lookup_pointer(0, _, _), do: nil
@@ -66,9 +66,9 @@ defmodule Geolix.Database do
   @spec read_database(atom, String.t) :: :ok | { :error, term }
   def read_database(which, filename) do
     filename
-      |> Geolix.Reader.read_database()
-      |> split_data()
-      |> store_data(which)
+    |> Geolix.Reader.read_database()
+    |> split_data()
+    |> store_data(which)
   end
 
   defp split_data({ :error, _reason } = error), do: error

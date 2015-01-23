@@ -11,9 +11,9 @@ defmodule Geolix.Reader do
   @spec read_database(String.t) :: { binary, binary }
   def read_database(filename) do
     filename
-      |> File.read!
-      |> :binary.split(@metadata_marker)
-      |> maybe_succeed()
+    |> File.read!
+    |> :binary.split(@metadata_marker)
+    |> maybe_succeed()
   end
 
   defp maybe_succeed([ _data ]),      do: { :error, :no_metadata }
