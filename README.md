@@ -68,9 +68,9 @@ Geolix can be used via convenience GenServer calls:
 
 ```elixir
 iex(1)> Geolix.lookup("127.0.0.1")
-%{ city:    %{ ... },
-   country: %{ ... }}
-iex(2)> Geolix.lookup({ 127, 0, 0, 1 }, :city, as: :map)
+%{ city:    %Geolix.Result.City{ ... },
+   country: %Geolix.Result.Country{ ... }}
+iex(2)> Geolix.lookup({ 127, 0, 0, 1 }, :city, as: :raw)
 %{ ... }
 ```
 
@@ -83,7 +83,9 @@ The third parameter can be used to change the return value from a
 `Geolix.Result.*` struct to a raw map result. By default every struct-supported
 database will return a struct.
 
-Every non-nil result will include the ip as a tuple.
+Every non-nil result will include the IP as a tuple either directly in the
+result field `:ip_address` or inside `%{ traits: %{ ip_address: ... }}` if
+a city or country database is used.
 
 ### Benchmarking
 

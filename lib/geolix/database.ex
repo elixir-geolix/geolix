@@ -54,9 +54,9 @@ defmodule Geolix.Database do
   end
 
   defp maybe_include_ip(nil, _ip),   do: nil
-  defp maybe_include_ip(result, ip), do: Map.put(result, :ip, ip)
+  defp maybe_include_ip(result, ip), do: Map.put(result, :ip_address, ip)
 
-  defp maybe_to_struct(result, _type, :map),  do: result
+  defp maybe_to_struct(result, _type, :raw),  do: result
   defp maybe_to_struct(result, type, :struct) do
     Geolix.Result.to_struct(type, result)
   end

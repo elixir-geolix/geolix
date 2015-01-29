@@ -13,9 +13,12 @@ for ip in ips:
 
   try:
     city_data = city.city(ip)
-    city_res  = u'%s_%s_%s' % (
+    city_res  = u'%s_%s_' % (
       city_data.location.latitude,
-      city_data.location.longitude,
+      city_data.location.longitude
+    )
+    city_res  = u'%s%s' % (
+      city_res,
       city_data.city.names['en']
     )
   except:
