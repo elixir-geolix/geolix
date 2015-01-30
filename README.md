@@ -74,8 +74,8 @@ iex(2)> Geolix.lookup({ 127, 0, 0, 1 }, :city, as: :raw)
 %{ ... }
 ```
 
-Using `Geolix.lookup/3` with only one parameter (the ip) will lookup the
-information on all registered databases, returning `nil` if the ip was not
+Using `Geolix.lookup/3` with only one parameter (the IP) will lookup the
+information on all registered databases, returning `nil` if the IP was not
 found. Using `Geolix.lookup/3` with 2 parameters will only return the
 information in the given database.
 

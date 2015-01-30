@@ -1,6 +1,6 @@
 defmodule Geolix.Server.Worker do
   @moduledoc """
-  Worker module reading a database and looking up ip information.
+  Worker module reading a database and looking up IP information.
   """
 
   use GenServer
