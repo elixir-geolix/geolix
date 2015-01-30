@@ -3,11 +3,15 @@ defmodule Geolix.Result.ISP do
   Result for `GeoIP2 ISP` databases.
   """
 
+  @behaviour Geolix.Model
+
   defstruct [
-    autonomous_system_number: nil,
-    autonomous_system_organization: nil,
-    ip_address: nil,
-    isp: nil,
-    organization: nil
+    :autonomous_system_number,
+    :autonomous_system_organization,
+    :ip_address,
+    :isp,
+    :organization
   ]
+
+  def from(data), do: struct(__MODULE__, data)
 end

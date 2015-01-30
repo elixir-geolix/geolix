@@ -3,8 +3,12 @@ defmodule Geolix.Result.Domain do
   Result for `GeoIP2 Domain` databases.
   """
 
+  @behaviour Geolix.Model
+
   defstruct [
-    domain: nil,
-    ip_address: nil
+    :domain,
+    :ip_address
   ]
+
+  def from(data), do: struct(__MODULE__, data)
 end
