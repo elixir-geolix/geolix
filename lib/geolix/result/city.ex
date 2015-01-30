@@ -21,7 +21,7 @@ defmodule Geolix.Result.City do
 
   def from(data) do
     %__MODULE__{
-      city:                data[:city],
+      city:                Record.City.from(data[:city]),
       continent:           Record.Continent.from(data[:continent]),
       country:             data[:country],
       location:            data[:location],
