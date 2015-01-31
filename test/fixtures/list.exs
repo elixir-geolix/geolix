@@ -20,6 +20,7 @@ defmodule Geolix.TestFixtures.List do
       { :fixture_country, "GeoIP2-Country-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-Country-Test.mmdb" },
       { :fixture_domain, "GeoIP2-Domain-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-Domain-Test.mmdb" },
       { :fixture_isp, "GeoIP2-ISP-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-ISP-Test.mmdb" },
+      { :fixture_precision, "GeoIP2-Precision-City-Test.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/GeoIP2-Precision-City-Test.mmdb" },
 
       { :fixture_ipv4_24, "MaxMind-DB-test-ipv4-24.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/MaxMind-DB-test-ipv4-24.mmdb" },
       { :fixture_ipv4_28, "MaxMind-DB-test-ipv4-28.mmdb", "https://github.com/maxmind/MaxMind-DB/raw/master/test-data/MaxMind-DB-test-ipv4-28.mmdb" },

@@ -13,6 +13,7 @@ defmodule Geolix.ResultTest do
 
   test "type to struct mapping" do
     assert Result.City == result_for("GeoIP2-City")
+    assert Result.City == result_for("GeoIP2-Precision-City")
     assert Result.City == result_for("GeoLite2-City")
     assert Result.Country == result_for("GeoIP2-Country")
     assert Result.Country == result_for("GeoLite2-Country")

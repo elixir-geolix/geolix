@@ -6,10 +6,11 @@ defmodule Geolix.Result do
   alias Geolix.Result
 
   @mapping [
-    { "GeoIP2-City",      Result.City },
-    { "GeoIP2-Country",   Result.Country },
-    { "GeoLite2-City",    Result.City },
-    { "GeoLite2-Country", Result.Country }
+    { "GeoIP2-City",           Result.City },
+    { "GeoIP2-Precision-City", Result.City },
+    { "GeoIP2-Country",        Result.Country },
+    { "GeoLite2-City",         Result.City },
+    { "GeoLite2-Country",      Result.Country }
   ]
 
   @mapping_flat [

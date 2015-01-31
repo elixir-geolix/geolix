@@ -10,6 +10,7 @@ defmodule Geolix.FixturesTest do
       { :fixture_country, "GeoIP2-Country" },
       { :fixture_domain, "GeoIP2-Domain" },
       { :fixture_isp, "GeoIP2-ISP" },
+      { :fixture_precision, "GeoIP2-Precision-City" },
 
       { :fixture_ipv4_24, "Test" },
       { :fixture_ipv4_28, "Test" },
