@@ -43,7 +43,7 @@ defmodule Geolix.Result do
   @spec structify(model :: atom, data :: map) :: map
   def structify(model, data) do
     result = model.from(data)
-    traits = result.traits |> Map.put(:ip_address, data[:ip])
+    traits = result.traits |> Map.put(:ip_address, data[:ip_address])
 
     result |> Map.put(:traits, traits)
   end
