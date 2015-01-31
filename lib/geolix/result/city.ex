@@ -23,11 +23,11 @@ defmodule Geolix.Result.City do
     %__MODULE__{
       city:                Record.City.from(data[:city]),
       continent:           Record.Continent.from(data[:continent]),
-      country:             data[:country],
+      country:             Record.Country.from(data[:country]),
       location:            data[:location],
       postal:              data[:postal],
-      registered_country:  data[:registered_country],
-      represented_country: data[:represented_country],
+      registered_country:  Record.Country.from(data[:registered_country]),
+      represented_country: Record.RepresentedCountry.from(data[:represented_country]),
       subdivisions:        data[:subdivisions],
       traits:              %{}
     }

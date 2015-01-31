@@ -27,6 +27,12 @@ defmodule GeolixTest do
     assert "Telstra Internet" == result.organization
   end
 
+  test "lookup represented country" do
+    result = Geolix.lookup("202.196.224.1", :fixture_city)
+
+    assert "military" == result.represented_country.type
+  end
+
   test "lookup returns ip address" do
     ip     = { 1, 2, 0, 0 }
     result = Geolix.lookup(ip, :fixture_domain)

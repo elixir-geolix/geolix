@@ -18,9 +18,9 @@ defmodule Geolix.Result.Country do
   def from(data) do
     %__MODULE__{
       continent:           Record.Continent.from(data[:continent]),
-      country:             data[:country],
-      registered_country:  data[:registered_country],
-      represented_country: data[:represented_country],
+      country:             Record.Country.from(data[:country]),
+      registered_country:  Record.Country.from(data[:registered_country]),
+      represented_country: Record.RepresentedCountry.from(data[:represented_country]),
       traits:              %{}
     }
   end
