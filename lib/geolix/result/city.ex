@@ -24,7 +24,7 @@ defmodule Geolix.Result.City do
       city:                Record.City.from(data[:city]),
       continent:           Record.Continent.from(data[:continent]),
       country:             Record.Country.from(data[:country]),
-      location:            data[:location],
+      location:            Record.Location.from(data[:location]),
       postal:              data[:postal],
       registered_country:  Record.Country.from(data[:registered_country]),
       represented_country: Record.RepresentedCountry.from(data[:represented_country]),
