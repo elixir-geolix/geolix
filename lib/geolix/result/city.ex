@@ -28,7 +28,7 @@ defmodule Geolix.Result.City do
       postal:              Record.Postal.from(data[:postal]),
       registered_country:  Record.Country.from(data[:registered_country]),
       represented_country: Record.RepresentedCountry.from(data[:represented_country]),
-      subdivisions:        data[:subdivisions],
+      subdivisions:        Record.Subdivision.from(data[:subdivisions]),
       traits:              %{}
     }
   end
