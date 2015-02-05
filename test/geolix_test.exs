@@ -12,12 +12,6 @@ defmodule GeolixTest do
     assert "Cable/DSL" == result.connection_type
   end
 
-  test "lookup domain entry" do
-    result = Geolix.lookup("1.2.0.0", :fixture_domain)
-
-    assert "maxmind.com" == result.domain
-  end
-
   test "lookup represented country" do
     result = Geolix.lookup("202.196.224.1", :fixture_city)
 

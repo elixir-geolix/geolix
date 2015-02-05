@@ -8,7 +8,6 @@ defmodule Geolix.FixturesTest do
       { :fixture_city, "GeoIP2-City" },
       { :fixture_connection, "GeoIP2-Connection-Type" },
       { :fixture_country, "GeoIP2-Country" },
-      { :fixture_domain, "GeoIP2-Domain" },
       { :fixture_precision, "GeoIP2-Precision-City" },
 
       { :fixture_ipv4_24, "Test" },
