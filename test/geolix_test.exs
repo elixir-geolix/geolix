@@ -18,15 +18,6 @@ defmodule GeolixTest do
     assert "maxmind.com" == result.domain
   end
 
-  test "lookup isp entry" do
-    result = Geolix.lookup("1.128.0.0", :fixture_isp)
-
-    assert 1221 == result.autonomous_system_number
-    assert "Telstra Pty Ltd" == result.autonomous_system_organization
-    assert "Telstra Internet" == result.isp
-    assert "Telstra Internet" == result.organization
-  end
-
   test "lookup represented country" do
     result = Geolix.lookup("202.196.224.1", :fixture_city)
 
