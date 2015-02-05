@@ -6,12 +6,6 @@ defmodule GeolixTest do
     assert %{} = Geolix.lookup("81.2.69.160", :fixture_city, as: :struct)
   end
 
-  test "lookup connection type entry" do
-    result = Geolix.lookup("1.0.1.0", :fixture_connection)
-
-    assert "Cable/DSL" == result.connection_type
-  end
-
   test "lookup represented country" do
     result = Geolix.lookup("202.196.224.1", :fixture_city)
 
