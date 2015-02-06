@@ -6,12 +6,6 @@ defmodule GeolixTest do
     assert %{} = Geolix.lookup("81.2.69.160", :fixture_city, as: :struct)
   end
 
-  test "lookup represented country" do
-    result = Geolix.lookup("202.196.224.1", :fixture_city)
-
-    assert "military" == result.represented_country.type
-  end
-
   test "lookup returns ip address" do
     ip     = { 1, 2, 0, 0 }
     result = Geolix.lookup(ip, :fixture_domain)

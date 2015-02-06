@@ -6,7 +6,6 @@ defmodule Geolix.FixturesTest do
   test "fixtures readable" do
     fixtures = [
       { :fixture_city, "GeoIP2-City" },
-      { :fixture_country, "GeoIP2-Country" },
       { :fixture_precision, "GeoIP2-Precision-City" },
 
       { :fixture_ipv4_24, "Test" },
