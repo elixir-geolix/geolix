@@ -6,7 +6,7 @@ defmodule Geolix.Record.Postal do
   @behaviour Geolix.Model
 
   defstruct [
-    :postal
+    :code
   ]
 
   def from(nil),  do: nil
