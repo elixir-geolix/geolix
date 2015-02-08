@@ -10,7 +10,7 @@ defmodule Geolix.Mixfile do
       description:   "MaxMind GeoIP2 database reader/decoder",
       source_url:    @url_github,
       package:       package,
-      version:       "0.6.0-dev",
+      version:       "0.6.0",
       elixir:        "~> 1.0",
       deps:          deps(Mix.env),
       docs:          [ readme: "README.md", main: "README" ],

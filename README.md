@@ -74,6 +74,9 @@ iex(2)> Geolix.lookup({ 127, 0, 0, 1 }, [ as: :raw, where: :city ])
 %{ ... }
 ```
 
+__Note__: Only IPv4 lookups using downloaded database files are possible
+at the moment.
+
 Using `Geolix.lookup/2` with only one parameter (the IP) will lookup the
 information on all registered databases, returning `nil` if the IP was not
 found.
