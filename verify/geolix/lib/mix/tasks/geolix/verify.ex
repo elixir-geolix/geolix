@@ -32,29 +32,11 @@ defmodule Mix.Tasks.Geolix.Verify do
   end
 
 
-  defp parse_city(%{ location: location, city: %{ names: names }}) do
-    [
-      location.latitude,
-      location.longitude,
-      names.en
-    ]
-      |> Enum.join("_")
-  end
-
-  defp parse_city(%{ location: location, city: %{}}) do
-    [
-      location.latitude,
-      location.longitude,
-      ""
-    ]
-      |> Enum.join("_")
-  end
-
   defp parse_city(%{ location: location, city: city }) do
     [
-      location.latitude,
-      location.longitude,
-      city
+      city_latitude(location),
+      city_longitude(location),
+      city_name(city)
     ]
       |> Enum.join("_")
   end
@@ -62,9 +44,20 @@ defmodule Mix.Tasks.Geolix.Verify do
   defp parse_city(_), do: ""
 
 
+  defp city_latitude(%{ latitude: latitude }), do: latitude
+  defp city_latitude(nil),                     do: "None"
+
+  defp city_longitude(%{ longitude: longitude }), do: longitude
+  defp city_longitude(nil),                       do: "None"
+
+  defp city_name(%{ names: names }), do: names.en
+  defp city_name(%{}),               do: ""
+  defp city_name(city),              do: city
+
+
   defp parse_country(%{ country: %{ names: names }}), do: names.en
-  defp parse_country(%{ country: %{} }),     do: ""
-  defp parse_country(%{ country: country }), do: country
+  defp parse_country(%{ country: %{} }),              do: ""
+  defp parse_country(%{ country: country }),          do: country
 
   defp parse_country(_), do: ""
 end
