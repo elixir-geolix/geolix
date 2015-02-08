@@ -5,7 +5,7 @@ defmodule Geolix.Result.CityTest do
   alias Geolix.Result.City
 
   test "result type" do
-    result = Geolix.lookup("2.125.160.216", :fixture_city)
+    result = Geolix.lookup("2.125.160.216", where: :fixture_city)
 
     assert %City{}        = result
     assert %Subdivision{} = result.subdivisions |> hd()
@@ -13,7 +13,7 @@ defmodule Geolix.Result.CityTest do
 
   test "precision city" do
     ip     = { 128, 101, 101, 101 }
-    result = Geolix.lookup(ip, :fixture_precision)
+    result = Geolix.lookup(ip, where: :fixture_precision)
 
     assert result.traits.ip_address == ip
 
@@ -37,7 +37,7 @@ defmodule Geolix.Result.CityTest do
 
   test "regular city" do
     ip     = { 175, 16, 199, 0 }
-    result = Geolix.lookup(ip, :fixture_city)
+    result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip
 
@@ -58,7 +58,7 @@ defmodule Geolix.Result.CityTest do
 
   test "represented country" do
     ip     = { 202, 196, 224, 0 }
-    result = Geolix.lookup(ip, :fixture_city)
+    result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip
 
@@ -71,7 +71,7 @@ defmodule Geolix.Result.CityTest do
 
   test "subdivisions: single" do
     ip     = { 81, 2, 69, 144 }
-    result = Geolix.lookup(ip, :fixture_city)
+    result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip
 
@@ -86,7 +86,7 @@ defmodule Geolix.Result.CityTest do
 
   test "subdivisions: multiple" do
     ip     = { 2, 125, 160, 216 }
-    result = Geolix.lookup(ip, :fixture_city)
+    result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip
 

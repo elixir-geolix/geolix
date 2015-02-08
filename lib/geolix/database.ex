@@ -15,25 +15,28 @@ defmodule Geolix.Database do
   @doc """
   Looks up IP information.
   """
-  @spec lookup(ip :: tuple, where :: nil | atom, opts :: Keyword.t) :: map
-  def lookup(ip, nil, opts) do
-    lookup_all(ip, opts, Storage.Metadata.registered(), %{})
+  @spec lookup(ip :: tuple, opts :: Keyword.t) :: map
+  def lookup(ip, opts) do
+    case opts[:where] do
+      nil   -> lookup_all(ip, opts, Storage.Metadata.registered(), %{})
+      where -> lookup_single(ip, where, opts)
+    end
   end
 
-  def lookup(ip, where, opts) do
+  defp lookup_all(_, _, [], results), do: results
+  defp lookup_all(ip, opts, [ where | rest ], results) do
+    result  = lookup_single(ip, where, opts)
+    results = Map.put(results, where, result)
+
+    lookup_all(ip, opts, rest, results)
+  end
+
+  def lookup_single(ip, where, opts) do
     data = Storage.Data.get(where)
     meta = Storage.Metadata.get(where)
     tree = Storage.Tree.get(where)
 
     lookup(ip, data, meta, tree, opts[:as])
-  end
-
-  defp lookup_all(_, _, [], results), do: results
-  defp lookup_all(ip, opts, [ where | rest ], results) do
-    result  = lookup(ip, where, opts)
-    results = Map.put(results, where, result)
-
-    lookup_all(ip, opts, rest, results)
   end
 
   defp lookup(_, nil, _, _, _), do: nil
@@ -43,7 +46,7 @@ defmodule Geolix.Database do
     parse_lookup_tree(ip, tree, meta)
     |> lookup_pointer(data, meta.node_count)
     |> maybe_include_ip(ip)
-    |> maybe_to_struct(meta.database_type, as)
+    |> maybe_to_struct(meta.database_type, as || :struct)
   end
 
   defp lookup_pointer(0, _, _), do: nil

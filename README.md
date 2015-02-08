@@ -70,18 +70,18 @@ Geolix can be used via convenience GenServer calls:
 iex(1)> Geolix.lookup("127.0.0.1")
 %{ city:    %Geolix.Result.City{ ... },
    country: %Geolix.Result.Country{ ... }}
-iex(2)> Geolix.lookup({ 127, 0, 0, 1 }, :city, as: :raw)
+iex(2)> Geolix.lookup({ 127, 0, 0, 1 }, [ as: :raw, where: :city ])
 %{ ... }
 ```
 
-Using `Geolix.lookup/3` with only one parameter (the IP) will lookup the
+Using `Geolix.lookup/2` with only one parameter (the IP) will lookup the
 information on all registered databases, returning `nil` if the IP was not
-found. Using `Geolix.lookup/3` with 2 parameters will only return the
-information in the given database.
+found.
 
-The third parameter can be used to change the return value from a
-`Geolix.Result.*` struct to a raw map result. By default every struct-supported
-database will return a struct.
+Lookup options:
+
+* `:as` - Return the result as a `:struct` or `:raw` (plain map)
+* `:where` - Lookup information in a single registered database
 
 Every non-nil result will include the IP as a tuple either directly in the
 result field `:ip_address` or inside `%{ traits: %{ ip_address: ... }}` if

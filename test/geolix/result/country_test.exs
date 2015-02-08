@@ -4,12 +4,12 @@ defmodule Geolix.Result.CountryTest do
   alias Geolix.Result.Country
 
   test "result type" do
-    assert %Country{} = Geolix.lookup("2.125.160.216", :fixture_country)
+    assert %Country{} = Geolix.lookup("2.125.160.216", where: :fixture_country)
   end
 
   test "regular country" do
     ip     = { 216, 160, 83, 56 }
-    result = Geolix.lookup(ip, :fixture_country)
+    result = Geolix.lookup(ip, where: :fixture_country)
 
     assert result.traits.ip_address == ip
 
@@ -28,7 +28,7 @@ defmodule Geolix.Result.CountryTest do
 
   test "represented country" do
     ip     = { 202, 196, 224, 0 }
-    result = Geolix.lookup(ip, :fixture_country)
+    result = Geolix.lookup(ip, where: :fixture_country)
 
     assert result.traits.ip_address == ip
 

@@ -4,12 +4,12 @@ defmodule Geolix.Result.DomainTest do
   alias Geolix.Result.Domain
 
   test "result type" do
-    assert %Domain{} = Geolix.lookup("1.2.0.0", :fixture_domain)
+    assert %Domain{} = Geolix.lookup("1.2.0.0", where: :fixture_domain)
   end
 
   test "domain" do
     ip       = { 1, 2, 0, 0 }
-    result   = Geolix.lookup(ip, :fixture_domain)
+    result   = Geolix.lookup(ip, where: :fixture_domain)
     expected = %Domain{ domain:     "maxmind.com",
                         ip_address: ip }
 

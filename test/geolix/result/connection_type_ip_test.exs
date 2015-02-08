@@ -4,12 +4,12 @@ defmodule Geolix.Result.ConnectionTypeTest do
   alias Geolix.Result.ConnectionType
 
   test "result type" do
-    assert %ConnectionType{} = Geolix.lookup("1.0.0.0", :fixture_connection)
+    assert %ConnectionType{} = Geolix.lookup("1.0.0.0", where: :fixture_connection)
   end
 
   test "cable/dsl" do
     ip       = { 1, 0, 1, 0 }
-    result   = Geolix.lookup(ip, :fixture_connection)
+    result   = Geolix.lookup(ip, where: :fixture_connection)
     expected = %ConnectionType{ connection_type: "Cable/DSL",
                                 ip_address:      ip }
 
@@ -18,7 +18,7 @@ defmodule Geolix.Result.ConnectionTypeTest do
 
   test "corporate" do
     ip       = { 201, 243, 200, 0 }
-    result   = Geolix.lookup(ip, :fixture_connection)
+    result   = Geolix.lookup(ip, where: :fixture_connection)
     expected = %ConnectionType{ connection_type: "Corporate",
                                 ip_address:      ip }
 
@@ -27,7 +27,7 @@ defmodule Geolix.Result.ConnectionTypeTest do
 
   test "cellular" do
     ip       = { 80, 214, 0, 0 }
-    result   = Geolix.lookup(ip, :fixture_connection)
+    result   = Geolix.lookup(ip, where: :fixture_connection)
     expected = %ConnectionType{ connection_type: "Cellular",
                                 ip_address:      ip }
 
@@ -36,7 +36,7 @@ defmodule Geolix.Result.ConnectionTypeTest do
 
   test "dialup" do
     ip       = { 1, 0, 2, 0 }
-    result   = Geolix.lookup(ip, :fixture_connection)
+    result   = Geolix.lookup(ip, where: :fixture_connection)
     expected = %ConnectionType{ connection_type: "Dialup",
                                 ip_address:      ip }
 
