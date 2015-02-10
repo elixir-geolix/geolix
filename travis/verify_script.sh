@@ -7,7 +7,6 @@ rm -f ./ip_set.txt
 # verify geolix results
 cd "${TRAVIS_BUILD_DIR}/verify/geolix"
 
-mix deps.get
 mix compile
 mix geolix.verify
 
