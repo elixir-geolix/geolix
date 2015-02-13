@@ -7,6 +7,17 @@ defmodule Geolix.Result.DomainTest do
     assert %Domain{} = Geolix.lookup("1.2.0.0", where: :fixture_domain)
   end
 
+  test "ipv6 lookup" do
+    ip                  = "2a02:8420:48f4:b000::"
+    { :ok, ip_address } = ip |> String.to_char_list() |> :inet.parse_address()
+
+    result   = Geolix.lookup(ip, where: :fixture_domain)
+    expected = %Domain{ domain:     "sfr.net",
+                        ip_address: ip_address }
+
+    assert result == expected
+  end
+
   test "domain" do
     ip       = { 1, 2, 0, 0 }
     result   = Geolix.lookup(ip, where: :fixture_domain)

@@ -7,6 +7,18 @@ defmodule Geolix.Result.AnonymousIPTest do
     assert %AnonymousIP{} = Geolix.lookup("1.2.0.0", where: :fixture_anonymous)
   end
 
+  test "ipv6 lookup" do
+    ip                  = "abcd:1000::"
+    { :ok, ip_address } = ip |> String.to_char_list() |> :inet.parse_address()
+
+    result   = Geolix.lookup(ip, where: :fixture_anonymous)
+    expected = %AnonymousIP{ ip_address:      ip_address,
+                             is_anonymous:    true,
+                             is_public_proxy: true }
+
+    assert result == expected
+  end
+
   test "anonymous vpn" do
     ip       = { 1, 2, 0, 0 }
     result   = Geolix.lookup(ip, where: :fixture_anonymous)

@@ -11,6 +11,20 @@ defmodule Geolix.Result.CityTest do
     assert %Subdivision{} = result.subdivisions |> hd()
   end
 
+  test "ipv6 lookup" do
+    ip                  = "2001:298::"
+    { :ok, ip_address } = ip |> String.to_char_list() |> :inet.parse_address()
+
+    result = Geolix.lookup(ip, where: :fixture_city)
+
+    assert result.traits.ip_address == ip_address
+
+    assert "Asia" == result.continent.names[:en]
+    assert "Japan" == result.country.names[:en]
+    assert "Japan" == result.registered_country.names[:en]
+    assert "Asia/Tokyo" == result.location.time_zone
+  end
+
   test "precision city" do
     ip     = { 128, 101, 101, 101 }
     result = Geolix.lookup(ip, where: :fixture_precision)

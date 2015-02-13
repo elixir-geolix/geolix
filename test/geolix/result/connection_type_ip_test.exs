@@ -7,6 +7,17 @@ defmodule Geolix.Result.ConnectionTypeTest do
     assert %ConnectionType{} = Geolix.lookup("1.0.0.0", where: :fixture_connection)
   end
 
+  test "ipv6 lookup" do
+    ip                  = "2003::"
+    { :ok, ip_address } = ip |> String.to_char_list() |> :inet.parse_address()
+
+    result   = Geolix.lookup(ip, where: :fixture_connection)
+    expected = %ConnectionType{ connection_type: "Cable/DSL",
+                                ip_address:      ip_address }
+
+    assert result == expected
+  end
+
   test "cable/dsl" do
     ip       = { 1, 0, 1, 0 }
     result   = Geolix.lookup(ip, where: :fixture_connection)

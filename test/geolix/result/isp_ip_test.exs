@@ -7,6 +7,18 @@ defmodule Geolix.Result.ISPTest do
     assert %ISP{} = Geolix.lookup("1.0.128.0", where: :fixture_isp)
   end
 
+  test "ipv6 lookup" do
+    ip                  = "2c0f:ff40::"
+    { :ok, ip_address } = ip |> String.to_char_list() |> :inet.parse_address()
+
+    result   = Geolix.lookup(ip, where: :fixture_isp)
+    expected = %ISP{ autonomous_system_number:       10474,
+                     autonomous_system_organization: "MWEB-10474",
+                     ip_address:                     ip_address }
+
+    assert result == expected
+  end
+
   test "autonomous system" do
     ip       = { 222, 230, 140, 0 }
     result   = Geolix.lookup(ip, where: :fixture_isp)
