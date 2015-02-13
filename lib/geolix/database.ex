@@ -104,10 +104,16 @@ defmodule Geolix.Database do
     :ok
   end
 
-  defp parse_lookup_tree(ip, tree, meta) do
-    start_node = get_start_node(32, meta)
+  defp parse_lookup_tree({ _, _, _, _ } = ip, tree, %{ ip_version: 6 } = meta) do
+    parse_lookup_tree_bitwise(ip, 0, 32, 96, tree, meta)
+  end
+  defp parse_lookup_tree({ _, _, _, _ } = ip, tree, meta) do
+    parse_lookup_tree_bitwise(ip, 0, 32, 0, tree, meta)
+  end
+  defp parse_lookup_tree({ 0, 0, 0, 0, 0, 65535, a, b }, tree, meta) do
+    ip = { a >>> 8, a &&& 0x00FF, b >>> 8, b &&& 0x00FF }
 
-    parse_lookup_tree_bitwise(ip, 0, 32, start_node, tree, meta)
+    parse_lookup_tree(ip, tree, meta)
   end
 
   defp parse_lookup_tree_bitwise(ip, bit, bit_count, node, tree, meta)
@@ -132,13 +138,6 @@ defmodule Geolix.Database do
       true ->
         Logger.error "Invalid node below node_count: #{node}"
         0
-    end
-  end
-
-  defp get_start_node(32, meta) do
-    case meta.ip_version do
-      6 -> 96
-      _ -> 0
     end
   end
 

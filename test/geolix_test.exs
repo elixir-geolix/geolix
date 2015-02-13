@@ -9,6 +9,23 @@ defmodule GeolixTest do
     assert %Geolix.Result.City{} = Geolix.lookup(ip, as: :struct, where: where)
   end
 
+  test "ipv4 lookup in ipv6 notation" do
+    ipv4 = "81.2.69.160"
+    ipv6 = "0:0:0:0:0:ffff:5102:45a0"
+
+    ipv4_result =
+         ipv4
+      |> Geolix.lookup(as: :raw, where: :fixture_city)
+      |> Map.put(:ip_address, nil)
+
+    ipv6_result =
+         ipv6
+      |> Geolix.lookup(as: :raw, where: :fixture_city)
+      |> Map.put(:ip_address, nil)
+
+    assert ipv4_result == ipv6_result
+  end
+
   test "lookup returns ip address" do
     ip     = { 1, 2, 0, 0 }
     result = Geolix.lookup(ip, where: :fixture_domain)

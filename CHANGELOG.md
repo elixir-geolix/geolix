@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.0 (dev)
+
+- Supports IPv4 lookups in IPv6 notation ("0:0:0:0:0:FFFF:xxxx:xxxx")
+
 ## v0.6.0
 
 - Initial Release

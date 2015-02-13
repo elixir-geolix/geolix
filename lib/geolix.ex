@@ -55,7 +55,7 @@ defmodule Geolix do
 
     case :inet.parse_address(ip) do
       { :ok, parsed } -> lookup(parsed, opts)
-      { :error, _  }  -> nil
+      { :error, _ }   -> nil
     end
   end
 
