@@ -26,6 +26,10 @@ defmodule GeolixTest do
     assert ipv4_result == ipv6_result
   end
 
+  test "ipv6 lookup in ipv4 database" do
+    assert nil == Geolix.lookup("2001::", where: :fixture_ipv4)
+  end
+
   test "lookup returns ip address" do
     ip     = { 1, 2, 0, 0 }
     result = Geolix.lookup(ip, where: :fixture_domain)

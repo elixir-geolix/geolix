@@ -119,6 +119,10 @@ defmodule Geolix.Database do
     |> parse_lookup_tree_bitwise(0, 32, 0, tree, meta)
   end
 
+  defp parse_lookup_tree({ _, _, _, _, _, _, _, _ }, _, %{ ip_version: 4 }) do
+    0
+  end
+
   defp parse_lookup_tree({ a, b, c, d, e, f, g, h }, tree, meta) do
     << a :: size(16), b :: size(16), c :: size(16), d :: size(16),
        e :: size(16), f :: size(16), g :: size(16), h :: size(16) >>
