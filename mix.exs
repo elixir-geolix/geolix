@@ -8,12 +8,11 @@ defmodule Geolix.Mixfile do
     [ app:           :geolix,
       name:          "Geolix",
       description:   "MaxMind GeoIP2 database reader/decoder",
-      source_url:    @url_github,
       package:       package,
       version:       "0.7.0-dev",
       elixir:        "~> 1.0",
       deps:          deps(Mix.env),
-      docs:          [ readme: "README.md", main: "README" ],
+      docs:          docs,
       test_coverage: [ tool: ExCoveralls ]]
   end
 
@@ -36,6 +35,13 @@ defmodule Geolix.Mixfile do
 
   def deps(_) do
     [ { :poolboy, "~> 1.0" } ]
+  end
+
+  def docs do
+    [ main:       "README",
+      readme:     "README.md",
+      source_ref: "master",
+      source_url: @url_github ]
   end
 
   def package do
