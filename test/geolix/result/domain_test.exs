@@ -1,5 +1,5 @@
 defmodule Geolix.Result.DomainTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
 
   alias Geolix.Result.Domain
 

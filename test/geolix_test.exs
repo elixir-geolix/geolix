@@ -1,5 +1,5 @@
 defmodule GeolixTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
 
   test "result type" do
     ip    = "81.2.69.160"

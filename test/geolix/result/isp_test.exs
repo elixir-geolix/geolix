@@ -1,5 +1,5 @@
 defmodule Geolix.Result.ISPTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
 
   alias Geolix.Result.ISP
 

@@ -1,5 +1,5 @@
 defmodule Geolix.Result.AnonymousIPTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
 
   alias Geolix.Result.AnonymousIP
 

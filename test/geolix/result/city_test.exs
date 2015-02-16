@@ -1,5 +1,5 @@
 defmodule Geolix.Result.CityTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
 
   alias Geolix.Record.Subdivision
   alias Geolix.Result.City
