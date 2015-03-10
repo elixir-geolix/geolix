@@ -12,8 +12,16 @@ defmodule Geolix.Reader do
   def read_database(filename) do
     filename
     |> File.read!
+    |> maybe_gunzip(filename)
     |> :binary.split(@metadata_marker)
     |> maybe_succeed()
+  end
+
+  defp maybe_gunzip(data, filename) do
+    case String.ends_with?(filename, ".gz") do
+      true  -> :zlib.gunzip(data)
+      false -> data
+    end
   end
 
   defp maybe_succeed([ _data ]),      do: { :error, :no_metadata }

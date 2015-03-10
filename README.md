@@ -47,14 +47,15 @@ config :geolix,
   ]
 ```
 
-An appropriate filename will be automatically appended to the path.
+An appropriate filename will be automatically appended to the path. If the
+filename ends in ".gz" it will be loaded as a compressed file.
 
 It is also possible to (re-) configure the loaded databases during runtime:
 
 ```elixir
 iex(1)> Geolix.set_database(:city, "/path/to/cities/db.mmdb")
 :ok
-iex(2)> Geolix.set_database(:country, "/path/to/countries/db.mmdb")
+iex(2)> Geolix.set_database(:country, "/path/to/countries/db.mmdb.gz")
 :ok
 ```
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.8.0-dev
+
+- Enhancements
+  - Allows direct usage of gzip'ed database files
+
 ## v0.7.0 (2015-02-16)
 
 - Enhancements
