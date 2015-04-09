@@ -33,36 +33,17 @@ defmodule Geolix do
   Adds a database to lookup data from.
   """
   @spec set_database(atom, String.t) :: :ok | { :error, String.t }
-  def set_database(which, filename) do
-    if not File.regular?(filename) do
-      { :error, "Given file '#{ filename }' does not exist?!" }
-    else
-      :poolboy.transaction(
-        Geolix.Server.Pool,
-        &GenServer.call(&1, { :set_database, which, filename }, :infinity)
-      )
-    end
-  end
+  defdelegate set_database(which, filename), to: Geolix.Pool
+
+  @doc """
+  Looks up IP information.
+  """
+  @spec lookup(ip :: tuple | String.t) :: nil | map
+  defdelegate lookup(ip), to: Geolix.Pool
 
   @doc """
   Looks up IP information.
   """
   @spec lookup(ip :: tuple | String.t, opts  :: Keyword.t) :: nil | map
-  def lookup(ip, opts \\ [ as: :struct, where: nil ])
-
-  def lookup(ip, opts) when is_binary(ip) do
-    ip = String.to_char_list(ip)
-
-    case :inet.parse_address(ip) do
-      { :ok, parsed } -> lookup(parsed, opts)
-      { :error, _ }   -> nil
-    end
-  end
-
-  def lookup(ip, opts) do
-    :poolboy.transaction(
-      Geolix.Server.Pool,
-      &GenServer.call(&1, { :lookup, ip, opts })
-    )
-  end
+  defdelegate lookup(ip, opts), to: Geolix.Pool
 end
