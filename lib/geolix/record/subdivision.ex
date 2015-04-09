@@ -8,10 +8,21 @@ defmodule Geolix.Record.Subdivision do
   defstruct [
     :geoname_id,
     :iso_code,
+    :name,
     :names
   ]
 
-  def from(nil),                     do: nil
-  def from(data) when is_list(data), do: data |> Enum.map(&from/1)
-  def from(data),                    do: struct(__MODULE__, data)
+  def from(nil, _), do: nil
+
+  def from(data, locale) when is_list(data) do
+    data |> Enum.map( &from(&1, locale) )
+  end
+
+  def from(data,    nil), do: struct(__MODULE__, data)
+  def from(data, locale) do
+    result = from(data, nil)
+    result = Map.put(result, :name, result.names[locale])
+
+    result
+  end
 end

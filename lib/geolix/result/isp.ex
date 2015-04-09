@@ -13,5 +13,5 @@ defmodule Geolix.Result.ISP do
     :organization
   ]
 
-  def from(data), do: struct(__MODULE__, data)
+  def from(data, _), do: struct(__MODULE__, data)
 end

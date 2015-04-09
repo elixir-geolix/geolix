@@ -82,6 +82,8 @@ found.
 Lookup options:
 
 * `:as` - Return the result as a `:struct` or `:raw` (plain map)
+* `:locale` - Language (atom) to fetch information for.
+  Only affects "top level" struct values.
 * `:where` - Lookup information in a single registered database
 
 Every non-nil result will include the IP as a tuple either directly in the

@@ -7,6 +7,15 @@ defmodule Geolix.Result.CountryTest do
     assert %Country{} = Geolix.lookup("2.125.160.216", where: :fixture_country)
   end
 
+  test "locale result" do
+    result = Geolix.lookup("202.196.224.0", [ locale: :en, where: :fixture_country ])
+
+    assert result.continent.name == result.continent.names[:en]
+    assert result.country.name == result.country.names[:en]
+    assert result.registered_country.name == result.registered_country.names[:en]
+    assert result.represented_country.name == result.represented_country.names[:en]
+  end
+
   test "ipv6 lookup" do
     ip                  = "2001:218::"
     { :ok, ip_address } = ip |> String.to_char_list() |> :inet.parse_address()

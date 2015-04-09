@@ -19,16 +19,16 @@ defmodule Geolix.Result.City do
     :traits
   ]
 
-  def from(data) do
+  def from(data, locale) do
     %__MODULE__{
-      city:                Record.City.from(data[:city]),
-      continent:           Record.Continent.from(data[:continent]),
-      country:             Record.Country.from(data[:country]),
-      location:            Record.Location.from(data[:location]),
-      postal:              Record.Postal.from(data[:postal]),
-      registered_country:  Record.Country.from(data[:registered_country]),
-      represented_country: Record.RepresentedCountry.from(data[:represented_country]),
-      subdivisions:        Record.Subdivision.from(data[:subdivisions]),
+      city:                Record.City.from(data[:city], locale),
+      continent:           Record.Continent.from(data[:continent], locale),
+      country:             Record.Country.from(data[:country], locale),
+      location:            Record.Location.from(data[:location], locale),
+      postal:              Record.Postal.from(data[:postal], locale),
+      registered_country:  Record.Country.from(data[:registered_country], locale),
+      represented_country: Record.RepresentedCountry.from(data[:represented_country], locale),
+      subdivisions:        Record.Subdivision.from(data[:subdivisions], locale),
       traits:              %{}
     }
   end

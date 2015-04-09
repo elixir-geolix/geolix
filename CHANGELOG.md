@@ -4,6 +4,7 @@
 
 - Enhancements
   - Allows direct usage of gzip'ed database files
+  - `:locale` lookup option for easier access to translatable result values
 
 ## v0.7.0 (2015-02-16)
 

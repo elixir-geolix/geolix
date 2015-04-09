@@ -14,5 +14,5 @@ defmodule Geolix.Result.AnonymousIP do
     is_tor_exit_node:    false
   ]
 
-  def from(data), do: struct(__MODULE__, data)
+  def from(data, _), do: struct(__MODULE__, data)
 end

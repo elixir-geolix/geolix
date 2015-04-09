@@ -9,6 +9,6 @@ defmodule Geolix.Record.Postal do
     :code
   ]
 
-  def from(nil),  do: nil
-  def from(data), do: struct(__MODULE__, data)
+  def from(nil,  _), do: nil
+  def from(data, _), do: struct(__MODULE__, data)
 end

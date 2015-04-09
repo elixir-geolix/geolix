@@ -8,5 +8,5 @@ defmodule Geolix.Model do
   @doc """
   Converts a dataset to a model.
   """
-  defcallback from(data :: any) :: nil | map
+  defcallback from(data :: any, locale :: atom) :: nil | map
 end

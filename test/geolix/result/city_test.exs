@@ -11,6 +11,17 @@ defmodule Geolix.Result.CityTest do
     assert %Subdivision{} = result.subdivisions |> hd()
   end
 
+  test "locale result" do
+    result      = Geolix.lookup("2.125.160.216", [ locale: :en, where: :fixture_city ])
+    subdivision = result.subdivisions |> hd()
+
+    assert result.continent.name == result.continent.names[:en]
+    assert result.country.name == result.country.names[:en]
+    assert result.registered_country.name == result.registered_country.names[:en]
+
+    assert subdivision.name == subdivision.names[:en]
+  end
+
   test "ipv6 lookup" do
     ip                  = "2001:298::"
     { :ok, ip_address } = ip |> String.to_char_list() |> :inet.parse_address()

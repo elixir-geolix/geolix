@@ -10,5 +10,5 @@ defmodule Geolix.Result.Domain do
     :ip_address
   ]
 
-  def from(data), do: struct(__MODULE__, data)
+  def from(data, _), do: struct(__MODULE__, data)
 end

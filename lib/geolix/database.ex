@@ -36,17 +36,17 @@ defmodule Geolix.Database do
     meta = Storage.Metadata.get(where)
     tree = Storage.Tree.get(where)
 
-    lookup(ip, data, meta, tree, opts[:as])
+    lookup(ip, data, meta, tree, opts)
   end
 
   defp lookup(_, nil, _, _, _), do: nil
   defp lookup(_, _, nil, _, _), do: nil
   defp lookup(_, _, _, nil, _), do: nil
-  defp lookup(ip, data, meta, tree, as) do
+  defp lookup(ip, data, meta, tree, opts) do
     parse_lookup_tree(ip, tree, meta)
     |> lookup_pointer(data, meta.node_count)
     |> maybe_include_ip(ip)
-    |> maybe_to_struct(meta.database_type, as || :struct)
+    |> maybe_to_struct(meta.database_type, opts[:as] || :struct, opts)
   end
 
   defp lookup_pointer(0, _, _), do: nil
@@ -56,12 +56,12 @@ defmodule Geolix.Database do
     Geolix.Decoder.value(data, offset)
   end
 
-  defp maybe_include_ip(nil, _ip),   do: nil
+  defp maybe_include_ip(nil,     _), do: nil
   defp maybe_include_ip(result, ip), do: Map.put(result, :ip_address, ip)
 
-  defp maybe_to_struct(result, _type, :raw),  do: result
-  defp maybe_to_struct(result, type, :struct) do
-    Geolix.Result.to_struct(type, result)
+  defp maybe_to_struct(result,    _, :raw,       _),  do: result
+  defp maybe_to_struct(result, type, :struct, opts) do
+    Geolix.Result.to_struct(type, result, opts[:locale])
   end
 
   @doc """

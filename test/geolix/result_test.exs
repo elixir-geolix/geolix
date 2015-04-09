@@ -3,12 +3,12 @@ defmodule Geolix.ResultTest do
 
   alias Geolix.Result
 
-  defp result_for(type), do: Result.to_struct(type, %{}).__struct__
+  defp result_for(type), do: Result.to_struct(type, %{}, nil).__struct__
 
   test "unknown type is unmodified" do
     data = %{ foo: :bar }
 
-    assert data == Result.to_struct("invalid-type", data)
+    assert data == Result.to_struct("invalid-type", data, nil)
   end
 
   test "type to struct mapping" do
