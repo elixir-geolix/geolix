@@ -1,5 +1,11 @@
 defmodule Mix.Tasks.Geolix.Verify do
+  @moduledoc """
+  Verifies Geolix results.
+  """
+
   use Mix.Task
+
+  @shortdoc "Verifies parser results"
 
   @data_path [ __DIR__, "../../../../.." ]        |> Path.join()
   @ip_set    [ @data_path, "ip_set.txt" ]         |> Path.join() |> Path.expand()
