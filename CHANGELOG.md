@@ -6,6 +6,10 @@
   - Allows direct usage of gzip'ed database files
   - `:locale` lookup option for easier access to translatable result values
 
+- Bug fixes
+  - `Float` values are rounded to 4 decimal digits
+  - `Double` values are rounded to 8 decimal digits
+
 ## v0.7.0 (2015-02-16)
 
 - Enhancements

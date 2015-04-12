@@ -34,7 +34,7 @@ defmodule Geolix.Decoder do
   end
 
   def decode(_, << @double :: size(3), 8 :: size(5), value :: size(64)-float, data_part :: binary >>) do
-    { value, data_part }
+    { Float.round(value, 8), data_part }
   end
 
   def decode(data, << @extended :: size(3), len :: size(5), @array, data_part :: binary >>) do
@@ -54,7 +54,7 @@ defmodule Geolix.Decoder do
   end
 
   def decode(_, << @extended :: size(3), 4 :: size(5), @float, value :: size(32)-float, data_part :: binary >>) do
-    { value, data_part }
+    { Float.round(value, 4), data_part }
   end
 
   def decode(_, << @extended :: size(3), len :: size(5), @signed_32, data_part :: binary >>) do

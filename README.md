@@ -90,6 +90,14 @@ Every non-nil result will include the IP as a tuple either directly in the
 result field `:ip_address` or inside `%{ traits: %{ ip_address: ... }}` if
 a city or country database is used.
 
+### Floating point precision
+
+Please be aware that all values of the type `float` are rounded to 4 decimal
+digits and `double` values to 8 decimal digits.
+
+This might be changed in the future if there are datasets known to return
+values with a higher precision.
+
 ### Benchmarking
 
 If you are curious on how long a lookup of an IP takes, you can simply measure
