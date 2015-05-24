@@ -1,6 +1,5 @@
 language: elixir
 
-sudo: false
 env:
   - TEST_ENV=ex_unit
   - TEST_ENV=verify
