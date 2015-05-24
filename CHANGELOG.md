@@ -5,6 +5,7 @@
 - Enhancements
   - Allows direct usage of gzip'ed database files
   - `:locale` lookup option for easier access to translatable result values
+  - Dependencies not used in production builds are marked as optional
 
 - Bug fixes
   - `Float` values are rounded to 4 decimal digits
