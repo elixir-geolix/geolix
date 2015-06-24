@@ -6,6 +6,9 @@ mkdir -p vendor/python
 
 export PYTHONPATH="${PYTHONPATH}:${TRAVIS_BUILD_DIR}/vendor/python"
 
+# install python dependencies
+pip install --target="${TRAVIS_BUILD_DIR}/vendor/python" --ignore-installed geoip2
+
 # fetch geolite2 databases
 mkdir -p data
 
