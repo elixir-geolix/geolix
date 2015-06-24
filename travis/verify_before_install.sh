@@ -18,3 +18,6 @@ wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.g
 wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz"
 
 gunzip *
+
+# reset working directory
+cd "${TRAVIS_BUILD_DIR}"
