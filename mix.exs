@@ -29,7 +29,7 @@ defmodule Geolix.Mixfile do
 
   def deps(:test) do
     deps(:prod) ++
-      [ { :dialyze,     "~> 0.1", optional: true },
+      [ { :dialyze,     "~> 0.2", optional: true },
         { :excoveralls, "~> 0.3", optional: true } ]
   end
 
