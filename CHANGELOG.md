@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.8.0-dev
+## v0.8.0 (2015-07-18)
 
 - Enhancements
   - Allows direct usage of gzip'ed database files
