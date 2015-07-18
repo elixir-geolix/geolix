@@ -9,7 +9,7 @@ defmodule Geolix.Mixfile do
       name:          "Geolix",
       description:   "MaxMind GeoIP2 database reader/decoder",
       package:       package,
-      version:       "0.8.0",
+      version:       "0.9.0-dev",
       elixir:        "~> 1.0",
       deps:          deps(Mix.env),
       docs:          docs,
@@ -40,7 +40,7 @@ defmodule Geolix.Mixfile do
   def docs do
     [ main:       "README",
       readme:     "README.md",
-      source_ref: "v0.8.0",
+      source_ref: "master",
       source_url: @url_github ]
   end
 
