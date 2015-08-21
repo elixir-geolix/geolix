@@ -60,7 +60,8 @@ iex(2)> Geolix.set_database(:country, "/path/to/countries/db.mmdb.gz")
 ```
 
 If Geolix cannot find the database it will return `{ :error, message }`,
-otherwise the return value will be `:ok`.
+otherwise the return value will be `:ok`. Running `set_database/2` on an
+already configured database will reload it.
 
 
 ## Usage
