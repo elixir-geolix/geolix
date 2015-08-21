@@ -50,7 +50,7 @@ defmodule Geolix.Storage.Metadata do
   """
   @spec registered() :: list
   def registered() do
-    Agent.get(__MODULE__, &Map.keys(&1))
+    Agent.get(__MODULE__, &Map.keys/1)
   end
 
   @doc """
