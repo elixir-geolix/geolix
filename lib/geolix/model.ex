@@ -3,10 +3,8 @@ defmodule Geolix.Model do
   Behaviour for records/results.
   """
 
-  use Behaviour
-
   @doc """
   Converts a dataset to a model.
   """
-  defcallback from(data :: any, locale :: atom) :: nil | map
+  @callback from(data :: any, locale :: atom) :: nil | map
 end
