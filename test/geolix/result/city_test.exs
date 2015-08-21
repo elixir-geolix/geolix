@@ -38,7 +38,7 @@ defmodule Geolix.Result.CityTest do
 
   test "precision city" do
     ip     = { 128, 101, 101, 101 }
-    result = Geolix.lookup(ip, where: :fixture_precision)
+    result = Geolix.lookup(ip, where: :fixture_precision_city)
 
     assert result.traits.ip_address == ip
 

@@ -17,7 +17,8 @@ defmodule Geolix.Result do
     { "GeoIP2-Anonymous-IP",    Result.AnonymousIP },
     { "GeoIP2-Connection-Type", Result.ConnectionType },
     { "GeoIP2-Domain",          Result.Domain },
-    { "GeoIP2-ISP",             Result.ISP }
+    { "GeoIP2-ISP",             Result.ISP },
+    { "GeoIP2-Precision-ISP",   Result.ISP }
   ]
 
   @doc """

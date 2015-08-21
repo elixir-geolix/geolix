@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.9.0
+
+- Enhancements
+  - Allows usage of "GeoIP2-Precision-ISP" databases
+
 ## v0.8.0 (2015-07-18)
 
 - Enhancements
