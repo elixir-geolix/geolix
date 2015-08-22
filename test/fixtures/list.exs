@@ -26,7 +26,10 @@ defmodule Geolix.TestFixtures.List do
 
       { :fixture_ipv4_24, "MaxMind-DB-test-ipv4-24.mmdb", "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data/MaxMind-DB-test-ipv4-24.mmdb" },
       { :fixture_ipv4_28, "MaxMind-DB-test-ipv4-28.mmdb", "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data/MaxMind-DB-test-ipv4-28.mmdb" },
-      { :fixture_ipv4_32, "MaxMind-DB-test-ipv4-32.mmdb", "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data/MaxMind-DB-test-ipv4-32.mmdb" }
+      { :fixture_ipv4_32, "MaxMind-DB-test-ipv4-32.mmdb", "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data/MaxMind-DB-test-ipv4-32.mmdb" },
+      { :fixture_ipv6_24, "MaxMind-DB-test-ipv6-24.mmdb", "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data/MaxMind-DB-test-ipv6-24.mmdb" },
+      { :fixture_ipv6_28, "MaxMind-DB-test-ipv6-28.mmdb", "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data/MaxMind-DB-test-ipv6-28.mmdb" },
+      { :fixture_ipv6_32, "MaxMind-DB-test-ipv6-32.mmdb", "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data/MaxMind-DB-test-ipv6-32.mmdb" }
     ]
   end
 end
