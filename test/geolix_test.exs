@@ -27,7 +27,7 @@ defmodule GeolixTest do
   end
 
   test "ipv6 lookup in ipv4 database" do
-    assert nil == Geolix.lookup("2001::", where: :fixture_ipv4)
+    assert nil == Geolix.lookup("2001::", where: :fixture_ipv4_32)
   end
 
   test "lookup returns ip address" do
