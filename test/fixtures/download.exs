@@ -13,8 +13,19 @@ defmodule Geolix.TestFixtures.Download do
 
     if not File.regular?(local) do
       Mix.shell.info [ :yellow, "Downloading fixture database: #{ filename }" ]
-      File.write! local, Mix.Utils.read_path!(remote)
+
+      download_fixture(remote, local)
     end
+  end
+
+  defp download_fixture(remote, local) do
+    if Version.match?(System.version, ">= 1.1.0") do
+      { :ok, content } = Mix.Utils.read_path(remote)
+    else
+      content = Mix.Utils.read_path!(remote)
+    end
+
+    File.write! local, content
   end
 
   defp local(filename) do
