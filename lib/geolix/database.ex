@@ -18,17 +18,19 @@ defmodule Geolix.Database do
   @spec lookup(ip :: tuple, opts :: Keyword.t) :: map
   def lookup(ip, opts) do
     case opts[:where] do
-      nil   -> lookup_all(ip, opts, Storage.Metadata.registered(), %{})
+      nil   -> lookup_all(ip, opts, Storage.Metadata.registered())
       where -> lookup_single(ip, where, opts)
     end
   end
 
-  defp lookup_all(_, _, [], results), do: results
-  defp lookup_all(ip, opts, [ where | rest ], results) do
-    result  = lookup_single(ip, where, opts)
-    results = Map.put(results, where, result)
-
-    lookup_all(ip, opts, rest, results)
+  defp lookup_all(_,  _,    []),       do: %{}
+  defp lookup_all(ip, opts, databases) do
+    databases
+    |> Enum.map(fn (database) ->
+         { database, Task.async(fn -> lookup_single(ip, database, opts) end) }
+       end)
+    |> Enum.map(fn ({ database, task }) -> { database, Task.await(task) } end)
+    |> Enum.into(%{})
   end
 
   def lookup_single(ip, where, opts) do

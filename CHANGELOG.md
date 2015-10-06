@@ -4,6 +4,7 @@
 
 - Enhancements
   - Allows usage of "GeoIP2-Precision-ISP" databases
+  - Lookups querying all registered databases are done concurrently
 
 ## v0.8.0 (2015-07-18)
 
