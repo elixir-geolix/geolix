@@ -5,8 +5,6 @@ defmodule Geolix.Server.Worker do
 
   use GenServer
 
-  require Logger
-
   @behaviour :poolboy_worker
 
   def start_link(default \\ %{}) do
