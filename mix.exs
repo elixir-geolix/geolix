@@ -17,7 +17,7 @@ defmodule Geolix.Mixfile do
   end
 
   def application do
-    [ applications: [ :logger ],
+    [ applications: [ :logger, :poolboy ],
       mod:          { Geolix, [] } ]
   end
 
