@@ -12,7 +12,7 @@ defmodule Mix.Tasks.Geolix.Verify do
   @results   [ @data_path, "geolix_results.txt" ] |> Path.join() |> Path.expand()
 
   def run(_args) do
-    :ok         = Application.start(:geolix)
+    { :ok, _ }  = Application.ensure_all_started(:geolix)
     result_file = @results |> File.open!([ :write, :utf8 ])
 
     @ip_set
