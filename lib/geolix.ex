@@ -8,32 +8,27 @@ defmodule Geolix do
   def start(_type, _args) do
     import Supervisor.Spec
 
+    databases = Application.get_env(:geolix, :databases, [])
+
     options  = [ strategy: :one_for_one, name: Geolix.Supervisor ]
     children = [
       Geolix.Server.Pool.child_spec,
 
       worker(Geolix.Storage.Data, []),
       worker(Geolix.Storage.Metadata, []),
-      worker(Geolix.Storage.Tree, [])
+      worker(Geolix.Storage.Tree, []),
+
+      worker(Geolix.Database.Loader, [ databases ])
     ]
 
-    { :ok, sup } = Supervisor.start_link(children, options)
-
-    if Application.get_env(:geolix, :databases) do
-      Enum.each(
-        Application.get_env(:geolix, :databases),
-        fn ({ which, filename }) -> set_database(which, filename) end
-      )
-    end
-
-    { :ok, sup }
+    Supervisor.start_link(children, options)
   end
 
   @doc """
   Adds a database to lookup data from.
   """
   @spec set_database(atom, String.t) :: :ok | { :error, String.t }
-  defdelegate set_database(which, filename), to: Geolix.Pool
+  defdelegate set_database(which, filename), to: Geolix.Database.Loader
 
   @doc """
   Looks up IP information.

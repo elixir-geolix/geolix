@@ -14,8 +14,4 @@ defmodule Geolix.Server.Worker do
   def handle_call({ :lookup, ip, opts }, _, state) do
     { :reply, Geolix.Database.lookup(ip, opts), state }
   end
-
-  def handle_call({ :set_database, which, filename }, _, state) do
-    { :reply, Geolix.Database.read_database(which, filename), state }
-  end
 end

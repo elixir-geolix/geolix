@@ -66,46 +66,6 @@ defmodule Geolix.Database do
     Geolix.Result.to_struct(type, result, opts[:locale])
   end
 
-  @doc """
-  Reads a database using `Geolix.Reader.read_database/1` and stores the
-  parts in their respective storage agents.
-  """
-  @spec read_database(atom, String.t) :: :ok | { :error, term }
-  def read_database(which, filename) do
-    filename
-    |> Geolix.Reader.read_database()
-    |> split_data()
-    |> store_data(which)
-  end
-
-  defp split_data({ :error, _reason } = error), do: error
-  defp split_data({ data, meta }) do
-    meta           = Geolix.Decoder.value(meta, 0)
-    meta           = struct(%Geolix.Metadata{}, meta)
-    record_size    = Map.get(meta, :record_size)
-    node_count     = Map.get(meta, :node_count)
-    node_byte_size = div(record_size, 4)
-    tree_size      = node_count * node_byte_size
-
-    meta = %Geolix.Metadata{ meta | node_byte_size: node_byte_size }
-    meta = %Geolix.Metadata{ meta | tree_size:      tree_size }
-
-    tree      = data |> binary_part(0, tree_size)
-    data_size = byte_size(data) - byte_size(tree) - 16
-    data      = data |> binary_part(tree_size + 16, data_size)
-
-    { tree, data, meta }
-  end
-
-  defp store_data({ :error, _reason } = error, _which), do: error
-  defp store_data({ tree, data, meta }, which) do
-    Storage.Data.set(which, data)
-    Storage.Metadata.set(which, meta)
-    Storage.Tree.set(which, tree)
-
-    :ok
-  end
-
 
   defp parse_lookup_tree({ 0, 0, 0, 0, 0, 65535, a, b }, tree, meta) do
     { a >>> 8, a &&& 0x00FF, b >>> 8, b &&& 0x00FF }

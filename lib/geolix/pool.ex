@@ -4,21 +4,6 @@ defmodule Geolix.Pool do
   """
 
   @doc """
-  Adds a database to the pool.
-  """
-  @spec set_database(atom, String.t) :: :ok | { :error, String.t }
-  def set_database(which, filename) do
-    if not File.regular?(filename) do
-      { :error, "Given file '#{ filename }' does not exist?!" }
-    else
-      :poolboy.transaction(
-        Geolix.Server.Pool,
-        &GenServer.call(&1, { :set_database, which, filename }, :infinity)
-      )
-    end
-  end
-
-  @doc """
   Sends a lookup request to the pool.
   """
   @spec lookup(ip :: tuple | String.t, opts  :: Keyword.t) :: nil | map
