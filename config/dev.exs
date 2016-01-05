@@ -1,8 +1,18 @@
 use Mix.Config
 
+path_city =
+     [ __DIR__, "../data/GeoLite2-City.mmdb.gz" ]
+  |> Path.join()
+  |> Path.expand()
+
+path_country =
+     [ __DIR__, "../data/GeoLite2-Country.mmdb.gz" ]
+  |> Path.join()
+  |> Path.expand()
+
 config :geolix,
   databases: [
-    { :city,    "./data/GeoLite2-City.mmdb.gz"    },
-    { :country, "./data/GeoLite2-Country.mmdb.gz" }
+    city:    path_city,
+    country: path_country
   ],
   pool: [ size: 5, max_overflow: 10 ]
