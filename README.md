@@ -47,6 +47,20 @@ config :geolix,
   ]
 ```
 
+#### For Phoenix users
+
+If you want to include a database, you'll need to store your files in a location such as `priv/static/`. From there you'll need to reference the base directory to properly locate the database files:
+
+```elixir
+use Mix.Config
+
+config :geolix,
+  databases: [
+    { :city,    :filename.join(Path.dirname(__DIR__), "priv/static/mmdb/db-city.mmdb")    },
+    { :country, :filename.join(Path.dirname(__DIR__), "priv/static/mmdb/db-country.mmdb") }
+  ]
+```
+
 An appropriate filename will be automatically appended to the path. If the
 filename ends in ".gz" it will be loaded as a compressed file.
 
