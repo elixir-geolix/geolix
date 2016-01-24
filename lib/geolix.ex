@@ -8,17 +8,10 @@ defmodule Geolix do
   def start(_type, _args) do
     import Supervisor.Spec
 
-    databases = Application.get_env(:geolix, :databases, [])
-
     options  = [ strategy: :one_for_one, name: Geolix.Supervisor ]
     children = [
       Geolix.Server.Pool.child_spec,
-
-      worker(Geolix.Storage.Data, []),
-      worker(Geolix.Storage.Metadata, []),
-      worker(Geolix.Storage.Tree, []),
-
-      worker(Geolix.Database.Loader, [ databases ])
+      supervisor(Geolix.Database.Supervisor, [])
     ]
 
     Supervisor.start_link(children, options)
