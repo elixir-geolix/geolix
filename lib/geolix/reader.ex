@@ -8,7 +8,7 @@ defmodule Geolix.Reader do
   @doc """
   Reads a database file and returns the data and metadata parts from it.
   """
-  @spec read_database(String.t) :: { binary, binary }
+  @spec read_database(String.t) :: { atom | binary, atom | binary }
   def read_database(filename) do
     filename
     |> File.read!
