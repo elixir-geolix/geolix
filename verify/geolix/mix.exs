@@ -10,11 +10,7 @@ defmodule Geolix.Verification.Mixfile do
       lockfile:  "../../mix.lock" ]
   end
 
-  def application do
-    [ applications: [ :geolix ]]
-  end
+  def application, do: [ applications: [ :geolix ] ]
 
-  defp deps do
-    [{ :geolix, path: "../../" }]
-  end
+  defp deps, do: [{ :geolix, path: "../../" }]
 end
