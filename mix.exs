@@ -22,7 +22,7 @@ defmodule Geolix.Mixfile do
 
   def deps(:docs) do
     deps(:prod) ++
-      [ { :earmark, "~> 0.1",  optional: true },
+      [ { :earmark, "~> 0.2",  optional: true },
         { :ex_doc,  "~> 0.11", optional: true } ]
   end
 
