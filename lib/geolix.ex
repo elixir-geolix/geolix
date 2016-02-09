@@ -5,12 +5,15 @@ defmodule Geolix do
 
   use Application
 
+  alias Geolix.Server.Pool
+
+
   def start(_type, _args) do
     import Supervisor.Spec
 
     options  = [ strategy: :one_for_one, name: Geolix.Supervisor ]
     children = [
-      Geolix.Server.Pool.child_spec,
+      Pool.child_spec,
       supervisor(Geolix.Database.Supervisor, [])
     ]
 
@@ -26,12 +29,19 @@ defmodule Geolix do
   @doc """
   Looks up IP information.
   """
-  @spec lookup(ip :: tuple | String.t) :: nil | map
-  defdelegate lookup(ip), to: Geolix.Pool
-
-  @doc """
-  Looks up IP information.
-  """
   @spec lookup(ip :: tuple | String.t, opts  :: Keyword.t) :: nil | map
-  defdelegate lookup(ip, opts), to: Geolix.Pool
+  def lookup(ip, opts \\ [ as: :struct, where: nil ])
+
+  def lookup(ip, opts) when is_binary(ip) do
+    ip = String.to_char_list(ip)
+
+    case :inet.parse_address(ip) do
+      { :ok, parsed } -> lookup(parsed, opts)
+      { :error, _ }   -> nil
+    end
+  end
+
+  def lookup(ip, opts) do
+    :poolboy.transaction(Pool, &GenServer.call(&1, { :lookup, ip, opts }))
+  end
 end
