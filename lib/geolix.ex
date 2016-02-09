@@ -26,11 +26,7 @@ defmodule Geolix do
   """
   @spec set_database(atom, String.t) :: :ok | { :error, String.t }
   def set_database(which, filename) do
-    if not File.regular?(filename) do
-      { :error, "Given file '#{ filename }' does not exist?!" }
-    else
-      GenServer.call(Loader, { :set_database, which, filename }, :infinity)
-    end
+    GenServer.call(Loader, { :set_database, which, filename }, :infinity)
   end
 
   @doc """

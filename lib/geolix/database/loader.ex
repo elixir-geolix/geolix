@@ -47,10 +47,14 @@ defmodule Geolix.Database.Loader do
   end
 
   defp load_database(which, filename) do
-    filename
-    |> Reader.read_database()
-    |> split_data()
-    |> store_data(which)
+    case File.regular?(filename) do
+      false -> { :error, "Given file '#{ filename }' does not exist?!" }
+      true  ->
+        filename
+        |> Reader.read_database()
+        |> split_data()
+        |> store_data(which)
+    end
   end
 
   defp split_data({ :error, _reason } = error), do: error
