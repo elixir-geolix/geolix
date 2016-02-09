@@ -5,6 +5,7 @@ defmodule Geolix do
 
   use Application
 
+  alias Geolix.Database.Loader
   alias Geolix.Server.Pool
 
 
@@ -24,7 +25,13 @@ defmodule Geolix do
   Adds a database to lookup data from.
   """
   @spec set_database(atom, String.t) :: :ok | { :error, String.t }
-  defdelegate set_database(which, filename), to: Geolix.Database.Loader
+  def set_database(which, filename) do
+    if not File.regular?(filename) do
+      { :error, "Given file '#{ filename }' does not exist?!" }
+    else
+      GenServer.call(Loader, { :set_database, which, filename }, :infinity)
+    end
+  end
 
   @doc """
   Looks up IP information.

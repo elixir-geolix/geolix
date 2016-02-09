@@ -35,21 +35,6 @@ defmodule Geolix.Database.Loader do
   end
 
 
-  # Convenience methods
-
-  @doc """
-  Registers a database for lookups.
-  """
-  @spec set_database(atom, String.t) :: :ok | { :error, String.t }
-  def set_database(which, filename) do
-    if not File.regular?(filename) do
-      { :error, "Given file '#{ filename }' does not exist?!" }
-    else
-      GenServer.call(__MODULE__, { :set_database, which, filename }, :infinity)
-    end
-  end
-
-
   # Internal methods
 
   defp init_databases([]),       do: []
