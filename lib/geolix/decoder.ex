@@ -3,7 +3,7 @@ defmodule Geolix.Decoder do
   Module for decoding the mmdb2 format byte streams.
   """
 
-  @type decoded :: atom | binary | bool | list | map
+  @type decoded :: atom | binary | boolean | list | map
 
 
   @array         4 # extended: 11
