@@ -51,11 +51,14 @@ defmodule Geolix.Database do
     |> maybe_to_struct(meta.database_type, opts[:as] || :struct, opts)
   end
 
-  defp lookup_pointer(0, _, _), do: nil
+  defp lookup_pointer(0, _, _),              do: nil
   defp lookup_pointer(ptr, data, node_count) do
     offset = ptr - node_count - 16
 
-    Geolix.Decoder.value(data, offset)
+    case Geolix.Decoder.value(data, offset) do
+      result when is_map(result) -> result
+      _                          -> nil
+    end
   end
 
   defp maybe_include_ip(nil,     _), do: nil

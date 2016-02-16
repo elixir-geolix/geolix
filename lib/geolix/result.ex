@@ -24,7 +24,7 @@ defmodule Geolix.Result do
   @doc """
   Convert raw result map into struct.
   """
-  @spec to_struct(type :: String.t, data :: map, locale :: atom) :: map
+  @spec to_struct(type :: String.t, data :: map | nil, locale :: atom) :: map
   def to_struct(_type, nil, _), do: nil
 
   for { type, model } <- @mapping do
