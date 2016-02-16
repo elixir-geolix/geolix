@@ -6,7 +6,7 @@ defmodule Geolix.Database.Supervisor do
   use Supervisor
 
   @doc """
-  Starts the database loader.
+  Starts the database supervisor.
   """
   @spec start_link(term) :: Supervisor.on_start
   def start_link(default \\ []) do
