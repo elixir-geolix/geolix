@@ -40,10 +40,17 @@ configuration:
 ```elixir
 use Mix.Config
 
+# static configuration
 config :geolix,
   databases: [
     { :city,    "/path/to/cities/db"    },
     { :country, "/path/to/countries/db" }
+  ]
+
+# system environment configuration
+config :geolix,
+  databases: [
+    { :city, { :system, "SOME_SYSTEM_ENV_VARIABLE" }}
   ]
 ```
 

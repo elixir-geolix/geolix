@@ -21,7 +21,9 @@ defmodule Geolix.Database.Loader do
   end
 
   def init(databases) do
-    { :ok, init_databases(databases) }
+    init_databases(databases)
+
+    { :ok, databases }
   end
 
 
@@ -37,13 +39,14 @@ defmodule Geolix.Database.Loader do
 
   # Internal methods
 
-  defp init_databases([]),       do: []
-  defp init_databases(databases) do
-    Enum.each databases, fn ({ which, filename }) ->
-      load_database(which, filename)
-    end
+  defp init_databases([]), do: []
+  defp init_databases([{ which, filename } | databases ]) do
+    load_database(which, filename)
+    init_databases(databases)
+  end
 
-    databases
+  defp load_database(which, { :system, var }) do
+    load_database(which, System.get_env(var))
   end
 
   defp load_database(which, filename) do

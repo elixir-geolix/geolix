@@ -3,8 +3,9 @@
 ## v0.10.0-dev
 
 - Enhancements
-    - Databases are reloaded if a storage process gets restarted.
-    - Storage processes are now supervised.
+    - Databases are reloaded if a storage process gets restarted
+    - Paths can be configured by accessing the system environment
+    - Storage processes are now supervised
 
 ## v0.9.0 (2015-11-16)
 
