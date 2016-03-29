@@ -31,4 +31,22 @@ defmodule Geolix.Database.LoaderTest do
     assert :ok = Geolix.set_database(:system_env, { :system, var })
     assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :system_env)
   end
+
+  test "remote database" do
+    # setup internal testing webserver
+    Application.ensure_all_started(:inets)
+
+    httpd_opts         = [ port:          0,
+                           server_name:   'geolix_test',
+                           server_root:   @fixture_path |> to_char_list,
+                           document_root: @fixture_path |> to_char_list ]
+    { :ok, httpd_pid } = :inets.start(:httpd, httpd_opts)
+
+    # teste remote file loading
+    remote_port = :httpd.info(httpd_pid)[:port]
+    remote_db   = "http://localhost:#{ remote_port }/GeoIP2-City-Test.mmdb"
+
+    assert :ok = Geolix.set_database(:remote, remote_db)
+    assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :remote)
+  end
 end
