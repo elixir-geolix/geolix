@@ -31,4 +31,11 @@ defmodule Geolix.Database.LoaderTest do
     assert :ok = Geolix.set_database(:system_env, { :system, var })
     assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :system_env)
   end
+
+  test "remote database" do
+    remote_db = "http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz"
+
+    assert :ok = Geolix.set_database(:reload, remote_db)
+    assert %Result.Country{} = Geolix.lookup("2.125.160.216", where: :reload)
+  end
 end

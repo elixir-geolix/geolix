@@ -17,6 +17,17 @@ defmodule Geolix.Reader do
     |> maybe_succeed()
   end
 
+  @doc """
+  Handles remote binary data and returns the data and metadata parts from it.
+  """
+  @spec handle_binary(Binary.t, String.t) :: { binary | :error, binary | :no_metadata }
+  def handle_binary(binary, filename) do
+    binary
+    |> maybe_gunzip(filename)
+    |> :binary.split(@metadata_marker)
+    |> maybe_succeed()
+  end
+
   defp maybe_gunzip(data, filename) do
     case String.ends_with?(filename, ".gz") do
       true  -> :zlib.gunzip(data)
