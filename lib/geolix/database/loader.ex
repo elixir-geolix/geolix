@@ -9,7 +9,6 @@ defmodule Geolix.Database.Loader do
   alias Geolix.Reader
   alias Geolix.Storage
 
-
   # GenServer lifecycle
 
   @doc """
@@ -51,7 +50,17 @@ defmodule Geolix.Database.Loader do
 
   defp load_database(which, filename) do
     case File.regular?(filename) do
-      false -> { :error, "Given file '#{ filename }' does not exist?!" }
+      false ->
+        case :httpc.request(filename |> to_char_list) do
+          { :ok, { _, _, body } } ->
+            body
+            |> IO.iodata_to_binary()
+            |> Reader.handle_binary(filename)
+            |> split_data()
+            |> store_data(which)
+          { :error, :no_scheme } ->
+            { :error, "Given file '#{ filename }' does not exist?!" }
+        end
       true  ->
         filename
         |> Reader.read_database()
