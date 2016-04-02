@@ -9,27 +9,32 @@ defmodule Geolix.Reader do
   Reads a database file and returns the data and metadata parts from it.
   """
   @spec read_database(String.t) :: { binary | :error, binary | :no_metadata }
+  def read_database("http" <> _ = filename) do
+    case :httpc.request(filename |> to_char_list) do
+      { :ok, {{ _, 200, _ }, _, body }} ->
+        body
+        |> IO.iodata_to_binary()
+        |> maybe_gunzip(filename)
+        |> :binary.split(@metadata_marker)
+        |> maybe_succeed()
+
+      _ -> { :error, "Could not load '#{ filename }' from remote host!" }
+    end
+  end
+
   def read_database(filename) do
     case File.regular?(filename) do
-      false ->
-        case :httpc.request(filename |> to_char_list) do
-          { :ok, { _, _, body } } ->
-            body
-            |> IO.iodata_to_binary()
-            |> maybe_gunzip(filename)
-            |> :binary.split(@metadata_marker)
-            |> maybe_succeed()
-          { :error, :no_scheme } ->
-            { :error, "Given file '#{ filename }' does not exist?!" }
-        end
-      true  ->
+      true ->
         filename
         |> File.read!
         |> maybe_gunzip(filename)
         |> :binary.split(@metadata_marker)
         |> maybe_succeed()
+
+      false -> { :error, "Given file '#{ filename }' does not exist?!" }
     end
   end
+
 
   defp maybe_gunzip(data, filename) do
     case String.ends_with?(filename, ".gz") do

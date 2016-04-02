@@ -54,4 +54,8 @@ defmodule Geolix.Database.LoaderTest do
   test "database with invalid filename (not found)" do
     assert { :error, _ } = Geolix.set_database(:unknown_database, "invalid")
   end
+
+  test "database with invalid filename (remote not found)" do
+    assert { :error, _ } = Geolix.set_database(:unknown_database, "http://does.not.exist/")
+  end
 end
