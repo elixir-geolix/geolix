@@ -10,6 +10,8 @@ defmodule Geolix.Reader do
   """
   @spec read_database(String.t) :: { binary | :error, binary | :no_metadata }
   def read_database("http" <> _ = filename) do
+    Application.ensure_all_started(:inets)
+
     case :httpc.request(filename |> to_char_list) do
       { :ok, {{ _, 200, _ }, _, body }} ->
         body
