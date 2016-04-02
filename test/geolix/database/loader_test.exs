@@ -49,4 +49,9 @@ defmodule Geolix.Database.LoaderTest do
     assert :ok = Geolix.set_database(:remote, remote_db)
     assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :remote)
   end
+
+
+  test "database with invalid filename (not found)" do
+    assert { :error, _ } = Geolix.set_database(:unknown_database, "invalid")
+  end
 end

@@ -59,8 +59,4 @@ defmodule GeolixTest do
   test "lookup from unregistered database" do
     assert nil == Geolix.lookup("127.0.0.1", where: :unknown_database)
   end
-
-  test "set database with invalid filename" do
-    assert { :error, _ } = Geolix.set_database(:unknown_database, "invalid")
-  end
 end
