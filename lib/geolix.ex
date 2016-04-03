@@ -8,6 +8,8 @@ defmodule Geolix do
   alias Geolix.Database.Loader
   alias Geolix.Server.Pool
 
+  @type database_file :: String.t | { :system, String.t }
+
 
   def start(_type, _args) do
     import Supervisor.Spec
@@ -24,7 +26,7 @@ defmodule Geolix do
   @doc """
   Adds a database to lookup data from.
   """
-  @spec set_database(atom, String.t) :: :ok | { :error, String.t }
+  @spec set_database(atom, database_file) :: :ok | { :error, String.t }
   def set_database(which, filename) do
     GenServer.call(Loader, { :set_database, which, filename }, :infinity)
   end
