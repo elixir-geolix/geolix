@@ -43,8 +43,9 @@ use Mix.Config
 # static configuration
 config :geolix,
   databases: [
-    { :city,    "/absolute/path/to/cities/db"    },
-    { :country, "/absolute/path/to/countries/db" }
+    { :city,       "/absolute/path/to/cities/db"    },
+    { :country,    "/absolute/path/to/countries/db" },
+    { :enterprise, "http://my.internal.server/database.mmdb" }
   ]
 
 # system environment configuration
@@ -73,6 +74,24 @@ iex(2)> Geolix.set_database(:country, { :system, "SOME_SYSTEM_ENV_VARIABLE" })
 If Geolix cannot find the database it will return `{ :error, message }`,
 otherwise the return value will be `:ok`. Running `set_database/2` on an
 already configured database will reload it.
+
+
+#### Configuration (remote files)
+
+If you configure a database with a filename starting with "http" (yep, also
+matches "https"), the application will request it from that location.
+
+Returning a status of `200` and the actual contents of the database then
+results in the regular loading process. Using this configuration you can
+load a database during startup from basically any location you can reach.
+
+_Note_: Please be aware of the drawbacks of remote files! You should take into
+account the startup times as the file will be requested during
+`GenServer.init/1`. Unstable or slow networks could result in nasty timeouts.
+
+_Note_: Be responsible with the source you configure! Having a public download
+mirror (or the official MaxMind location) set might flag you as a
+"not so nice person". Ideally use your own server or online storage.
 
 
 ## Usage
