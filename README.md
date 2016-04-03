@@ -43,8 +43,8 @@ use Mix.Config
 # static configuration
 config :geolix,
   databases: [
-    { :city,    "/path/to/cities/db"    },
-    { :country, "/path/to/countries/db" }
+    { :city,    "/absolute/path/to/cities/db"    },
+    { :country, "/absolute/path/to/countries/db" }
   ]
 
 # system environment configuration
@@ -54,15 +54,19 @@ config :geolix,
   ]
 ```
 
+_Note_: if you do not want to use absolute paths or system variables please
+be aware that any code in the config file is evaluated at compile time.
+
+
 An appropriate filename will be automatically appended to the path. If the
 filename ends in ".gz" it will be loaded as a compressed file.
 
 It is also possible to (re-) configure the loaded databases during runtime:
 
 ```elixir
-iex(1)> Geolix.set_database(:city, "/path/to/cities/db.mmdb")
+iex(1)> Geolix.set_database(:city, "/absolute/path/to/cities/db.mmdb")
 :ok
-iex(2)> Geolix.set_database(:country, "/path/to/countries/db.mmdb.gz")
+iex(2)> Geolix.set_database(:country, { :system, "SOME_SYSTEM_ENV_VARIABLE" })
 :ok
 ```
 
