@@ -96,7 +96,7 @@ mirror (or the official MaxMind location) set might flag you as a
 
 ## Usage
 
-Geolix can be used via convenience GenServer calls:
+Lookups are done using `Geolix.lookup/1,2`:
 
 ```elixir
 iex(1)> Geolix.lookup("127.0.0.1")
@@ -132,7 +132,7 @@ values with a higher precision.
 ### Benchmarking
 
 If you are curious on how long a lookup of an IP takes, you can simply measure
-it using the erlang :timer module:
+it using the erlang `:timer` module:
 
 ```elixir
 iex(1)> :timer.tc(fn -> Geolix.lookup({ 108, 168, 255, 243 }) end)
