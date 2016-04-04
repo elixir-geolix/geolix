@@ -38,7 +38,7 @@ defmodule Geolix.Mixfile do
       { :ex_doc,  "~> 0.11", only: :docs },
 
       { :dialyze,     "~> 0.2", only: :test },
-      { :excoveralls, "~> 0.4", only: :test },
+      { :excoveralls, "~> 0.5", only: :test },
 
       { :poolboy, "~> 1.0" } ]
   end
