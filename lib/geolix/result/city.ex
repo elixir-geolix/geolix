@@ -29,7 +29,7 @@ defmodule Geolix.Result.City do
       registered_country:  Record.Country.from(data[:registered_country], locale),
       represented_country: Record.RepresentedCountry.from(data[:represented_country], locale),
       subdivisions:        Record.Subdivision.from(data[:subdivisions], locale),
-      traits:              %{}
+      traits:              Map.get(data, :traits, %{})
     }
   end
 end

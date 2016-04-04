@@ -9,6 +9,9 @@
     - Paths can be configured by accessing the system environment
     - Storage processes are now supervised
 
+- Bug fixes
+    - Traits from the database are properly passed on in the result
+
 ## v0.9.0 (2015-11-16)
 
 - Enhancements

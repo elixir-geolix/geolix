@@ -122,4 +122,12 @@ defmodule Geolix.Result.CityTest do
     assert 6269131 == sub_1.geoname_id
     assert 3333217 == sub_2.geoname_id
   end
+
+  test "with traits" do
+    ip     = { 67, 43, 156, 0 }
+    result = Geolix.lookup(ip, where: :fixture_city)
+
+    assert result.traits.ip_address == ip
+    assert result.traits.is_anonymous_proxy == true
+  end
 end

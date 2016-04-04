@@ -69,4 +69,12 @@ defmodule Geolix.Result.CountryTest do
     assert "Estados Unidos" == result.represented_country.names[:es]
     assert "military" == result.represented_country.type
   end
+
+  test "with traits" do
+    ip     = { 67, 43, 156, 0 }
+    result = Geolix.lookup(ip, where: :fixture_country)
+
+    assert result.traits.ip_address == ip
+    assert result.traits.is_anonymous_proxy == true
+  end
 end
