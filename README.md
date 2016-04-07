@@ -119,7 +119,7 @@ Lookup options:
 
 Every non-nil result will include the IP as a tuple either directly in the
 result field `:ip_address` or inside `%{ traits: %{ ip_address: ... }}` if
-a city or country database is used.
+a city or country (or enterprise) database is used.
 
 ### Floating Point Precision
 

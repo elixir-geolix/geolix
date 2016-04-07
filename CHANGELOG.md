@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.11.0-dev
+
+- Enhancements
+    - "GeoIP-Enterprise" databases return structs instead of plain maps
+
 ## v0.10.0 (2016-04-04)
 
 - Enhancements

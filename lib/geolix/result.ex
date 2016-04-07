@@ -7,8 +7,9 @@ defmodule Geolix.Result do
 
   @mapping [
     { "GeoIP2-City",           Result.City },
-    { "GeoIP2-Precision-City", Result.City },
     { "GeoIP2-Country",        Result.Country },
+    { "GeoIP2-Enterprise",     Result.Enterprise },
+    { "GeoIP2-Precision-City", Result.City },
     { "GeoLite2-City",         Result.City },
     { "GeoLite2-Country",      Result.Country }
   ]
