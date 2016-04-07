@@ -131,14 +131,21 @@ values with a higher precision.
 
 ### Benchmarking
 
-If you are curious on how long a lookup of an IP takes, you can simply measure
-it using the erlang `:timer` module:
+If you are curious about how long a lookup of an IP takes, you can simply
+measure it using the erlang `:timer` module:
 
 ```elixir
-iex(1)> :timer.tc(fn -> Geolix.lookup({ 108, 168, 255, 243 }) end)
+iex(1)> # display runtime in microseconds and the result
+iex(2)> :timer.tc(fn -> Geolix.lookup({ 108, 168, 255, 243 }) end)
 { 1337,
   %{ city:    ... ,
      country: ... } }
+iex(3)> # display only runtime in microseconds
+iex(4)> (fn ->
+...(4)>   { t, _ } = :timer.tc(fn -> Geolix.lookup({ 82, 212, 250, 99 }) end)
+...(4)>   t
+...(4)> end).()
+1337
 ```
 
 The time returned are the `microseconds` of the complete lookup including
