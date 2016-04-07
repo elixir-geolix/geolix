@@ -76,7 +76,7 @@ otherwise the return value will be `:ok`. Running `set_database/2` on an
 already configured database will reload it.
 
 
-#### Configuration (remote files)
+#### Configuration (Remote Files)
 
 If you configure a database with a filename starting with "http" (yep, also
 matches "https"), the application will request it from that location.
@@ -121,7 +121,7 @@ Every non-nil result will include the IP as a tuple either directly in the
 result field `:ip_address` or inside `%{ traits: %{ ip_address: ... }}` if
 a city or country database is used.
 
-### Floating point precision
+### Floating Point Precision
 
 Please be aware that all values of the type `float` are rounded to 4 decimal
 digits and `double` values to 8 decimal digits.
