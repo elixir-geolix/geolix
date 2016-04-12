@@ -8,9 +8,10 @@ defmodule Geolix.Database do
 
   use Bitwise, only_operators: true
 
-  require Logger
-
+  alias Geolix.Adapter.MMDB2.Decoder
   alias Geolix.Storage
+
+  require Logger
 
   @doc """
   Looks up IP information.
@@ -55,7 +56,7 @@ defmodule Geolix.Database do
   defp lookup_pointer(ptr, data, node_count) do
     offset = ptr - node_count - 16
 
-    case Geolix.Decoder.value(data, offset) do
+    case Decoder.value(data, offset) do
       result when is_map(result) -> result
       _                          -> nil
     end

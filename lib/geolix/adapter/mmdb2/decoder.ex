@@ -1,9 +1,9 @@
-defmodule Geolix.Decoder do
+defmodule Geolix.Adapter.MMDB2.Decoder do
   @moduledoc """
   Module for decoding the mmdb2 format byte streams.
   """
 
-  @type decoded :: atom | binary | boolean | list | map
+  @behaviour Geolix.Adapter.Decoder
 
 
   @array         4 # extended: 11
@@ -22,12 +22,6 @@ defmodule Geolix.Decoder do
   @unsigned_64   2 # extended:  9
   @unsigned_128  3 # extended: 10
   @pointer       1
-
-  @doc """
-  Decodes the datatype found at the given offset of the data.
-  """
-  @spec decode(data :: binary, data_part :: binary) :: { value :: decoded,
-                                                         rest  :: binary }
 
   def decode(_, << @binary :: size(3), len :: size(5), data_part :: binary >>) do
     decode_binary(len, data_part)
@@ -89,10 +83,6 @@ defmodule Geolix.Decoder do
     decode_unsigned(len, data_part)
   end
 
-  @doc """
-  Decodes the node at the given offset.
-  """
-  @spec value(data :: binary, offset :: non_neg_integer) :: decoded
   def value(data, offset) do
     << _ :: size(offset)-binary, rest :: binary >> = data
 
