@@ -6,6 +6,7 @@ defmodule Geolix.Database.Loader do
   use GenServer
 
   alias Geolix.Adapter.MMDB2.Decoder
+  alias Geolix.Adapter.MMDB2.Metadata
   alias Geolix.Adapter.MMDB2.Reader
   alias Geolix.Storage
 
@@ -58,14 +59,14 @@ defmodule Geolix.Database.Loader do
   defp split_data({ :error, _reason } = error), do: error
   defp split_data({ data, meta }) do
     meta           = Decoder.value(meta, 0)
-    meta           = struct(%Geolix.Metadata{}, meta)
+    meta           = struct(%Metadata{}, meta)
     record_size    = Map.get(meta, :record_size)
     node_count     = Map.get(meta, :node_count)
     node_byte_size = div(record_size, 4)
     tree_size      = node_count * node_byte_size
 
-    meta = %Geolix.Metadata{ meta | node_byte_size: node_byte_size }
-    meta = %Geolix.Metadata{ meta | tree_size:      tree_size }
+    meta = %Metadata{ meta | node_byte_size: node_byte_size }
+    meta = %Metadata{ meta | tree_size:      tree_size }
 
     tree      = data |> binary_part(0, tree_size)
     data_size = byte_size(data) - byte_size(tree) - 16

@@ -4,10 +4,11 @@ defmodule Geolix.Storage.Metadata do
 
   ## Usage
 
-      iex> set(:some_database_name, %Geolix.Metadata{ database_type: "doctest" })
+      iex> alias Geolix.Adapter.MMDB2.Metadata
+      iex> set(:some_database_name, %Metadata{ database_type: "doctest" })
       :ok
       iex> get(:some_database_name)
-      %Geolix.Metadata{ database_type: "doctest" }
+      %Metadata{ database_type: "doctest" }
       iex> get(:some_database_name, :database_type)
       "doctest"
 
@@ -16,6 +17,8 @@ defmodule Geolix.Storage.Metadata do
       iex> get(:unregistered_database, :database_type)
       nil
   """
+
+  alias Geolix.Adapter.MMDB2.Metadata
 
   @doc """
   Starts the metadata agent.
@@ -26,7 +29,7 @@ defmodule Geolix.Storage.Metadata do
   @doc """
   Fetches a metadata entry for a database.
   """
-  @spec get(atom) :: Geolix.Metadata.t | nil
+  @spec get(atom) :: Metadata.t | nil
   def get(database) do
     Agent.get(__MODULE__, &Map.get(&1, database, nil))
   end
@@ -56,8 +59,8 @@ defmodule Geolix.Storage.Metadata do
   @doc """
   Stores a set of metadata for a specific database.
   """
-  @spec set(atom, Geolix.Metadata.t) :: :ok
-  def set(database, %Geolix.Metadata{} = metadata) do
+  @spec set(atom, Metadata.t) :: :ok
+  def set(database, %Metadata{} = metadata) do
     Agent.update(__MODULE__, &Map.put(&1, database, metadata))
   end
 end

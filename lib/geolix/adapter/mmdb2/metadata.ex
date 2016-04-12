@@ -1,4 +1,4 @@
-defmodule Geolix.Metadata do
+defmodule Geolix.Adapter.MMDB2.Metadata do
   @moduledoc """
   Metadata struct.
   """
