@@ -33,7 +33,9 @@ defmodule Geolix.TestFixtures.List do
       { :fixture_ipv4_32, "MaxMind-DB-test-ipv4-32.mmdb", "#{ @base_url }/MaxMind-DB-test-ipv4-32.mmdb" },
       { :fixture_ipv6_24, "MaxMind-DB-test-ipv6-24.mmdb", "#{ @base_url }/MaxMind-DB-test-ipv6-24.mmdb" },
       { :fixture_ipv6_28, "MaxMind-DB-test-ipv6-28.mmdb", "#{ @base_url }/MaxMind-DB-test-ipv6-28.mmdb" },
-      { :fixture_ipv6_32, "MaxMind-DB-test-ipv6-32.mmdb", "#{ @base_url }/MaxMind-DB-test-ipv6-32.mmdb" }
+      { :fixture_ipv6_32, "MaxMind-DB-test-ipv6-32.mmdb", "#{ @base_url }/MaxMind-DB-test-ipv6-32.mmdb" },
+
+      { :fixture_no_ipv4_search_tree, "MaxMind-DB-no-ipv4-search-tree.mmdb", "#{ @base_url }/MaxMind-DB-no-ipv4-search-tree.mmdb" }
     ]
   end
 end

@@ -84,11 +84,15 @@ defmodule Geolix.Adapter.MMDB2.Decoder do
   end
 
   def value(data, offset) do
-    << _ :: size(offset)-binary, rest :: binary >> = data
+    case byte_size(data) > offset do
+      false -> nil
+      true  ->
+        << _ :: size(offset)-binary, rest :: binary >> = data
 
-    { value, _rest } = decode(data, rest)
+        { value, _rest } = decode(data, rest)
 
-    value
+        value
+    end
   end
 
 
