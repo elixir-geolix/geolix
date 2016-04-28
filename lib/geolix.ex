@@ -11,17 +11,8 @@ defmodule Geolix do
   @type database_file :: String.t | { :system, String.t }
 
 
-  def start(_type, _args) do
-    import Supervisor.Spec
+  def start(_type, _args), do: Geolix.Supervisor.start_link()
 
-    options  = [ strategy: :one_for_one, name: Geolix.Supervisor ]
-    children = [
-      Pool.child_spec,
-      supervisor(Geolix.Database.Supervisor, [])
-    ]
-
-    Supervisor.start_link(children, options)
-  end
 
   @doc """
   Adds a database to lookup data from.
