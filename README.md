@@ -121,6 +121,10 @@ Every non-nil result will include the IP as a tuple either directly in the
 result field `:ip_address` or inside `%{ traits: %{ ip_address: ... }}` if
 a city or country (or enterprise) database is used.
 
+_Note_: Please be aware that all results for enterprise databases are returned
+using separate structs if the data is not already included in the regular
+databases. This may change in the future.
+
 ### Floating Point Precision
 
 Please be aware that all values of the type `float` are rounded to 4 decimal
