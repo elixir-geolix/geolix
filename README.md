@@ -24,12 +24,35 @@ defp deps do
 end
 ```
 
-You should also update your applications to include all necessary projects:
+### Application/Supervisor Setup
+
+Probably the easiest way to manage startup is by simply
+adding `:geolix` to the list of applications:
 
 ```elixir
 def application do
   [ applications: [ :geolix ] ]
 end
+```
+
+A second possible approach is to take care of supervision yourself. This
+means you should add `:geolix` to your included applications instead:
+
+```elixir
+def application do
+  [ included_applications: [ :geolix ] ]
+end
+```
+
+And also add the appropriate `Geolix.Supervisor` to your hierarchy:
+
+```elixir
+# in your application/supervisor
+children = [
+  # ...
+  supervise(Geolix.Supervisor, [])
+  # ..
+]
 ```
 
 ### Configuration
