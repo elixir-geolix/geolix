@@ -6,6 +6,7 @@ defmodule Geolix.Record.Location do
   @behaviour Geolix.Model
 
   defstruct [
+    :accuracy_radius,
     :latitude,
     :longitude,
     :metro_code,

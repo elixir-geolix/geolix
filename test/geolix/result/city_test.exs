@@ -44,6 +44,7 @@ defmodule Geolix.Result.CityTest do
 
     assert "美国" == result.country.names[:"zh-CN"]
 
+    assert 3 == result.location.accuracy_radius
     assert -93.2166 == result.location.longitude
     assert 44.9759 == result.location.latitude
     assert "America/Chicago" == result.location.time_zone
@@ -70,6 +71,7 @@ defmodule Geolix.Result.CityTest do
     assert "Ásia" == result.continent.names[:"pt-BR"]
     assert "China" == result.country.names[:es]
 
+    assert 100 == result.location.accuracy_radius
     assert 43.88 == result.location.latitude
     assert 125.3228 == result.location.longitude
 
