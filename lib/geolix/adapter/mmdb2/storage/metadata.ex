@@ -20,18 +20,21 @@ defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
 
   alias Geolix.Adapter.MMDB2.Metadata
 
+  @name Geolix.Adapter.MMDB2.Names.storage(:metadata)
+
+
   @doc """
   Starts the metadata agent.
   """
   @spec start_link() :: Agent.on_start
-  def start_link(), do: Agent.start_link(fn -> %{} end, name: __MODULE__)
+  def start_link(), do: Agent.start_link(fn -> %{} end, name: @name)
 
   @doc """
   Fetches a metadata entry for a database.
   """
   @spec get(atom) :: Metadata.t | nil
   def get(database) do
-    Agent.get(__MODULE__, &Map.get(&1, database, nil))
+    Agent.get(@name, &Map.get(&1, database, nil))
   end
 
   @doc """
@@ -53,7 +56,7 @@ defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
   """
   @spec registered() :: list
   def registered() do
-    Agent.get(__MODULE__, &Map.keys/1)
+    Agent.get(@name, &Map.keys/1)
   end
 
   @doc """
@@ -61,6 +64,6 @@ defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
   """
   @spec set(atom, Metadata.t) :: :ok
   def set(database, %Metadata{} = metadata) do
-    Agent.update(__MODULE__, &Map.put(&1, database, metadata))
+    Agent.update(@name, &Map.put(&1, database, metadata))
   end
 end
