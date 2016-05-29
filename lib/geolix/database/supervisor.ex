@@ -5,6 +5,10 @@ defmodule Geolix.Database.Supervisor do
 
   use Supervisor
 
+  alias Geolix.Adapter.MMDB2.Storage
+  alias Geolix.Database.Loader
+
+
   @doc """
   Starts the database supervisor.
   """
@@ -17,11 +21,11 @@ defmodule Geolix.Database.Supervisor do
   def init(_default) do
     databases = Application.get_env(:geolix, :databases, [])
     children  = [
-      worker(Geolix.Storage.Data, []),
-      worker(Geolix.Storage.Metadata, []),
-      worker(Geolix.Storage.Tree, []),
+      worker(Storage.Data, []),
+      worker(Storage.Metadata, []),
+      worker(Storage.Tree, []),
 
-      worker(Geolix.Database.Loader, [ databases ])
+      worker(Loader, [ databases ])
     ]
 
     supervise(children, strategy: :one_for_all)

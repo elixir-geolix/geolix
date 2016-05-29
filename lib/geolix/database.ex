@@ -9,7 +9,7 @@ defmodule Geolix.Database do
   use Bitwise, only_operators: true
 
   alias Geolix.Adapter.MMDB2.Decoder
-  alias Geolix.Storage
+  alias Geolix.Adapter.MMDB2.Storage
 
   require Logger
 

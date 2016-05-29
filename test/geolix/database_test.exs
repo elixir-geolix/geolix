@@ -1,7 +1,7 @@
 defmodule Geolix.DatabaseTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Storage.Metadata
+  alias Geolix.Adapter.MMDB2.Storage.Metadata
 
 
   test "ipv4 24 bit record size" do

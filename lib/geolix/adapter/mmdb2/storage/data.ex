@@ -1,6 +1,6 @@
-defmodule Geolix.Storage.Tree do
+defmodule Geolix.Adapter.MMDB2.Storage.Data do
   @moduledoc """
-  Geolix tree storage.
+  Geolix data storage.
 
   ## Usage
 
@@ -13,13 +13,13 @@ defmodule Geolix.Storage.Tree do
   """
 
   @doc """
-  Starts the tree agent.
+  Starts the data agent.
   """
   @spec start_link() :: Agent.on_start
   def start_link(), do: Agent.start_link(fn -> %{} end, name: __MODULE__)
 
   @doc """
-  Fetches the tree for a database.
+  Fetches the data for a database.
   """
   @spec get(atom) :: binary | nil
   def get(database) do
@@ -27,10 +27,10 @@ defmodule Geolix.Storage.Tree do
   end
 
   @doc """
-  Stores the tree for a specific database.
+  Stores the data for a specific database.
   """
   @spec set(atom, binary) :: :ok
-  def set(database, tree) do
-    Agent.update(__MODULE__, &Map.put(&1, database, tree))
+  def set(database, data) do
+    Agent.update(__MODULE__, &Map.put(&1, database, data))
   end
 end

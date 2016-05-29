@@ -1,4 +1,4 @@
-defmodule Geolix.Storage.Metadata do
+defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
   @moduledoc """
   Geolix metadata storage.
 

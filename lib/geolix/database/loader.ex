@@ -8,7 +8,7 @@ defmodule Geolix.Database.Loader do
   alias Geolix.Adapter.MMDB2.Decoder
   alias Geolix.Adapter.MMDB2.Metadata
   alias Geolix.Adapter.MMDB2.Reader
-  alias Geolix.Storage
+  alias Geolix.Adapter.MMDB2.Storage
 
   # GenServer lifecycle
 
