@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.10.1-dev
+## v0.10.1 (2016-06-04)
 
 - Enhancements
     - Lookup results are generated with `:en` as the default
