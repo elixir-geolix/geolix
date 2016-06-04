@@ -8,12 +8,19 @@ defmodule Geolix.Result.CountryTest do
   end
 
   test "locale result" do
-    result = Geolix.lookup("202.196.224.0", [ locale: :en, where: :fixture_country ])
+    result = Geolix.lookup("202.196.224.0", [ locale: :fr, where: :fixture_country ])
+
+    assert result.continent.name == result.continent.names[:fr]
+    assert result.country.name == result.country.names[:fr]
+    assert result.registered_country.name == result.registered_country.names[:fr]
+    assert result.represented_country.name == result.represented_country.names[:fr]
+  end
+
+  test "locale result (default :en)" do
+    result = Geolix.lookup("202.196.224.0", [ where: :fixture_country ])
 
     assert result.continent.name == result.continent.names[:en]
     assert result.country.name == result.country.names[:en]
-    assert result.registered_country.name == result.registered_country.names[:en]
-    assert result.represented_country.name == result.represented_country.names[:en]
   end
 
   test "ipv6 lookup" do

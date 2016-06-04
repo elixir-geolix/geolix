@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.1-dev
+
+- Enhancements
+    - Lookup results are generated with `:en` as the default
+      if no locale is passed
+
 ## v0.10.0 (2016-04-04)
 
 - Enhancements
