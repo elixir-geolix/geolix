@@ -19,21 +19,4 @@ defmodule Geolix.DecoderTest do
     assert decoded[:boolean]     == true
     assert decoded[:float]       == 1.1
   end
-
-  test "empty decoded values" do
-    decoded = Geolix.lookup("0.0.0.0", where: :fixture_decoder)
-
-    assert decoded[:utf8_string] == ""
-    assert decoded[:double]      == 0.0
-    assert decoded[:bytes]       == ""
-    assert decoded[:uint16]      == 0
-    assert decoded[:uint32]      == 0
-    assert decoded[:int32]       == 0
-    assert decoded[:uint64]      == 0
-    assert decoded[:uint128]     == 0
-    assert decoded[:array]       == []
-    assert decoded[:map]         == %{}
-    assert decoded[:boolean]     == false
-    assert decoded[:float]       == 0.0
-  end
 end
