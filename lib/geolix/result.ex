@@ -30,13 +30,13 @@ defmodule Geolix.Result do
 
   for { type, model } <- @mapping do
     def to_struct(unquote(type), data, locale) do
-      structify(unquote(model), data, locale)
+      structify(unquote(model), data, locale || :en)
     end
   end
 
   for { type, model } <- @mapping_flat do
     def to_struct(unquote(type), data, locale) do
-      structify_flat(unquote(model), data, locale)
+      structify_flat(unquote(model), data, locale || :en)
     end
   end
 

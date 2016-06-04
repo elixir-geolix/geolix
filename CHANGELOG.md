@@ -5,6 +5,12 @@
 - Enhancements
     - "GeoIP-Enterprise" databases return structs instead of plain maps
 
+## v0.10.1 (2016-06-04)
+
+- Enhancements
+    - Lookup results are generated with `:en` as the default
+      if no locale is passed
+
 ## v0.10.0 (2016-04-04)
 
 - Enhancements

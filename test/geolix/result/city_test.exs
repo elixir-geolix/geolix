@@ -12,14 +12,21 @@ defmodule Geolix.Result.CityTest do
   end
 
   test "locale result" do
-    result      = Geolix.lookup("2.125.160.216", [ locale: :en, where: :fixture_city ])
+    result      = Geolix.lookup("2.125.160.216", [ locale: :fr, where: :fixture_city ])
     subdivision = result.subdivisions |> hd()
+
+    assert result.continent.name == result.continent.names[:fr]
+    assert result.country.name == result.country.names[:fr]
+    assert result.registered_country.name == result.registered_country.names[:fr]
+
+    assert subdivision.name == subdivision.names[:fr]
+  end
+
+  test "locale result (default :en)" do
+    result = Geolix.lookup("2.125.160.216", [ where: :fixture_city ])
 
     assert result.continent.name == result.continent.names[:en]
     assert result.country.name == result.country.names[:en]
-    assert result.registered_country.name == result.registered_country.names[:en]
-
-    assert subdivision.name == subdivision.names[:en]
   end
 
   test "ipv6 lookup" do
