@@ -10,6 +10,12 @@ defmodule Geolix do
 
   @type database_file :: String.t | { :system, String.t }
 
+  @lookup_default_opts [
+    as:     :struct,
+    locale: :en,
+    where:  nil
+  ]
+
 
   def start(_type, _args), do: Geolix.Supervisor.start_link()
 
@@ -26,8 +32,7 @@ defmodule Geolix do
   Looks up IP information.
   """
   @spec lookup(ip :: tuple | String.t, opts  :: Keyword.t) :: nil | map
-  def lookup(ip, opts \\ [ as: :struct, where: nil ])
-
+  def lookup(ip, opts \\ [])
   def lookup(ip, opts) when is_binary(ip) do
     ip = String.to_char_list(ip)
 
@@ -38,6 +43,10 @@ defmodule Geolix do
   end
 
   def lookup(ip, opts) do
-    :poolboy.transaction(Pool, &GenServer.call(&1, { :lookup, ip, opts }))
+    :poolboy.transaction(Pool, &GenServer.call(&1, {
+      :lookup,
+      ip,
+      Keyword.merge(@lookup_default_opts, opts)
+    }))
   end
 end
