@@ -42,16 +42,13 @@ defmodule Geolix.Result do
 
   def to_struct(_type, data, _), do: data
 
-  @doc false
-  @spec structify(model :: atom, data :: map, locale :: atom) :: map
-  def structify(model, data, locale) do
+
+  defp structify(model, data, locale) do
     result = model.from(data, locale)
     traits = result.traits |> Map.put(:ip_address, data[:ip_address])
 
     result |> Map.put(:traits, traits)
   end
 
-  @doc false
-  @spec structify_flat(model :: atom, data :: map, locale :: atom) :: map
-  def structify_flat(model, data, locale), do: model.from(data, locale)
+  defp structify_flat(model, data, locale), do: model.from(data, locale)
 end
