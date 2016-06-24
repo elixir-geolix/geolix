@@ -30,6 +30,8 @@ defmodule Geolix.Database.LoaderTest do
 
     assert :ok = Geolix.set_database(:system_env, { :system, var })
     assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :system_env)
+
+    System.delete_env(var)
   end
 
   test "remote database" do
