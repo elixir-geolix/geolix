@@ -3,6 +3,9 @@ defmodule Geolix.Adapter.MMDB2.Reader do
   Module to read mmdb2 database files and split them into data and metadata.
   """
 
+  @behaviour Geolix.Adapter.Reader
+
+
   @metadata_marker << 0xAB, 0xCD, 0xEF >> <> "MaxMind.com"
 
   def read_database("http" <> _ = filename) do
