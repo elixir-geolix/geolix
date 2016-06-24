@@ -1,6 +1,6 @@
-defmodule Geolix.Database do
+defmodule Geolix.Adapter.MMDB2.Database do
   @moduledoc """
-  Module to interact with the geo database.
+  Module to interact with mmdb2 databases.
 
   This includes proxy methods for reading the database and lookup up
   entries.
@@ -13,16 +13,16 @@ defmodule Geolix.Database do
 
   require Logger
 
-  @doc """
-  Looks up IP information.
-  """
-  @spec lookup(ip :: tuple, opts :: Keyword.t) :: map
+
+  @behaviour Geolix.Adapter.Database
+
   def lookup(ip, opts) do
     case opts[:where] do
       nil   -> lookup_all(ip, opts, Storage.Metadata.registered())
       where -> lookup_single(ip, where, opts)
     end
   end
+
 
   defp lookup_all(_,  _,    []),       do: %{}
   defp lookup_all(ip, opts, databases) do

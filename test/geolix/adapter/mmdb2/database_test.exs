@@ -1,4 +1,4 @@
-defmodule Geolix.DatabaseTest do
+defmodule Geolix.Adapter.MMDB2.DatabaseTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Adapter.MMDB2.Storage.Metadata
