@@ -8,7 +8,7 @@ defmodule Geolix.Mixfile do
       name:    "Geolix",
       version: "0.11.0-dev",
       elixir:  "~> 1.0",
-      deps:    deps,
+      deps:    deps(),
 
       build_embedded:  Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -23,8 +23,8 @@ defmodule Geolix.Mixfile do
       ],
 
       description:   "MaxMind GeoIP2 database reader/decoder",
-      docs:          docs,
-      package:       package,
+      docs:          docs(),
+      package:       package(),
       test_coverage: [ tool: ExCoveralls ] ]
   end
 
