@@ -10,6 +10,7 @@ defmodule Geolix.Adapter.MMDB2.Database do
 
   alias Geolix.Adapter.MMDB2.Decoder
   alias Geolix.Adapter.MMDB2.Storage
+  alias Geolix.Database.Loader
 
   require Logger
 
@@ -18,11 +19,17 @@ defmodule Geolix.Adapter.MMDB2.Database do
 
   def lookup(ip, opts) do
     case opts[:where] do
-      nil   -> lookup_all(ip, opts, Storage.Metadata.registered())
+      nil   -> lookup_all(ip, opts)
       where -> lookup_single(ip, where, opts)
     end
   end
 
+
+  defp lookup_all(ip, opts) do
+    databases = GenServer.call(Loader, :registered)
+
+    lookup_all(ip, opts, databases)
+  end
 
   defp lookup_all(_,  _,    []),       do: %{}
   defp lookup_all(ip, opts, databases) do

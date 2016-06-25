@@ -52,14 +52,6 @@ defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
   end
 
   @doc """
-  Returns the names of all registered metadata entries.
-  """
-  @spec registered() :: list
-  def registered() do
-    Agent.get(@name, &Map.keys/1)
-  end
-
-  @doc """
   Stores a set of metadata for a specific database.
   """
   @spec set(atom, Metadata.t) :: :ok

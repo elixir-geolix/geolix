@@ -36,6 +36,10 @@ defmodule Geolix.Database.Loader do
     end
   end
 
+  def handle_call(:registered, _, state) do
+    { :reply, Keyword.keys(state), state }
+  end
+
 
   # Internal methods
 
