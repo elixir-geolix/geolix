@@ -96,7 +96,7 @@ iex(2)> Geolix.set_database(:country, { :system, "SOME_SYSTEM_ENV_VARIABLE" })
 
 If Geolix cannot find the database it will return `{ :error, message }`,
 otherwise the return value will be `:ok`. Running `set_database/2` on an
-already configured database will reload it.
+already configured database will reload/replace it.
 
 
 #### Configuration (Remote Files)
