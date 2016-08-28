@@ -12,7 +12,15 @@ path_country =
 
 config :geolix,
   databases: [
-    city:    path_city,
-    country: path_country
+    %{
+      id:      :city,
+      adapter: Geolix.Adapter.MMDB2,
+      source:  path_city
+    },
+    %{
+      id:      :country,
+      adapter: Geolix.Adapter.MMDB2,
+      source:  path_country
+    }
   ],
   pool: [ size: 1, max_overflow: 0 ]

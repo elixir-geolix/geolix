@@ -29,6 +29,14 @@ defmodule Geolix do
   end
 
   @doc """
+  Loads a database according to its specification.
+  """
+  @spec load_database(map) :: :ok | { :error, String.t }
+  def load_database(database) do
+    GenServer.call(Loader, { :load_database, database }, :infinity)
+  end
+
+  @doc """
   Looks up IP information.
   """
   @spec lookup(ip :: tuple | String.t, opts  :: Keyword.t) :: nil | map

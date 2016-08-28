@@ -1,22 +1,23 @@
 Code.require_file("fixtures/list.exs", __DIR__)
 Code.require_file("fixtures/download.exs", __DIR__)
 
+alias Geolix.Adapter.MMDB2
 alias Geolix.TestFixtures
 
 
 TestFixtures.Download.run()
 
-Enum.each TestFixtures.List.get(), fn ({ name, filename, _remote }) ->
-  databases = Application.get_env(:geolix, :databases, [])
-  path      =
-       [ __DIR__, "fixtures", filename ]
+
+databases = Enum.map TestFixtures.List.get(), fn ({ id, filename, _remote }) ->
+  source =
+    [ __DIR__, "fixtures", filename ]
     |> Path.join()
     |> Path.expand()
 
-  databases = Keyword.put(databases, name, path)
-
-  Application.put_env(:geolix, :databases, databases)
+  %{ id: id, adapter: MMDB2, source: source }
 end
+
+Application.put_env(:geolix, :databases, databases)
 
 
 # Silent restart

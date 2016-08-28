@@ -66,15 +66,31 @@ use Mix.Config
 # static configuration
 config :geolix,
   databases: [
-    { :city,       "/absolute/path/to/cities/db"    },
-    { :country,    "/absolute/path/to/countries/db" },
-    { :enterprise, "http://my.internal.server/database.mmdb" }
+    %{
+      id:      :city,
+      adapter: Geolix.Adapter.MMDB2,
+      source:  "/absolute/path/to/cities/db"
+    },
+    %{
+      id:      :country,
+      adapter: Geolix.Adapter.MMDB2,
+      source:  "/absolute/path/to/countries/db"
+    },
+    %{
+      id:      :enterprise,
+      adapter: Geolix.Adapter.MMDB2,
+      source:  "http://my.internal.server/database.mmdb"
+    }
   ]
 
 # system environment configuration
 config :geolix,
   databases: [
-    { :city, { :system, "SOME_SYSTEM_ENV_VARIABLE" }}
+    %{
+      id:      :system_city,
+      adapter: Geolix.Adapter.MMDB2,
+      source:  { :system, "SOME_SYSTEM_ENV_VARIABLE" }
+    }
   ]
 ```
 
@@ -88,14 +104,22 @@ filename ends in ".gz" it will be loaded as a compressed file.
 It is also possible to (re-) configure the loaded databases during runtime:
 
 ```elixir
-iex(1)> Geolix.set_database(:city, "/absolute/path/to/cities/db.mmdb")
+iex(1)> Geolix.load_database(%{
+...(1)>   id:      :city,
+...(1)>   adapter: Geolix.Adapter.MMDB2,
+...(1)>   source:  "/absolute/path/to/cities/db.mmdb"
+...(1)> })
 :ok
-iex(2)> Geolix.set_database(:country, { :system, "SOME_SYSTEM_ENV_VARIABLE" })
+iex(2)> Geolix.load_database(%{
+...(2)>   id:      :country,
+...(2)>   adapter: Geolix.Adapter.MMDB2,
+...(2)>   source:  { :system, "SOME_SYSTEM_ENV_VARIABLE" }
+...(2)> })
 :ok
 ```
 
 If Geolix cannot find the database it will return `{ :error, message }`,
-otherwise the return value will be `:ok`. Running `set_database/2` on an
+otherwise the return value will be `:ok`. Running `load_database/1` on an
 already configured database will reload/replace it.
 
 

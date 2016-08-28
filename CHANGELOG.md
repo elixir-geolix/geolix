@@ -3,7 +3,15 @@
 ## v0.11.0-dev
 
 - Enhancements
+    - Database configuration has been extended to support upcoming adapters
     - "GeoIP-Enterprise" databases return structs instead of plain maps
+
+- Deprecations
+    - Configuring the applications databases using `{ :id, filename }` tuples
+      (or `Keyword.t`) has been deprecated in favor of a list of database
+      definition maps
+    - `Geolix.set_database/2` has been deprecated in favor of the new
+      `Geolix.load_database/1`
 
 ## v0.10.1 (2016-06-04)
 

@@ -1,34 +1,42 @@
 defmodule Geolix.Database.LoaderTest do
   use ExUnit.Case, async: true
 
+  alias Geolix.Adapter.MMDB2
   alias Geolix.Result
+
 
   @fixture_path [ __DIR__, "../../fixtures" ] |> Path.join() |> Path.expand()
 
+
   test "error if database contains no metadata" do
     path = Path.join([ @fixture_path, ".gitignore" ])
+    db   = %{ id: :invalid, adapter: MMDB2, source: path }
 
-    assert { :error, :no_metadata } == Geolix.set_database(:invalid, path)
+    assert { :error, :no_metadata } == Geolix.load_database(db)
   end
 
   test "reloading a database" do
-    db_city    = Path.join([ @fixture_path, "GeoIP2-City-Test.mmdb" ])
-    db_country = Path.join([ @fixture_path, "GeoIP2-Country-Test.mmdb" ])
+    path_city    = Path.join([ @fixture_path, "GeoIP2-City-Test.mmdb" ])
+    path_country = Path.join([ @fixture_path, "GeoIP2-Country-Test.mmdb" ])
 
-    assert :ok = Geolix.set_database(:reload, db_city)
+    db_city    = %{ id: :reload, adapter: MMDB2, source: path_city }
+    db_country = %{ id: :reload, adapter: MMDB2, source: path_country }
+
+    assert :ok = Geolix.load_database(db_city)
     assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :reload)
 
-    assert :ok = Geolix.set_database(:reload, db_country)
+    assert :ok = Geolix.load_database(db_country)
     assert %Result.Country{} = Geolix.lookup("2.125.160.216", where: :reload)
   end
 
   test "system environment configuration" do
-    db_city = Path.join([ @fixture_path, "GeoIP2-City-Test.mmdb" ])
-    var     = "GEOLIX_TEST_DATABASE_PATH"
+    path = Path.join([ @fixture_path, "GeoIP2-City-Test.mmdb" ])
+    var  = "GEOLIX_TEST_DATABASE_PATH"
+    db   = %{ id: :system_env, adapter: MMDB2, source: { :system, var }}
 
-    System.put_env(var, db_city)
+    System.put_env(var, path)
 
-    assert :ok = Geolix.set_database(:system_env, { :system, var })
+    assert :ok = Geolix.load_database(db)
     assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :system_env)
 
     System.delete_env(var)
@@ -45,19 +53,24 @@ defmodule Geolix.Database.LoaderTest do
     { :ok, httpd_pid } = :inets.start(:httpd, httpd_opts)
 
     # teste remote file loading
-    remote_port = :httpd.info(httpd_pid)[:port]
-    remote_db   = "http://localhost:#{ remote_port }/GeoIP2-City-Test.mmdb"
+    port = :httpd.info(httpd_pid)[:port]
+    path = "http://localhost:#{ port }/GeoIP2-City-Test.mmdb"
+    db   = %{ id: :remote, adapter: MMDB2, source: path }
 
-    assert :ok = Geolix.set_database(:remote, remote_db)
+    assert :ok = Geolix.load_database(db)
     assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :remote)
   end
 
 
   test "database with invalid filename (not found)" do
-    assert { :error, _ } = Geolix.set_database(:unknown_database, "invalid")
+    db = %{ id: :unknown_database, adapter: MMDB2, source: "invalid" }
+
+    assert { :error, _ } = Geolix.load_database(db)
   end
 
   test "database with invalid filename (remote not found)" do
-    assert { :error, _ } = Geolix.set_database(:unknown_database, "http://does.not.exist/")
+    db = %{ id: :unknown_database, adapter: MMDB2, source: "http://does.not.exist/" }
+
+    assert { :error, _ } = Geolix.load_database(db)
   end
 end
