@@ -78,48 +78,9 @@ defmodule Geolix.Database.Loader do
     |> load_database()
   end
 
-  defp load_database(%{ source: source, adapter: adapter } = database) do
-    reader = Module.concat([ adapter, Reader ])
+  defp load_database(%{ adapter: adapter } = database) do
+    loader = Module.concat([ adapter, Loader ])
 
-    source
-    |> reader.read_database()
-    |> split_data(database)
-    |> store_data(database)
-  end
-
-
-  defp split_data({ :error, _reason } = error, _), do: error
-  defp split_data({ data, meta }, %{ adapter: adapter }) do
-    decoder    = Module.concat([ adapter, Decoder ])
-    metastruct = Module.concat([ adapter, Metadata ])
-
-    meta           = decoder.value(meta, 0)
-    meta           = struct(metastruct, meta)
-    record_size    = Map.get(meta, :record_size)
-    node_count     = Map.get(meta, :node_count)
-    node_byte_size = div(record_size, 4)
-    tree_size      = node_count * node_byte_size
-
-    meta = %{ meta | node_byte_size: node_byte_size }
-    meta = %{ meta | tree_size:      tree_size }
-
-    tree      = data |> binary_part(0, tree_size)
-    data_size = byte_size(data) - byte_size(tree) - 16
-    data      = data |> binary_part(tree_size + 16, data_size)
-
-    { tree, data, meta }
-  end
-
-  defp store_data({ :error, _reason } = error, _), do: error
-  defp store_data({ tree, data, meta }, %{ id: id, adapter: adapter}) do
-    storage_data = Module.concat([ adapter, Storage.Data ])
-    storage_meta = Module.concat([ adapter, Storage.Metadata ])
-    storage_tree = Module.concat([ adapter, Storage.Tree ])
-
-    storage_data.set(id, data)
-    storage_meta.set(id, meta)
-    storage_tree.set(id, tree)
-
-    :ok
+    loader.load(database)
   end
 end
