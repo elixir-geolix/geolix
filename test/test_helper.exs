@@ -18,13 +18,7 @@ databases = Enum.map TestFixtures.List.get(), fn ({ id, filename, _remote }) ->
 end
 
 Application.put_env(:geolix, :databases, databases)
-
-
-# Silent restart
-Logger.remove_backend(:console)
-Application.stop(:geolix)
-Application.ensure_all_started(:geolix)
-Logger.add_backend(:console, flush: true)
+Enum.each(databases, &Geolix.load_database/1)
 
 
 ExUnit.start()
