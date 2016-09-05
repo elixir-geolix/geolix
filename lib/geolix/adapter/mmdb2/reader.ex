@@ -3,11 +3,13 @@ defmodule Geolix.Adapter.MMDB2.Reader do
   Module to read mmdb2 database files and split them into data and metadata.
   """
 
-  @behaviour Geolix.Adapter.Reader
-
-
   @metadata_marker << 0xAB, 0xCD, 0xEF >> <> "MaxMind.com"
 
+  @doc """
+  Reads a database file and returns the data and metadata parts from it.
+  """
+  @spec read_database(String.t) :: { binary | :error,
+                                     binary | :no_metadata }
   def read_database("http" <> _ = filename) do
     Application.ensure_all_started(:inets)
 
