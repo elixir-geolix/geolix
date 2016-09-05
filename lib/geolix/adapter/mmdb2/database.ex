@@ -15,8 +15,10 @@ defmodule Geolix.Adapter.MMDB2.Database do
   require Logger
 
 
-  @behaviour Geolix.Adapter.Database
-
+  @doc """
+  Implementation of `Geolix.Adapter.MMDB2.lookup/2`.
+  """
+  @spec lookup(tuple, Keyword.t) :: map
   def lookup(ip, opts) do
     case opts[:where] do
       nil   -> lookup_all(ip, opts)

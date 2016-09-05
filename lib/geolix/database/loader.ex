@@ -79,8 +79,6 @@ defmodule Geolix.Database.Loader do
   end
 
   defp load_database(%{ adapter: adapter } = database) do
-    loader = Module.concat([ adapter, Loader ])
-
-    loader.load(database)
+    adapter.load_database(database)
   end
 end

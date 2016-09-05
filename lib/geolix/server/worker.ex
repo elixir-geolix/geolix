@@ -3,7 +3,7 @@ defmodule Geolix.Server.Worker do
   Worker module reading a database and looking up IP information.
   """
 
-  alias Geolix.Adapter.MMDB2.Database
+  alias Geolix.Adapter.MMDB2
 
   use GenServer
 
@@ -14,6 +14,6 @@ defmodule Geolix.Server.Worker do
   end
 
   def handle_call({ :lookup, ip, opts }, _, state) do
-    { :reply, Database.lookup(ip, opts), state }
+    { :reply, MMDB2.lookup(ip, opts), state }
   end
 end

@@ -9,9 +9,11 @@ defmodule Geolix.Adapter.MMDB2.Loader do
   alias Geolix.Adapter.MMDB2.Storage
 
 
-  @behaviour Geolix.Adapter.Loader
-
-  def load(%{ id: id, source: source }) do
+  @doc """
+  Implementation of `Geolix.Adapter.MMDB2.load_database/2`.
+  """
+  @spec load_database(map) :: :ok
+  def load_database(%{ id: id, source: source }) do
     source
     |> Reader.read_database()
     |> split_data()
