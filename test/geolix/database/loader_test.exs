@@ -2,10 +2,22 @@ defmodule Geolix.Database.LoaderTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Adapter.MMDB2
+  alias Geolix.Database.Loader
   alias Geolix.Result
 
 
   @fixture_path [ __DIR__, "../../fixtures" ] |> Path.join() |> Path.expand()
+
+  test "fetching registered database information" do
+    id       = :fixture_city
+    database = GenServer.call(Loader, { :get_database, id })
+
+    assert %{ id: ^id } = database
+  end
+
+  test "fetching un-registered database information" do
+    refute GenServer.call(Loader, { :get_database, :database_not_loaded })
+  end
 
 
   test "error if database contains no metadata" do

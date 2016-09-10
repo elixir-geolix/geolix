@@ -29,6 +29,10 @@ defmodule Geolix.Database.Loader do
 
   # GenServer callbacks
 
+  def handle_call({ :get_database, which }, _, state) do
+    { :reply, state[which], state }
+  end
+
   def handle_call({ :load_database, database }, _, state) do
     case load_database(database) do
       :ok   -> { :reply, :ok, Keyword.put(state, database[:id], database) }
