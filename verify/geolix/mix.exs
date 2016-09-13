@@ -5,7 +5,7 @@ defmodule Geolix.Verification.Mixfile do
     [ app:       :geolix_verification,
       version:   "0.0.1",
       elixir:    "~> 1.0",
-      deps:      deps,
+      deps:      deps(),
       deps_path: "../../deps",
       lockfile:  "../../mix.lock" ]
   end
