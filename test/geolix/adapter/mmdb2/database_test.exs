@@ -1,7 +1,13 @@
 defmodule Geolix.Adapter.MMDB2.DatabaseTest do
   use ExUnit.Case, async: true
 
+  alias Geolix.Adapter.MMDB2.Database
   alias Geolix.Adapter.MMDB2.Storage.Metadata
+
+
+  test "empty :where defaults to nil result" do
+    assert nil == Database.lookup("8.8.8.8", [])
+  end
 
 
   test "ipv4 24 bit record size" do

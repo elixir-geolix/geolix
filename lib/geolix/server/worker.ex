@@ -4,8 +4,10 @@ defmodule Geolix.Server.Worker do
   """
 
   alias Geolix.Adapter.MMDB2
+  alias Geolix.Database.Loader
 
   use GenServer
+
 
   @behaviour :poolboy_worker
 
@@ -14,6 +16,30 @@ defmodule Geolix.Server.Worker do
   end
 
   def handle_call({ :lookup, ip, opts }, _, state) do
-    { :reply, MMDB2.lookup(ip, opts), state }
+    case opts[:where] do
+      nil    -> { :reply, lookup_all(ip, opts),    state }
+      _where -> { :reply, lookup_single(ip, opts), state }
+    end
   end
+
+
+  defp lookup_all(ip, opts) do
+    databases = GenServer.call(Loader, :registered)
+
+    lookup_all(ip, opts, databases)
+  end
+
+  defp lookup_all(_,  _,    []),       do: %{}
+  defp lookup_all(ip, opts, databases) do
+    databases
+    |> Enum.map(fn (database) ->
+	 task_opts = Keyword.put(opts, :where, database)
+
+         { database, Task.async(fn -> lookup_single(ip, task_opts) end) }
+       end)
+    |> Enum.map(fn ({ database, task }) -> { database, Task.await(task) } end)
+    |> Enum.into(%{})
+  end
+
+  defp lookup_single(ip, opts), do: MMDB2.lookup(ip, opts)
 end

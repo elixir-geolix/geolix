@@ -10,7 +10,6 @@ defmodule Geolix.Adapter.MMDB2.Database do
 
   alias Geolix.Adapter.MMDB2.Decoder
   alias Geolix.Adapter.MMDB2.Storage
-  alias Geolix.Database.Loader
 
   require Logger
 
@@ -18,32 +17,16 @@ defmodule Geolix.Adapter.MMDB2.Database do
   @doc """
   Implementation of `Geolix.Adapter.MMDB2.lookup/2`.
   """
-  @spec lookup(tuple, Keyword.t) :: map
+  @spec lookup(tuple, Keyword.t) :: map | nil
   def lookup(ip, opts) do
     case opts[:where] do
-      nil   -> lookup_all(ip, opts)
-      where -> lookup_single(ip, where, opts)
+      nil   -> nil
+      where -> lookup(ip, where, opts)
     end
   end
 
 
-  defp lookup_all(ip, opts) do
-    databases = GenServer.call(Loader, :registered)
-
-    lookup_all(ip, opts, databases)
-  end
-
-  defp lookup_all(_,  _,    []),       do: %{}
-  defp lookup_all(ip, opts, databases) do
-    databases
-    |> Enum.map(fn (database) ->
-         { database, Task.async(fn -> lookup_single(ip, database, opts) end) }
-       end)
-    |> Enum.map(fn ({ database, task }) -> { database, Task.await(task) } end)
-    |> Enum.into(%{})
-  end
-
-  defp lookup_single(ip, where, opts) do
+  defp lookup(ip, where, opts) do
     data = Storage.Data.get(where)
     meta = Storage.Metadata.get(where)
     tree = Storage.Tree.get(where)
