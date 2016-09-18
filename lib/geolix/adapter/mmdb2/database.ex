@@ -43,7 +43,7 @@ defmodule Geolix.Adapter.MMDB2.Database do
     |> Enum.into(%{})
   end
 
-  def lookup_single(ip, where, opts) do
+  defp lookup_single(ip, where, opts) do
     data = Storage.Data.get(where)
     meta = Storage.Metadata.get(where)
     tree = Storage.Tree.get(where)
