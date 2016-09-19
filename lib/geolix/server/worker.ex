@@ -41,5 +41,12 @@ defmodule Geolix.Server.Worker do
     |> Enum.into(%{})
   end
 
-  defp lookup_single(ip, opts), do: MMDB2.lookup(ip, opts)
+  defp lookup_single(ip, opts) do
+    database = GenServer.call(Loader, { :get_database, opts[:where] })
+
+    case database do
+      nil   -> nil
+      _info -> MMDB2.lookup(ip, opts)
+    end
+  end
 end
