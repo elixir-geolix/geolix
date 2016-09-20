@@ -5,6 +5,7 @@
 - Enhancements
     - Database configuration has been extended to support upcoming adapters
     - "GeoIP-Enterprise" databases return structs instead of plain maps
+    - Lookups are done with a configurable timeout
 
 - Deprecations
     - Configuring the applications databases using `{ :id, filename }` tuples

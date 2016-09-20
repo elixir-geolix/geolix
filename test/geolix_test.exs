@@ -59,4 +59,12 @@ defmodule GeolixTest do
   test "lookup from unregistered database" do
     assert nil == Geolix.lookup("127.0.0.1", where: :unknown_database)
   end
+
+  test "lookup using timeout" do
+    ip     = "81.2.69.160"
+    opts   = [ where: :fixture_city, timeout: 50 ]
+    result = Geolix.lookup(ip, opts)
+
+    assert %Geolix.Result.City{} = result
+  end
 end

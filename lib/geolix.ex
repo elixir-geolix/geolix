@@ -51,10 +51,12 @@ defmodule Geolix do
   end
 
   def lookup(ip, opts) do
+    timeout = Keyword.get(opts, :timeout, 5_000)
+
     :poolboy.transaction(Pool, &GenServer.call(&1, {
       :lookup,
       ip,
       Keyword.merge(@lookup_default_opts, opts)
-    }))
+    }, timeout))
   end
 end

@@ -162,6 +162,7 @@ Lookup options:
 * `:as` - Return the result as a `:struct` or `:raw` (plain map)
 * `:locale` - Language (atom) to fetch information for.
   Only affects "top level" struct values. Defaults to `:en`.
+* `:timeout` - GenServer call timeout for the lookup. Defaults to `5_000`.
 * `:where` - Lookup information in a single registered database
 
 Every non-nil result will include the IP as a tuple either directly in the
