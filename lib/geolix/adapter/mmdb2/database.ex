@@ -34,9 +34,6 @@ defmodule Geolix.Adapter.MMDB2.Database do
     lookup(ip, data, meta, tree, opts)
   end
 
-  defp lookup(_, nil, _, _, _), do: nil
-  defp lookup(_, _, nil, _, _), do: nil
-  defp lookup(_, _, _, nil, _), do: nil
   defp lookup(ip, data, meta, tree, opts) do
     parse_lookup_tree(ip, tree, meta)
     |> lookup_pointer(data, meta.node_count)
