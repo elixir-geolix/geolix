@@ -62,7 +62,7 @@ defmodule GeolixTest do
 
   test "lookup using timeout" do
     ip     = "81.2.69.160"
-    opts   = [ where: :fixture_city, timeout: 50 ]
+    opts   = [ where: :fixture_city, timeout: 500 ]
     result = Geolix.lookup(ip, opts)
 
     assert %Geolix.Result.City{} = result
