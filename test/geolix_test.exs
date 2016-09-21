@@ -45,8 +45,8 @@ defmodule GeolixTest do
 
     lookup = Geolix.lookup(ip)
 
-    assert nil == lookup[:fixture__city]
-    assert nil == lookup[:fixture__country]
+    assert nil == lookup[:fixture_city]
+    assert nil == lookup[:fixture_country]
   end
 
   test "lookup from all registered databases" do
