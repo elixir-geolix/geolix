@@ -64,7 +64,7 @@ defmodule Geolix.Database.LoaderTest do
                            document_root: @fixture_path |> to_char_list ]
     { :ok, httpd_pid } = :inets.start(:httpd, httpd_opts)
 
-    # teste remote file loading
+    # test remote file loading
     port = :httpd.info(httpd_pid)[:port]
     path = "http://localhost:#{ port }/GeoIP2-City-Test.mmdb"
     db   = %{ id: :remote, adapter: MMDB2, source: path }
