@@ -20,21 +20,7 @@ defmodule Geolix do
   def start(_type, _args), do: Geolix.Supervisor.start_link()
 
 
-  @doc """
-  Adds a database to lookup data from.
-  """
-  @spec set_database(atom, database_file) :: :ok | { :error, String.t }
-  def set_database(which, filename) do
-    GenServer.call(Loader, { :set_database, which, filename }, :infinity)
-  end
-
-  @doc """
-  Loads a database according to its specification.
-  """
-  @spec load_database(map) :: :ok | { :error, String.t }
-  def load_database(database) do
-    GenServer.call(Loader, { :load_database, database }, :infinity)
-  end
+  # Database lookup
 
   @doc """
   Looks up IP information.
@@ -58,5 +44,24 @@ defmodule Geolix do
       ip,
       Keyword.merge(@lookup_default_opts, opts)
     }, timeout))
+  end
+
+
+  # Database management
+
+  @doc """
+  Loads a database according to its specification.
+  """
+  @spec load_database(map) :: :ok | { :error, String.t }
+  def load_database(database) do
+    GenServer.call(Loader, { :load_database, database }, :infinity)
+  end
+
+  @doc """
+  Adds a database to lookup data from.
+  """
+  @spec set_database(atom, database_file) :: :ok | { :error, String.t }
+  def set_database(which, filename) do
+    GenServer.call(Loader, { :set_database, which, filename }, :infinity)
   end
 end
