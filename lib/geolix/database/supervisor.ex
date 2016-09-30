@@ -14,7 +14,7 @@ defmodule Geolix.Database.Supervisor do
   """
   @spec start_link(term) :: Supervisor.on_start
   def start_link(default \\ []) do
-    Supervisor.start_link(__MODULE__, default)
+    Supervisor.start_link(__MODULE__, default, [ name: __MODULE__ ])
   end
 
   @doc false
