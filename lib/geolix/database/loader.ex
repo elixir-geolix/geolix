@@ -16,8 +16,7 @@ defmodule Geolix.Database.Loader do
   end
 
   def init(databases) do
-    init_databases(databases)
-
+    :ok   = GenServer.cast(__MODULE__, :reload_databases)
     state =
       databases
       |> Enum.map(&fix_legacy/1)
@@ -50,6 +49,12 @@ defmodule Geolix.Database.Loader do
     { :reply, Keyword.keys(state), state }
   end
 
+  def handle_cast(:reload_databases, state) do
+    :ok = state |> Keyword.values() |> Enum.each(&load_database/1)
+
+    { :noreply, state }
+  end
+
 
   # Internal methods
 
@@ -66,15 +71,6 @@ defmodule Geolix.Database.Loader do
     }
   end
 
-
-  defp init_databases([]), do: []
-  defp init_databases([ database | databases ]) do
-    database
-    |> fix_legacy()
-    |> load_database()
-
-    init_databases(databases)
-  end
 
   defp load_database(%{ source: { :system, var }} = database) do
     database

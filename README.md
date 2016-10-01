@@ -122,6 +122,9 @@ If Geolix cannot find the database it will return `{ :error, message }`,
 otherwise the return value will be `:ok`. Running `load_database/1` on an
 already configured database will reload/replace it.
 
+If you want to forcefully reload all database configured in the application
+environment you can use `Geolix.reload_databases/0` to do so. This uses an
+internal `GenServer.cast/2` so a slight delay will occur.
 
 #### Configuration (Remote Files)
 
