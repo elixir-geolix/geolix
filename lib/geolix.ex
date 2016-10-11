@@ -51,6 +51,9 @@ defmodule Geolix do
 
   @doc """
   Loads a database according to its specification.
+
+  Requires at least the fields `:id` and `:adapter`. Any other required
+  fields depend on the adapter's requirements.
   """
   @spec load_database(map) :: :ok | { :error, String.t }
   def load_database(database) do

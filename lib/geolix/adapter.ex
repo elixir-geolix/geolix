@@ -6,6 +6,9 @@ defmodule Geolix.Adapter do
 
   @doc """
   Loads a given database into Geolix.
+
+  Requires at least the fields `:id` and `:adapter`. Any other required
+  fields depend on the adapter's requirements.
   """
   @callback load_database(map) :: :ok
 
