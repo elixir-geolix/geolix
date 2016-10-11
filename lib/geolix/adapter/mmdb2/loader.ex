@@ -10,7 +10,7 @@ defmodule Geolix.Adapter.MMDB2.Loader do
 
 
   @doc """
-  Implementation of `Geolix.Adapter.MMDB2.load_database/2`.
+  Implementation of `Geolix.Adapter.MMDB2.load_database/1`.
   """
   @spec load_database(map) :: :ok
   def load_database(%{ id: id, source: source }) do
