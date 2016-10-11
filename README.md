@@ -6,7 +6,7 @@ MaxMind GeoIP2 database reader/decoder.
 ## Installation
 
 Fetch both the Geolix repository and a distribution of the
-[MaxMind GeoIP2](http://dev.maxmind.com/geoip/geoip2/downloadable/)
+[MaxMind GeoIP2](https://www.maxmind.com/en/geoip2-databases)
 databases (or the free [GeoLite2](http://dev.maxmind.com/geoip/geoip2/geolite2/)
 variant).
 
