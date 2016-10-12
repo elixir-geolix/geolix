@@ -11,8 +11,17 @@ defmodule Geolix.Adapter.MMDB2.Loader do
 
   @doc """
   Implementation of `Geolix.Adapter.MMDB2.load_database/1`.
+
+  Requires the parameter `:source` as the location of the database. Can access
+  the system environment by receiving a `{ :system, "env_var_name" }` tuple.
   """
   @spec load_database(map) :: :ok
+  def load_database(%{ source: { :system, var }} = database) do
+    database
+    |> Map.put(:source, System.get_env(var))
+    |> load_database()
+  end
+
   def load_database(%{ id: id, source: source }) do
     source
     |> Reader.read_database()

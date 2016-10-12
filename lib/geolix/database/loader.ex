@@ -71,13 +71,6 @@ defmodule Geolix.Database.Loader do
     }
   end
 
-
-  defp load_database(%{ source: { :system, var }} = database) do
-    database
-    |> Map.put(:source, System.get_env(var))
-    |> load_database()
-  end
-
   defp load_database(%{ adapter: adapter } = database) do
     adapter.load_database(database)
   end
