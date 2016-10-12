@@ -1,6 +1,6 @@
 defmodule Geolix.Adapter.MMDB2.Storage.Data do
   @moduledoc """
-  Geolix data storage.
+  Geolix MMDB2 data storage.
 
   ## Usage
 

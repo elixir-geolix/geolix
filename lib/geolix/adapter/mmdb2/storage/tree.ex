@@ -1,6 +1,6 @@
 defmodule Geolix.Adapter.MMDB2.Storage.Tree do
   @moduledoc """
-  Geolix tree storage.
+  Geolix MMDB2 tree storage.
 
   ## Usage
 
