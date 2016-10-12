@@ -5,6 +5,9 @@ defmodule Geolix.Database.Loader do
 
   use GenServer
 
+  alias Geolix.Database.Supervisor, as: DatabaseSupervisor
+
+
   # GenServer lifecycle
 
   @doc """
@@ -72,6 +75,8 @@ defmodule Geolix.Database.Loader do
   end
 
   defp load_database(%{ adapter: adapter } = database) do
+    :ok = DatabaseSupervisor.start_adapter(adapter)
+
     adapter.load_database(database)
   end
 end

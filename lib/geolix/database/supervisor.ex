@@ -20,14 +20,36 @@ defmodule Geolix.Database.Supervisor do
   @doc false
   def init(_default) do
     databases = Application.get_env(:geolix, :databases, [])
-    children  = [
-      worker(Storage.Data, []),
-      worker(Storage.Metadata, []),
-      worker(Storage.Tree, []),
-
-      worker(Loader, [ databases ])
-    ]
+    children  = [ worker(Loader, [ databases ]) | workers(databases) ]
 
     supervise(children, strategy: :one_for_all)
+  end
+
+
+  @doc """
+  Starts the worker processes of an adapter if not already under supervision.
+  """
+  @spec start_adapter(Module.t) :: :ok
+  def start_adapter(adapter) do
+    adapter
+    |> database_workers()
+    |> Enum.each(&( Supervisor.start_child(__MODULE__, &1) ))
+  end
+
+
+  defp database_workers(Geolix.Adapter.MMDB2) do
+    [
+      worker(Storage.Data, []),
+      worker(Storage.Metadata, []),
+      worker(Storage.Tree, [])
+    ]
+  end
+
+  defp workers(databases) do
+    databases
+    |> Enum.map(&( Map.get(&1, :adapter, nil) ))
+    |> Enum.uniq()
+    |> Enum.reject(&( &1 == nil ))
+    |> Enum.flat_map(&database_workers/1)
   end
 end
