@@ -5,7 +5,7 @@
 - Enhancements
     - All configured databases can be reloaded in the background
       using `Geolix.reload_databases/0`
-    - Database configuration has been extended to support upcoming adapters
+    - Database configuration has been extended to support adapters
     - "GeoIP-Enterprise" databases return structs instead of plain maps
     - Lookups are done with a configurable timeout
 
