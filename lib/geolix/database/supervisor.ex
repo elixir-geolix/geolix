@@ -5,7 +5,8 @@ defmodule Geolix.Database.Supervisor do
 
   use Supervisor
 
-  alias Geolix.Adapter.MMDB2.Storage
+  alias Geolix.Adapter.Fake.Storage,  as: FakeStorage
+  alias Geolix.Adapter.MMDB2.Storage, as: MMDB2Storage
   alias Geolix.Database.Loader
 
 
@@ -37,11 +38,15 @@ defmodule Geolix.Database.Supervisor do
   end
 
 
+  defp database_workers(Geolix.Adapter.Fake) do
+    [ worker(FakeStorage, []) ]
+  end
+
   defp database_workers(Geolix.Adapter.MMDB2) do
     [
-      worker(Storage.Data, []),
-      worker(Storage.Metadata, []),
-      worker(Storage.Tree, [])
+      worker(MMDB2Storage.Data, []),
+      worker(MMDB2Storage.Metadata, []),
+      worker(MMDB2Storage.Tree, [])
     ]
   end
 
