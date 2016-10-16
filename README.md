@@ -224,6 +224,18 @@ executed on each run
 (i.e. `./travis/verify_install.sh` and `./travis/verify_script.sh`).
 
 
+## Adapters
+
+If you need a different database or have other special needs for lookups you
+can write your own adapter and configure it.
+
+Each adapter is expected to adhere to the `Geolix.Adapter` behaviour.
+
+The MMDB2 adapter (`Geolix.Adapter.MMDB2`) is pre-packaged and usable once you
+configure it. For testing you can use a fake adapter (`Geolix.Adapter.Fake`)
+working on a plain `Agent` holding your IP lookup responses.
+
+
 ## License
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
