@@ -50,6 +50,8 @@ defmodule Geolix.Database.Supervisor do
     ]
   end
 
+  defp database_workers(_), do: []
+
   defp workers(databases) do
     databases
     |> Enum.map(&( Map.get(&1, :adapter, nil) ))
