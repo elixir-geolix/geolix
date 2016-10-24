@@ -5,8 +5,6 @@ defmodule Geolix.Database.Supervisor do
 
   use Supervisor
 
-  alias Geolix.Adapter.Fake.Storage,  as: FakeStorage
-  alias Geolix.Adapter.MMDB2.Storage, as: MMDB2Storage
   alias Geolix.Database.Loader
 
 
@@ -33,30 +31,25 @@ defmodule Geolix.Database.Supervisor do
   @spec start_adapter(Module.t) :: :ok
   def start_adapter(adapter) do
     adapter
-    |> database_workers()
+    |> adapter_workers()
     |> Enum.each(&( Supervisor.start_child(__MODULE__, &1) ))
   end
 
 
-  defp database_workers(Geolix.Adapter.Fake) do
-    [ worker(FakeStorage, []) ]
-  end
+  defp adapter_workers(adapter) do
+    { :module, ^adapter } = Code.ensure_loaded(adapter)
 
-  defp database_workers(Geolix.Adapter.MMDB2) do
-    [
-      worker(MMDB2Storage.Data, []),
-      worker(MMDB2Storage.Metadata, []),
-      worker(MMDB2Storage.Tree, [])
-    ]
+    case function_exported?(adapter, :database_workers, 0) do
+      true  -> adapter.database_workers()
+      false -> []
+    end
   end
-
-  defp database_workers(_), do: []
 
   defp workers(databases) do
     databases
     |> Enum.map(&( Map.get(&1, :adapter, nil) ))
     |> Enum.uniq()
     |> Enum.reject(&( &1 == nil ))
-    |> Enum.flat_map(&database_workers/1)
+    |> Enum.flat_map(&adapter_workers/1)
   end
 end

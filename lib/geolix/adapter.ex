@@ -3,6 +3,10 @@ defmodule Geolix.Adapter do
   Adapter behaviour module.
   """
 
+  @optional_callbacks [
+    database_workers: 0
+  ]
+
 
   @doc """
   Loads a given database into Geolix.
@@ -20,4 +24,13 @@ defmodule Geolix.Adapter do
   should be returned instead.
   """
   @callback lookup(ip :: tuple, opts :: Keyword.t) :: map | nil
+
+  @doc """
+  Returns the children to be supervised by `Geolix.Database.Supervisor`.
+
+  If no automatic supervision should take place or it is intended to use a
+  adapter specific supervisor (i.e. using the application config) this callback
+  should be either unimplemented or return an empty list.
+  """
+  @callback database_workers() :: list
 end

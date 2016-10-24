@@ -5,10 +5,21 @@ defmodule Geolix.Adapter.MMDB2 do
 
   alias Geolix.Adapter.MMDB2.Database
   alias Geolix.Adapter.MMDB2.Loader
+  alias Geolix.Adapter.MMDB2.Storage
 
   @behaviour Geolix.Adapter
 
   defdelegate load_database(database), to: Loader
 
   defdelegate lookup(ip, opts), to: Database
+
+  def database_workers() do
+    import Supervisor.Spec
+
+    [
+      worker(Storage.Data, []),
+      worker(Storage.Metadata, []),
+      worker(Storage.Tree, [])
+    ]
+  end
 end
