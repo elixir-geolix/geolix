@@ -9,6 +9,15 @@ defmodule Geolix.Adapter do
 
 
   @doc """
+  Returns the children to be supervised by `Geolix.Database.Supervisor`.
+
+  If no automatic supervision should take place or it is intended to use a
+  adapter specific supervisor (i.e. using the application config) this callback
+  should be either unimplemented or return an empty list.
+  """
+  @callback database_workers() :: list
+
+  @doc """
   Loads a given database into Geolix.
 
   Requires at least the fields `:id` and `:adapter`. Any other required
@@ -24,13 +33,4 @@ defmodule Geolix.Adapter do
   should be returned instead.
   """
   @callback lookup(ip :: tuple, opts :: Keyword.t) :: map | nil
-
-  @doc """
-  Returns the children to be supervised by `Geolix.Database.Supervisor`.
-
-  If no automatic supervision should take place or it is intended to use a
-  adapter specific supervisor (i.e. using the application config) this callback
-  should be either unimplemented or return an empty list.
-  """
-  @callback database_workers() :: list
 end

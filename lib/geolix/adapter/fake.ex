@@ -8,6 +8,12 @@ defmodule Geolix.Adapter.Fake do
   @behaviour Geolix.Adapter
 
 
+  def database_workers() do
+    import Supervisor.Spec
+
+    [ worker(Storage, []) ]
+  end
+
   @doc """
   Implementation of `Geolix.Adapter.load_database/1`.
 
@@ -24,11 +30,5 @@ defmodule Geolix.Adapter.Fake do
       nil   -> nil
       where -> where |> Storage.get() |> Map.get(ip, nil)
     end
-  end
-
-  def database_workers() do
-    import Supervisor.Spec
-
-    [ worker(Storage, []) ]
   end
 end
