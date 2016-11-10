@@ -19,7 +19,7 @@ defmodule Geolix.ReloadTest do
 
     on_exit fn ->
       :ok = Application.put_env(:geolix, :databases, databases)
-      :ok = restart_supervisor
+      :ok = restart_supervisor()
     end
   end
 
