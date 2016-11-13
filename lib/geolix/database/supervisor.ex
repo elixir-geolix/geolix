@@ -51,5 +51,6 @@ defmodule Geolix.Database.Supervisor do
     |> Enum.uniq()
     |> Enum.reject(&( &1 == nil ))
     |> Enum.flat_map(&adapter_workers/1)
+    |> Enum.uniq_by(fn ({ id, _, _, _, _, _ }) -> id end)
   end
 end
