@@ -4,7 +4,8 @@ defmodule Geolix.Adapter do
   """
 
   @optional_callbacks [
-    database_workers: 0
+    database_workers: 0,
+    load_database:    1
   ]
 
 

@@ -77,6 +77,9 @@ defmodule Geolix.Database.Loader do
   defp load_database(%{ adapter: adapter } = database) do
     :ok = DatabaseSupervisor.start_adapter(adapter)
 
-    adapter.load_database(database)
+    case function_exported?(adapter, :load_database, 1) do
+      true  -> adapter.load_database(database)
+      false -> :ok
+    end
   end
 end
