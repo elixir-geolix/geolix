@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.11.0-dev
+## v0.11.0 (2016-12-28)
 
 - Enhancements
     - All configured databases can be reloaded in the background
