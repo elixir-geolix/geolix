@@ -12,7 +12,7 @@
     - Lookups are done with a configurable timeout
 
 - Deprecations
-    - Configuring the applications databases using `{ :id, filename }` tuples
+    - Configuring the application's databases using `{ :id, filename }` tuples
       (or `Keyword.t`) has been deprecated in favor of a list of database
       definition maps
     - `Geolix.set_database/2` has been deprecated in favor of the new
