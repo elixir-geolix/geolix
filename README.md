@@ -25,8 +25,8 @@ end
 ```
 
 __Note__: If you are reading this on
-[GitHub](https://github.com/mneudert/geolix) then the information in this file
-may be out of sync with the [Hex package](https://hex.pm/packages/geolix).
+[GitHub](https://github.com/elixir-geolix/geolix) then the information in this
+file may be out of sync with the [Hex package](https://hex.pm/packages/geolix).
 If you are using this library through Hex please refer to the appropriate
 documentation on HexDocs (link available on Hex).
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.12.0-dev
+
+- Ownership has been transferred to the
+  [`elixir_geolix`](https://github.com/elixir-geolix) organisation
+
 ## v0.11.0 (2016-12-28)
 
 - Enhancements
@@ -29,7 +34,7 @@
 - Enhancements
     - Databases are reloaded if a storage process gets restarted
     - Databases can be directly loaded from remote (http) locations if
-      configured ([#10](https://github.com/mneudert/geolix/pull/10))
+      configured ([#10](https://github.com/elixir-geolix/geolix/pull/10))
     - Paths can be configured by accessing the system environment
     - Storage processes are now supervised
 

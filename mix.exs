@@ -1,7 +1,7 @@
 defmodule Geolix.Mixfile do
   use Mix.Project
 
-  @url_github "https://github.com/mneudert/geolix"
+  @url_github "https://github.com/elixir-geolix/geolix"
 
   def project do
     [ app:     :geolix,
