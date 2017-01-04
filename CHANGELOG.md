@@ -5,6 +5,9 @@
 - Ownership has been transferred to the
   [`elixir_geolix`](https://github.com/elixir-geolix) organisation
 
+- Backwards incompatible changes
+    - Support for non-map database configuration has been removed
+
 ## v0.11.0 (2016-12-28)
 
 - Enhancements

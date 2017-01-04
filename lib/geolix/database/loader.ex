@@ -20,10 +20,7 @@ defmodule Geolix.Database.Loader do
 
   def init(databases) do
     :ok   = GenServer.cast(__MODULE__, :reload_databases)
-    state =
-      databases
-      |> Enum.map(&fix_legacy/1)
-      |> Enum.map(fn (database) -> { database[:id], database } end)
+    state = Enum.map(databases, &({ Map.fetch!(&1, :id), &1 }))
 
     { :ok, state }
   end
@@ -42,12 +39,6 @@ defmodule Geolix.Database.Loader do
     end
   end
 
-  def handle_call({ :set_database, which, filename }, from, state) do
-    database = fix_legacy({ which, filename })
-
-    handle_call({ :load_database, database }, from, state)
-  end
-
   def handle_call(:registered, _, state) do
     { :reply, Keyword.keys(state), state }
   end
@@ -60,19 +51,6 @@ defmodule Geolix.Database.Loader do
 
 
   # Internal methods
-
-  defp fix_legacy(database) when is_map(database), do: database
-  defp fix_legacy({ which, filename }) do
-    IO.write :stderr, "The database '#{ inspect which }' is loaded using" <>
-                      " a deprecated tuple definition. Please update to" <>
-                      " the new map based format."
-
-    %{
-      id:      which,
-      adapter: Geolix.Adapter.MMDB2,
-      source:  filename
-    }
-  end
 
   defp load_database(%{ adapter: adapter } = database) do
     :ok = DatabaseSupervisor.start_adapter(adapter)

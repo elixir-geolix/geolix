@@ -65,12 +65,4 @@ defmodule Geolix do
   """
   @spec reload_databases() :: :ok
   def reload_databases(), do: GenServer.cast(Loader, :reload_databases)
-
-  @doc """
-  Adds a database to lookup data from.
-  """
-  @spec set_database(atom, database_file) :: :ok | { :error, String.t }
-  def set_database(which, filename) do
-    GenServer.call(Loader, { :set_database, which, filename }, :infinity)
-  end
 end
