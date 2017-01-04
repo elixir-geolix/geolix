@@ -1,4 +1,4 @@
-defmodule Geolix.Result.CityTest do
+defmodule Geolix.Adapter.MMDB2.Result.CityTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Record.Subdivision

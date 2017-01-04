@@ -1,4 +1,4 @@
-defmodule Geolix.ReloadTest do
+defmodule Geolix.Database.SupervisorTest do
   use ExUnit.Case, async: false
 
   alias Geolix.Adapter.Fake
@@ -38,7 +38,7 @@ defmodule Geolix.ReloadTest do
   end
 
 
-  test "reload databases" do
+  test "reload databases on supervisor restart" do
     assert @result == Geolix.lookup(@ip, where: @reload_id)
 
     # break data

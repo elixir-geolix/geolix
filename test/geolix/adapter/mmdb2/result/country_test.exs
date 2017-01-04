@@ -1,4 +1,4 @@
-defmodule Geolix.Result.CountryTest do
+defmodule Geolix.Adapter.MMDB2.Result.CountryTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Result.Country

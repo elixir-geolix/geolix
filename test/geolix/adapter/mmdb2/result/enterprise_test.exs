@@ -1,4 +1,4 @@
-defmodule Geolix.Result.EnterpriseTest do
+defmodule Geolix.Adapter.MMDB2.Result.EnterpriseTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Record.EnterpriseSubdivision

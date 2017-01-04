@@ -1,4 +1,4 @@
-defmodule Geolix.Result.ConnectionTypeTest do
+defmodule Geolix.Adapter.MMDB2.Result.ConnectionTypeTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Result.ConnectionType

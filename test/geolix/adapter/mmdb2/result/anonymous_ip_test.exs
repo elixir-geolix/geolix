@@ -1,4 +1,4 @@
-defmodule Geolix.Result.AnonymousIPTest do
+defmodule Geolix.Adapter.MMDB2.Result.AnonymousIPTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Result.AnonymousIP

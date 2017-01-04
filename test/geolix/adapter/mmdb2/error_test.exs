@@ -1,4 +1,4 @@
-defmodule Geolix.ErrorTest do
+defmodule Geolix.Adapter.MMDB2.ErrorTest do
   use ExUnit.Case, async: true
 
   test "broken pointers" do

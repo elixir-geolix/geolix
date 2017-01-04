@@ -1,4 +1,4 @@
-defmodule Geolix.ResultTest do
+defmodule Geolix.Adapter.MMDB2.ResultTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Result
