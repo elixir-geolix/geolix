@@ -1,20 +1,23 @@
 defmodule Geolix.ReloadTest do
   use ExUnit.Case, async: false
 
-  alias Geolix.Adapter.MMDB2.Metadata
-  alias Geolix.Adapter.MMDB2.Storage.Metadata, as: MetadataStorage
-
+  alias Geolix.Adapter.Fake
   alias Geolix.Database.Supervisor, as: DatabaseSupervisor
 
 
+  @ip        { 55, 55, 55, 55 }
+  @result    :fake_result
+  @reload_id :test_reload
+  @reload_db %{
+    id:      @reload_id,
+    adapter: Fake,
+    data:    Map.put(%{}, @ip, @result)
+  }
+
   setup do
     databases = Application.get_env(:geolix, :databases)
-    database  =
-      databases
-      |> Enum.filter(&( &1.id == :fixture_city ))
-      |> List.first()
 
-    :ok = Application.put_env(:geolix, :databases, [ database ])
+    :ok = Application.put_env(:geolix, :databases, [ @reload_db ])
     :ok = restart_supervisor()
 
     on_exit fn ->
@@ -36,18 +39,17 @@ defmodule Geolix.ReloadTest do
 
 
   test "reload databases" do
-    ip    = "81.2.69.160"
-    where = :fixture_city
+    assert @result == Geolix.lookup(@ip, where: @reload_id)
 
-    # break lookup tree
-    MetadataStorage.set(where, %Metadata{})
+    # break data
+    Fake.Storage.set(@reload_id, %{})
 
-    assert nil == Geolix.lookup(ip, where: where)
+    assert nil == Geolix.lookup(@ip, where: @reload_id)
 
     # reload to fix lookup
     Geolix.reload_databases()
     :timer.sleep(500)
 
-    refute nil == Geolix.lookup(ip, where: where)
+    assert @result == Geolix.lookup(@ip, where: @reload_id)
   end
 end
