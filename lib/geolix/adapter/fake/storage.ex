@@ -16,7 +16,7 @@ defmodule Geolix.Adapter.Fake.Storage do
   """
   @spec get(atom) :: map | nil
   def get(database) do
-    Agent.get(__MODULE__, &Map.get(&1, database, nil))
+    Agent.get(__MODULE__, &Map.get(&1, database, %{}))
   end
 
   @doc """
