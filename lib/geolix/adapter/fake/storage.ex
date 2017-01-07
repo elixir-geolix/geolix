@@ -14,7 +14,7 @@ defmodule Geolix.Adapter.Fake.Storage do
   @doc """
   Fetches the data for a database.
   """
-  @spec get(atom) :: binary | nil
+  @spec get(atom) :: map | nil
   def get(database) do
     Agent.get(__MODULE__, &Map.get(&1, database, nil))
   end
@@ -22,7 +22,7 @@ defmodule Geolix.Adapter.Fake.Storage do
   @doc """
   Stores the data for a specific database.
   """
-  @spec set(atom, binary) :: :ok
+  @spec set(atom, map) :: :ok
   def set(database, data) do
     Agent.update(__MODULE__, &Map.put(&1, database, data))
   end
