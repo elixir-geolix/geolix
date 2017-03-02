@@ -6,20 +6,18 @@ defmodule Geolix.Result do
   alias Geolix.Result
 
   @mapping [
-    { "GeoIP2-City",           Result.City },
-    { "GeoIP2-Country",        Result.Country },
-    { "GeoIP2-Enterprise",     Result.Enterprise },
-    { "GeoIP2-Precision-City", Result.City },
-    { "GeoLite2-City",         Result.City },
-    { "GeoLite2-Country",      Result.Country }
+    { "GeoIP2-City",       Result.City },
+    { "GeoIP2-Country",    Result.Country },
+    { "GeoIP2-Enterprise", Result.Enterprise },
+    { "GeoLite2-City",     Result.City },
+    { "GeoLite2-Country",  Result.Country }
   ]
 
   @mapping_flat [
     { "GeoIP2-Anonymous-IP",    Result.AnonymousIP },
     { "GeoIP2-Connection-Type", Result.ConnectionType },
     { "GeoIP2-Domain",          Result.Domain },
-    { "GeoIP2-ISP",             Result.ISP },
-    { "GeoIP2-Precision-ISP",   Result.ISP }
+    { "GeoIP2-ISP",             Result.ISP }
   ]
 
   @doc """

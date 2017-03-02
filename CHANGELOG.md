@@ -7,6 +7,9 @@
 
 - Backwards incompatible changes
     - Support for non-map database configuration has been removed
+    - Support for `GeoIP2-Precision-City` and `GeoIP2-Precision-Country`
+      database files has been removed
+      ([matching upstream](https://github.com/maxmind/MaxMind-DB/commit/8c69730696fbc3c839d04ff9a668a3c209390d7d))
 
 ## v0.11.0 (2016-12-28)
 

@@ -13,7 +13,6 @@ defmodule Geolix.Adapter.MMDB2.ResultTest do
 
   test "type to struct mapping" do
     assert Result.City == result_for("GeoIP2-City")
-    assert Result.City == result_for("GeoIP2-Precision-City")
     assert Result.City == result_for("GeoLite2-City")
     assert Result.Country == result_for("GeoIP2-Country")
     assert Result.Country == result_for("GeoLite2-Country")
@@ -24,6 +23,5 @@ defmodule Geolix.Adapter.MMDB2.ResultTest do
     assert Result.ConnectionType == result_for("GeoIP2-Connection-Type")
     assert Result.Domain == result_for("GeoIP2-Domain")
     assert Result.ISP == result_for("GeoIP2-ISP")
-    assert Result.ISP == result_for("GeoIP2-Precision-ISP")
   end
 end

@@ -24,8 +24,6 @@ defmodule Geolix.TestFixtures.List do
       { :fixture_domain, "GeoIP2-Domain-Test.mmdb", "#{ @base_url }/GeoIP2-Domain-Test.mmdb" },
       { :fixture_enterprise, "GeoIP2-Enterprise-Test.mmdb", "#{ @base_url }/GeoIP2-Enterprise-Test.mmdb" },
       { :fixture_isp, "GeoIP2-ISP-Test.mmdb", "#{ @base_url }/GeoIP2-ISP-Test.mmdb" },
-      { :fixture_precision_city, "GeoIP2-Precision-City-Test.mmdb", "#{ @base_url }/GeoIP2-Precision-City-Test.mmdb" },
-      { :fixture_precision_isp, "GeoIP2-Precision-ISP-Test.mmdb", "#{ @base_url }/GeoIP2-Precision-ISP-Test.mmdb" },
 
       { :fixture_decoder, "MaxMind-DB-test-decoder.mmdb", "#{ @base_url }/MaxMind-DB-test-decoder.mmdb" },
       { :fixture_ipv4_24, "MaxMind-DB-test-ipv4-24.mmdb", "#{ @base_url }/MaxMind-DB-test-ipv4-24.mmdb" },

@@ -43,31 +43,6 @@ defmodule Geolix.Adapter.MMDB2.Result.CityTest do
     assert "Asia/Tokyo" == result.location.time_zone
   end
 
-  test "precision city" do
-    ip     = { 128, 101, 101, 101 }
-    result = Geolix.lookup(ip, where: :fixture_precision_city)
-
-    assert result.traits.ip_address == ip
-
-    assert "美国" == result.country.names[:"zh-CN"]
-
-    assert 3 == result.location.accuracy_radius
-    assert -93.2166 == result.location.longitude
-    assert 44.9759 == result.location.latitude
-    assert "America/Chicago" == result.location.time_zone
-    assert 613 == result.location.metro_code
-
-    subdivision = result.subdivisions |> hd()
-
-    assert "Minnesota" == subdivision.names[:es]
-
-    assert "55414" == result.postal.code
-
-    assert 5037649 == result.city.geoname_id
-    assert 6255149 == result.continent.geoname_id
-    assert 6252001 == result.registered_country.geoname_id
-  end
-
   test "regular city" do
     ip     = { 175, 16, 199, 0 }
     result = Geolix.lookup(ip, where: :fixture_city)

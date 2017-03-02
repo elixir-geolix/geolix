@@ -19,18 +19,6 @@ defmodule Geolix.Adapter.MMDB2.Result.ISPTest do
     assert result == expected
   end
 
-  test "precision isp" do
-    ip       = { 128, 101, 101, 101 }
-    result   = Geolix.lookup(ip, where: :fixture_precision_isp )
-    expected = %ISP{ autonomous_system_number:       2313,
-                     autonomous_system_organization: "Precision AS Org",
-                     ip_address:                     ip,
-                     isp:                            "Precision ISP",
-                     organization:                   "Precision Org" }
-
-    assert result == expected
-  end
-
   test "autonomous system" do
     ip       = { 222, 230, 140, 0 }
     result   = Geolix.lookup(ip, where: :fixture_isp)
