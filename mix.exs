@@ -31,9 +31,8 @@ defmodule Geolix.Mixfile do
   end
 
   defp deps do
-    [ { :ex_doc, ">= 0.0.0", only: :dev },
-
-      { :excoveralls, "< 0.6.0", only: :test },
+    [ { :ex_doc,      ">= 0.0.0", only: :dev },
+      { :excoveralls, "< 0.6.0",  only: :test },
 
       { :poolboy, "~> 1.0" } ]
   end
