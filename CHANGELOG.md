@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.12.0-dev
+## v0.12.0 (2017-03-26)
 
 - Ownership has been transferred to the
   [`elixir_geolix`](https://github.com/elixir-geolix) organisation

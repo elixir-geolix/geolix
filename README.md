@@ -20,7 +20,7 @@ as a dependency:
 
 ```elixir
 defp deps do
-  [ { :geolix, "~> 0.11" } ]
+  [ { :geolix, "~> 0.12" } ]
 end
 ```
 
