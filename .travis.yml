@@ -1,6 +1,7 @@
-language: elixir
-elixir:   1.0.5
-sudo:     false
+language:    elixir
+otp_release: 18.0
+elixir:      1.2.6
+sudo:        false
 
 env:
   - MIX_ENV=test TEST_ENV=ex_unit TRAVIS_COVERAGE=true

@@ -7,7 +7,7 @@ defmodule Geolix.Mixfile do
     [ app:     :geolix,
       name:    "Geolix",
       version: "0.13.0-dev",
-      elixir:  "~> 1.0",
+      elixir:  "~> 1.2",
       deps:    deps(),
 
       build_embedded:  Mix.env == :prod,

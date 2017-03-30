@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.13.0-dev
+
+- Backwards incompatible changes
+    - Minimum required elixir version is now "~> 1.2"
+    - Minimum required erlang version is now "~> 18.0"
+
 ## v0.12.0 (2017-03-26)
 
 - Ownership has been transferred to the
