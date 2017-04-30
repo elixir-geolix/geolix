@@ -14,10 +14,13 @@ mkdir -p data
 
 cd data
 
-wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz"
-wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz"
+wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
+wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
 
-gunzip *
+tar -xzf GeoLite2-City.tar.gz
+tar -xzf GeoLite2-Country.tar.gz
+
+find . -name '*.mmdb' -exec mv {} . \;
 
 # reset working directory
 cd "${TRAVIS_BUILD_DIR}"
