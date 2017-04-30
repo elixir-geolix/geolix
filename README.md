@@ -103,9 +103,10 @@ config :geolix,
 _Note_: if you do not want to use absolute paths or system variables please
 be aware that any code in the config file is evaluated at compile time.
 
-
-An appropriate filename will be automatically appended to the path. If the
-filename ends in ".gz" it will be loaded as a compressed file.
+By default it is expected that all databases are provided uncompressed.
+The only compression directly supported is `gzip` (not `zip`!) if the
+database source configured ends in `.gz`. There is no support for compressed
+tarballs (`.tar.gz`)!
 
 It is also possible to (re-) configure the loaded databases during runtime:
 
