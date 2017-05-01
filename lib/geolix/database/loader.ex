@@ -5,6 +5,8 @@ defmodule Geolix.Database.Loader do
 
   use GenServer
 
+  require Logger
+
   alias Geolix.Database.Supervisor, as: DatabaseSupervisor
 
 
@@ -44,7 +46,18 @@ defmodule Geolix.Database.Loader do
   end
 
   def handle_cast(:reload_databases, state) do
-    :ok = state |> Keyword.values() |> Enum.each(&load_database/1)
+    :ok =
+      state
+      |> Keyword.values()
+      |> Enum.each(fn (db) ->
+           case load_database(db) do
+             :ok               -> :ok
+             { :error, error } ->
+               Logger.error "Failed to load database" <>
+                            " #{ inspect(db[:id]) }:" <>
+                            " #{ inspect(error) }"
+           end
+         end)
 
     { :noreply, state }
   end

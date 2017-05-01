@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.14.0-dev
+
+- Enhancements
+    - Errors occurring while initially loading databases
+      (or when calling `Geolix.reload_databases/0`) are now sent to
+      `Logger.error` ([#16](https://github.com/elixir-geolix/geolix/issues/16))
+
 ## v0.13.0 (2017-04-12)
 
 - Backwards incompatible changes
