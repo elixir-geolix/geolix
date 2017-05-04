@@ -47,5 +47,8 @@ defmodule Geolix.Database.LoaderErrorTest do
 
     assert %{ id: ^id, state: { :error, _ }} =
            GenServer.call(Loader, { :get_database, db[:id] })
+
+    assert Enum.member?(GenServer.call(Loader, :registered), db[:id])
+    refute Enum.member?(GenServer.call(Loader, :loaded),     db[:id])
   end
 end

@@ -23,7 +23,7 @@ defmodule Geolix.Server.Worker do
 
 
   defp lookup_all(ip, opts) do
-    databases = GenServer.call(Loader, :registered)
+    databases = GenServer.call(Loader, :loaded)
 
     lookup_all(ip, opts, databases)
   end

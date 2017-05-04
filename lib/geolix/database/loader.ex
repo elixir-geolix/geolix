@@ -46,6 +46,15 @@ defmodule Geolix.Database.Loader do
     end
   end
 
+  def handle_call(:loaded, _, state) do
+    loaded =
+      state
+      |> Enum.filter(fn ({ _id, db }) -> :loaded == Map.get(db, :state) end)
+      |> Keyword.keys()
+
+    { :reply, loaded, state }
+  end
+
   def handle_call(:registered, _, state) do
     { :reply, Keyword.keys(state), state }
   end
