@@ -4,6 +4,7 @@ defmodule Geolix.Database.LoaderErrorTest do
   import ExUnit.CaptureLog
 
   alias Geolix.Adapter.MMDB2
+  alias Geolix.Database.Loader
   alias Geolix.Database.Supervisor, as: DatabaseSupervisor
 
 
@@ -27,7 +28,7 @@ defmodule Geolix.Database.LoaderErrorTest do
   end
 
 
-  test "(re-) loading databases at startup logs errors" do
+  test "(re-) loading databases at start logs errors (kept as state)" do
     id = :initially_broken
     db = %{
       id:      id,
@@ -43,5 +44,8 @@ defmodule Geolix.Database.LoaderErrorTest do
       # ensure GenServer.cast/1 was processed
       :timer.sleep(100)
     end) =~ "does not exist"
+
+    assert %{ id: ^id, state: { :error, _ }} =
+           GenServer.call(Loader, { :get_database, db[:id] })
   end
 end

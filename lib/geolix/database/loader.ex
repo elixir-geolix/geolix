@@ -34,10 +34,15 @@ defmodule Geolix.Database.Loader do
     { :reply, state[which], state }
   end
 
-  def handle_call({ :load_database, database }, _, state) do
-    case load_database(database) do
-      :ok   -> { :reply, :ok, Keyword.put(state, database[:id], database) }
-      error -> { :reply, error, state }
+  def handle_call({ :load_database, db }, _, state) do
+    db =
+      db
+      |> load_database()
+      |> register_state(db)
+
+    case db[:state] do
+      :loaded             -> { :reply, :ok, Keyword.put(state, db[:id], db) }
+      { :error, _ } = err -> { :reply, err, state }
     end
   end
 
@@ -46,18 +51,15 @@ defmodule Geolix.Database.Loader do
   end
 
   def handle_cast(:reload_databases, state) do
-    :ok =
-      state
-      |> Keyword.values()
-      |> Enum.each(fn (db) ->
-           case load_database(db) do
-             :ok               -> :ok
-             { :error, error } ->
-               Logger.error "Failed to load database" <>
-                            " #{ inspect(db[:id]) }:" <>
-                            " #{ inspect(error) }"
-           end
-         end)
+    state = Enum.map state, fn ({ id, db }) ->
+      db =
+        db
+        |> load_database()
+        |> register_state(db)
+        |> maybe_log_error()
+
+      { id, db }
+    end
 
     { :noreply, state }
   end
@@ -73,4 +75,16 @@ defmodule Geolix.Database.Loader do
       false -> :ok
     end
   end
+
+  defp maybe_log_error(%{ state: :loaded }          = db), do: db
+  defp maybe_log_error(%{ state: { :error, error }} = db)  do
+    Logger.error "Failed to load database" <>
+                 " #{ inspect(db[:id]) }:" <>
+                 " #{ inspect(error) }"
+
+    db
+  end
+
+  defp register_state(:ok,                 db), do: Map.put(db, :state, :loaded)
+  defp register_state({ :error, _ } = err, db), do: Map.put(db, :state, err)
 end

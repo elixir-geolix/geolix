@@ -8,7 +8,7 @@ defmodule Geolix.Database.LoaderTest do
     id       = :fixture_city
     database = GenServer.call(Loader, { :get_database, id })
 
-    assert %{ id: ^id } = database
+    assert %{ id: ^id, state: :loaded } = database
   end
 
   test "fetching un-registered database information" do
