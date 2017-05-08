@@ -9,7 +9,7 @@ defmodule Geolix.Adapter.MMDB2.Reader do
   Reads a database file and returns the data and metadata parts from it.
   """
   @spec read_database(String.t) :: { binary | :error,
-                                     binary | :no_metadata }
+                                     binary | term }
   def read_database("http" <> _ = filename) do
     { :ok, _ } = Application.ensure_all_started(:inets)
 
@@ -21,7 +21,7 @@ defmodule Geolix.Adapter.MMDB2.Reader do
         |> :binary.split(@metadata_marker)
         |> maybe_succeed()
 
-      _ -> { :error, "Could not load '#{ filename }' from remote host!" }
+      { :error, err } -> { :error, { :remote, err }}
     end
   end
 
@@ -34,7 +34,7 @@ defmodule Geolix.Adapter.MMDB2.Reader do
         |> :binary.split(@metadata_marker)
         |> maybe_succeed()
 
-      false -> { :error, "Given file '#{ filename }' does not exist?!" }
+      false -> { :error, :enoent }
     end
   end
 

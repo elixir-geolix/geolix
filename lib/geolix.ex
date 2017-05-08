@@ -55,7 +55,7 @@ defmodule Geolix do
   Requires at least the fields `:id` and `:adapter`. Any other required
   fields depend on the adapter's requirements.
   """
-  @spec load_database(map) :: :ok | { :error, String.t }
+  @spec load_database(map) :: :ok | { :error, term }
   def load_database(database) do
     GenServer.call(Loader, { :load_database, database }, :infinity)
   end

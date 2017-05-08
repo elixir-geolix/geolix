@@ -183,6 +183,14 @@ _Note_: Please be aware that all results for enterprise databases are returned
 using separate structs if the data is not already included in the regular
 databases. This may change in the future.
 
+### Loading errors
+
+Erros occuring during database load are sent to `Logger` with level `:error`.
+The contain an atom with the specific error (like `:enoent`) and, in some cases,
+are more readable error message.
+
+The errors are defined by the adapter.
+
 ### Floating Point Precision
 
 Please be aware that all values of the type `float` are rounded to 4 decimal

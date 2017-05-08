@@ -85,11 +85,14 @@ defmodule Geolix.Database.Loader do
     end
   end
 
-  defp maybe_log_error(%{ state: :loaded }          = db), do: db
-  defp maybe_log_error(%{ state: { :error, error }} = db)  do
+  defp load_error_message(:enoent), do: "file not found (:enoent)"
+  defp load_error_message(reason),  do: inspect(reason)
+
+  defp maybe_log_error(%{ state: :loaded }           = db), do: db
+  defp maybe_log_error(%{ state: { :error, reason }} = db)  do
     Logger.error "Failed to load database" <>
                  " #{ inspect(db[:id]) }:" <>
-                 " #{ inspect(error) }"
+                 " #{ load_error_message(reason) }"
 
     db
   end

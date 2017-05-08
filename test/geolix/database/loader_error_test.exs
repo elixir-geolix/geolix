@@ -43,7 +43,7 @@ defmodule Geolix.Database.LoaderErrorTest do
 
       # ensure GenServer.cast/1 was processed
       :timer.sleep(100)
-    end) =~ "does not exist"
+    end) =~ "file not found"
 
     assert %{ id: ^id, state: { :error, _ }} =
            GenServer.call(Loader, { :get_database, db[:id] })

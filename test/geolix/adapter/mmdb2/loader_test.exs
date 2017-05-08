@@ -66,12 +66,13 @@ defmodule Geolix.Adapter.MMDB2.Database.LoaderTest do
   test "database with invalid filename (not found)" do
     db = %{ id: :unknown_database, adapter: MMDB2, source: "invalid" }
 
-    assert { :error, _ } = Geolix.load_database(db)
+    assert { :error, :enoent } = Geolix.load_database(db)
   end
 
   test "database with invalid filename (remote not found)" do
-    db = %{ id: :unknown_database, adapter: MMDB2, source: "http://does.not.exist/" }
+    db  = %{ id: :unknown_database, adapter: MMDB2, source: "http://does.not.exist/" }
+    err = Geolix.load_database(db)
 
-    assert { :error, _ } = Geolix.load_database(db)
+    assert { :error, { :remote, { :failed_connect, _ }}} = err
   end
 end

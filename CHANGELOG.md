@@ -3,11 +3,16 @@
 ## v0.14.0-dev
 
 - Enhancements
+    - Errors are now always returned in a tuple format (`{ :error, type }`)
     - Errors occurring while initially loading databases
       (or when calling `Geolix.reload_databases/0`) are now sent to
       `Logger.error` ([#16](https://github.com/elixir-geolix/geolix/issues/16))
     - When an error occurs during database load the database will be
       excluded from the lookup process
+
+- Backwards incompatible changes
+    - Previous `{ :error, String.t }` return values have been removed in favor
+      of tuples and `Logger.error/1`
 
 ## v0.13.0 (2017-04-12)
 
