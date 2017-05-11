@@ -1,12 +1,12 @@
 use Mix.Config
 
 path_city =
-  [ __DIR__, "../data/GeoLite2-City.mmdb" ]
+  [ __DIR__, "../data/GeoLite2-City.tar.gz" ]
   |> Path.join()
   |> Path.expand()
 
 path_country =
-  [ __DIR__, "../data/GeoLite2-Country.mmdb" ]
+  [ __DIR__, "../data/GeoLite2-Country.tar.gz" ]
   |> Path.join()
   |> Path.expand()
 

@@ -105,8 +105,9 @@ be aware that any code in the config file is evaluated at compile time.
 
 By default it is expected that all databases are provided uncompressed.
 The only compression directly supported is `gzip` (not `zip`!) if the
-database source configured ends in `.gz`. There is no support for compressed
-tarballs (`.tar.gz`)!
+database source configured ends in `.gz`. If the loader detects a
+tarball (`.tar` or `.tar.gz`) the first file in the archive ending in `.mmdb2`
+will be loaded.
 
 It is also possible to (re-) configure the loaded databases during runtime:
 

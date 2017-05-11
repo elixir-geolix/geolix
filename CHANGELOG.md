@@ -3,6 +3,8 @@
 ## v0.14.0-dev
 
 - Enhancements
+    - Databases in tarball format (`.tar` or `.tar.gz`) are now supported
+      ([#16](https://github.com/elixir-geolix/geolix/issues/16))
     - Errors are now always returned in a tuple format (`{ :error, type }`)
     - Errors occurring while initially loading databases
       (or when calling `Geolix.reload_databases/0`) are now sent to
