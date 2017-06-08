@@ -19,6 +19,7 @@ defmodule Geolix.TestFixtures.List do
   def get() do
     [
       { :fixture_anonymous, "GeoIP-Anonymous-IP-Test.mmdb", "#{ @base_maxmind }/GeoIP2-Anonymous-IP-Test.mmdb" },
+      { :fixture_asn, "GeoLite2-ASN-Test.mmdb", "#{ @base_maxmind }/GeoLite2-ASN-Test.mmdb" },
       { :fixture_city, "GeoIP2-City-Test.mmdb", "#{ @base_maxmind }/GeoIP2-City-Test.mmdb" },
       { :fixture_connection, "GeoIP2-Connection-Type-Test.mmdb", "#{ @base_maxmind }/GeoIP2-Connection-Type-Test.mmdb" },
       { :fixture_country, "GeoIP2-Country-Test.mmdb", "#{ @base_maxmind }/GeoIP2-Country-Test.mmdb" },

@@ -5,13 +5,10 @@ defmodule Geolix.Result.ISP do
 
   @behaviour Geolix.Model
 
-  defstruct [
-    :autonomous_system_number,
-    :autonomous_system_organization,
-    :ip_address,
-    :isp,
-    :organization
-  ]
+  defstruct %Geolix.Result.ASN{}
+            |> Map.keys()
+            |> List.delete(:__struct__)
+            |> List.flatten([ :isp, :organization ])
 
   def from(data, _), do: struct(__MODULE__, data)
 end
