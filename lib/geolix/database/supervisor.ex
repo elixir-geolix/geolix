@@ -50,7 +50,7 @@ defmodule Geolix.Database.Supervisor do
       databases
       |> Enum.map(&( Map.get(&1, :adapter, nil) ))
       |> Enum.uniq()
-      |> Enum.reject(&( &1 == nil ))
+      |> Enum.reject(&Kernel.is_nil/1)
       |> Enum.flat_map(&adapter_workers/1)
 
     if Version.compare(System.version, "1.1.0") == :lt do
