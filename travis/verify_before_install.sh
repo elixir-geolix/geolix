@@ -14,9 +14,11 @@ mkdir -p data
 
 cd data
 
+wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz"
 wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
 wget -q "http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
 
+tar -xzf GeoLite2-ASN.tar.gz
 tar -xzf GeoLite2-City.tar.gz
 tar -xzf GeoLite2-Country.tar.gz
 

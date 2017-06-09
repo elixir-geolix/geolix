@@ -1,5 +1,10 @@
 use Mix.Config
 
+path_asn =
+     [ __DIR__, "../../../data/GeoLite2-ASN.mmdb" ]
+  |> Path.join()
+  |> Path.expand()
+
 path_city =
      [ __DIR__, "../../../data/GeoLite2-City.mmdb" ]
   |> Path.join()
@@ -12,6 +17,11 @@ path_country =
 
 config :geolix,
   databases: [
+    %{
+      id:      :asn,
+      adapter: Geolix.Adapter.MMDB2,
+      source:  path_asn
+    },
     %{
       id:      :city,
       adapter: Geolix.Adapter.MMDB2,

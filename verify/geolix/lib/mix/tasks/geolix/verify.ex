@@ -23,20 +23,23 @@ defmodule Mix.Tasks.Geolix.Verify do
 
   defp check([], _),                    do: :ok
   defp check([ ip | ips ], result_file) do
-    { city_data, country_data } =
+    { asn_data, city_data, country_data } =
       ip
         |> Geolix.lookup()
         |> parse()
 
-    IO.puts(result_file, "#{ ip }-#{ city_data }-#{ country_data }")
+    IO.puts(result_file, "#{ ip }-#{ asn_data }-#{ city_data }-#{ country_data }")
 
     check(ips, result_file)
   end
 
-  defp parse(%{ city: city, country: country }) do
-    { parse_city(city), parse_country(country) }
+  defp parse(%{ asn: asn, city: city, country: country }) do
+    { parse_asn(asn), parse_city(city), parse_country(country) }
   end
 
+
+  defp parse_asn(%{ autonomous_system_number: num }), do: num
+  defp parse_asn(_), do: ""
 
   defp parse_city(%{ location: location, city: city }) do
     [

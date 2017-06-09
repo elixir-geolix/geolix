@@ -1,6 +1,7 @@
 import geoip2.database
 import io
 
+asn     = geoip2.database.Reader('../../data/GeoLite2-ASN.mmdb')
 city    = geoip2.database.Reader('../../data/GeoLite2-City.mmdb')
 country = geoip2.database.Reader('../../data/GeoLite2-Country.mmdb')
 ips     = file('../ip_set.txt', 'r')
@@ -8,8 +9,15 @@ results = io.open('../python_results.txt', mode='w', encoding='utf-8')
 
 for ip in ips:
   ip          = ip.strip()
+  asn_res     = ''
   city_res    = ''
   country_res = ''
+
+  try:
+    asn_data = asn.asn(ip)
+    asn_res  = u'%u' % (asn_data.autonomous_system_number)
+  except:
+    pass
 
   try:
     city_data = city.city(ip)
@@ -30,7 +38,7 @@ for ip in ips:
   except:
     pass
 
-  results.write(u'%s-%s-%s\n' % (ip, city_res, country_res))
+  results.write(u'%s-%s-%s-%s\n' % (ip, asn_res, city_res, country_res))
 
 city.close()
 country.close()
