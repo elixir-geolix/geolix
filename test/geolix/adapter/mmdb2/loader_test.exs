@@ -45,6 +45,18 @@ defmodule Geolix.Adapter.MMDB2.Database.LoaderTest do
     System.delete_env(var)
   end
 
+  test "system environment configuration (default value)" do
+    path = Path.join([ @fixture_path, "GeoIP2-City-Test.mmdb" ])
+    var  = "GEOLIX_TEST_DATABASE_PATH"
+    db   = %{ id: :system_env_default, adapter: MMDB2, source: { :system, var, path }}
+
+    System.delete_env(var)
+
+    assert :ok = Geolix.load_database(db)
+    assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :system_env_default)
+  end
+
+
   test "remote database" do
     # setup internal testing webserver
     Application.ensure_all_started(:inets)

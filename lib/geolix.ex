@@ -8,7 +8,9 @@ defmodule Geolix do
   alias Geolix.Database.Loader
   alias Geolix.Server.Pool
 
-  @type database_file :: String.t | { :system, String.t }
+  @type database_file :: String.t |
+                         { :system, String.t } |
+                         { :system, String.t, String.t }
 
   @lookup_default_opts [
     as:     :struct,

@@ -96,6 +96,11 @@ config :geolix,
       id:      :system_city,
       adapter: Geolix.Adapter.MMDB2,
       source:  { :system, "SOME_SYSTEM_ENV_VARIABLE" }
+    },
+    %{
+      id:      :system_country,
+      adapter: Geolix.Adapter.MMDB2,
+      source:  { :system, "SOME_VARIABLE", "/path/to/fallback.mmdb2" }
     }
   ]
 ```

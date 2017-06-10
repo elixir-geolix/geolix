@@ -14,8 +14,17 @@ defmodule Geolix.Adapter.MMDB2.Loader do
 
   Requires the parameter `:source` as the location of the database. Can access
   the system environment by receiving a `{ :system, "env_var_name" }` tuple.
+
+  Using `{ :system, "env_var_name", "/path/to/default.mmdb2" }` you can define
+  a fallback value to be used if the environment variable is not set.
   """
   @spec load_database(map) :: :ok
+  def load_database(%{ source: { :system, var, default }} = database) do
+    database
+    |> Map.put(:source, System.get_env(var) || default)
+    |> load_database()
+  end
+
   def load_database(%{ source: { :system, var }} = database) do
     database
     |> Map.put(:source, System.get_env(var))

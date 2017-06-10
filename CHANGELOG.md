@@ -10,6 +10,8 @@
       (or when calling `Geolix.reload_databases/0`) are now sent to
       `Logger.error` ([#16](https://github.com/elixir-geolix/geolix/issues/16))
     - "GeoLite2-ASN" databases return structs instead of plain maps
+    - System environment configuration can set an optional default value
+      to be used if the environment variable is unset
     - When an error occurs during database load the database will be
       excluded from the lookup process
 
