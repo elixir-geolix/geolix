@@ -46,17 +46,11 @@ defmodule Geolix.Database.Supervisor do
   end
 
   defp workers(databases) do
-    workers =
-      databases
-      |> Enum.map(&( Map.get(&1, :adapter, nil) ))
-      |> Enum.uniq()
-      |> Enum.reject(&Kernel.is_nil/1)
-      |> Enum.flat_map(&adapter_workers/1)
-
-    if Version.compare(System.version, "1.1.0") == :lt do
-      Enum.uniq(workers, fn ({ id, _, _, _, _, _ }) -> id end)
-    else
-      Enum.uniq_by(workers, fn ({ id, _, _, _, _, _ }) -> id end)
-    end
+    databases
+    |> Enum.map(&( Map.get(&1, :adapter, nil) ))
+    |> Enum.uniq()
+    |> Enum.reject(&Kernel.is_nil/1)
+    |> Enum.flat_map(&adapter_workers/1)
+    |> Enum.uniq_by(fn ({ id, _, _, _, _, _ }) -> id end)
   end
 end
