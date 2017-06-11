@@ -32,8 +32,10 @@ defmodule Geolix.Database.SupervisorTest do
       |> Process.whereis()
       |> Process.exit(:kill)
 
-    :timer.sleep(250)
-
+    :ok = :timer.sleep(100)
+    _   = Application.ensure_all_started(:geolix)
+    :ok = Geolix.reload_databases()
+    :ok = :timer.sleep(100)
     :ok
   end
 
@@ -47,8 +49,8 @@ defmodule Geolix.Database.SupervisorTest do
     assert nil == Geolix.lookup(@ip, where: @reload_id)
 
     # reload to fix lookup
-    Geolix.reload_databases()
-    :timer.sleep(500)
+    :ok = Geolix.reload_databases()
+    :ok = :timer.sleep(100)
 
     assert @result == Geolix.lookup(@ip, where: @reload_id)
   end

@@ -22,8 +22,10 @@ defmodule Geolix.Database.LoaderErrorTest do
       |> Process.whereis()
       |> Process.exit(:kill)
 
-    :timer.sleep(250)
-
+    :ok = :timer.sleep(100)
+    _   = Application.ensure_all_started(:geolix)
+    :ok = Geolix.reload_databases()
+    :ok = :timer.sleep(100)
     :ok
   end
 
@@ -39,7 +41,6 @@ defmodule Geolix.Database.LoaderErrorTest do
     assert capture_log(fn ->
       :ok = Application.put_env(:geolix, :databases, [ db ])
       :ok = restart_supervisor()
-      :ok = Geolix.reload_databases()
 
       # ensure GenServer.cast/1 was processed
       :timer.sleep(100)
