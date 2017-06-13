@@ -31,22 +31,35 @@ defmodule Geolix.Database.LoaderErrorTest do
 
 
   test "(re-) loading databases at start logs errors (kept as state)" do
-    id = :initially_broken
-    db = %{
-      id:      id,
-      adapter: MMDB2,
-      source:  Path.join([ __DIR__, "does-not-exist" ])
-    }
+    databases = [
+      %{ id: :error_missing_adapter },
+      %{ id: :error_unknown_adapter, adapter: __MODULE__.Missing },
+      %{
+        id:      :error_enoent,
+        adapter: MMDB2,
+        source:  Path.join([ __DIR__, "does-not-exist" ])
+      }
+    ]
 
-    assert capture_log(fn ->
-      :ok = Application.put_env(:geolix, :databases, [ db ])
+    log = capture_log(fn ->
+      :ok = Application.put_env(:geolix, :databases, databases)
       :ok = restart_supervisor()
-    end) =~ "file not found"
+    end)
 
-    assert %{ id: ^id, state: { :error, _ }} =
-           GenServer.call(Loader, { :get_database, db[:id] })
+    assert log =~ "file not found"
+    assert log =~ "missing adapter"
+    assert log =~ "unknown adapter"
 
-    assert Enum.member?(GenServer.call(Loader, :registered), db[:id])
-    refute Enum.member?(GenServer.call(Loader, :loaded),     db[:id])
+    databases
+    |> Enum.filter(&( Map.has_key?(&1, :id) ))
+    |> Enum.each(fn (db) ->
+         id = db[:id]
+
+         assert %{ id: ^id, state: { :error, _ }} =
+                GenServer.call(Loader, { :get_database, id })
+
+         assert Enum.member?(GenServer.call(Loader, :registered), id)
+         refute Enum.member?(GenServer.call(Loader, :loaded),     id)
+       end)
   end
 end

@@ -14,4 +14,19 @@ defmodule Geolix.Database.LoaderTest do
   test "fetching un-registered database information" do
     refute GenServer.call(Loader, { :get_database, :database_not_loaded })
   end
+
+
+  test "error if configured without adapter" do
+    id = :missing_adapter
+
+    assert Geolix.load_database(%{ id: id }) ==
+           { :error, { :config, :missing_adapter }}
+  end
+
+  test "error if configured with unknown (not loaded) adapter" do
+    id = :unknown_adapter
+
+    assert Geolix.load_database(%{ id: id, adapter: __MODULE__.Missing }) ==
+           { :error, { :config, :unknown_adapter }}
+  end
 end

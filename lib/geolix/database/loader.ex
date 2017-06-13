@@ -22,7 +22,10 @@ defmodule Geolix.Database.Loader do
 
   def init(databases) do
     :ok   = GenServer.cast(__MODULE__, :reload_databases)
-    state = Enum.map(databases, &({ Map.fetch!(&1, :id), &1 }))
+    state =
+      databases
+      |> Enum.filter(&( Map.has_key?(&1, :id) ))
+      |> Enum.map(&({ Map.fetch!(&1, :id), &1 }))
 
     { :ok, state }
   end
@@ -77,16 +80,27 @@ defmodule Geolix.Database.Loader do
   # Internal methods
 
   defp load_database(%{ adapter: adapter } = database) do
-    :ok = DatabaseSupervisor.start_adapter(adapter)
+    case Code.ensure_loaded?(adapter) do
+      true ->
+        :ok = DatabaseSupervisor.start_adapter(adapter)
 
-    case function_exported?(adapter, :load_database, 1) do
-      true  -> adapter.load_database(database)
-      false -> :ok
+        case function_exported?(adapter, :load_database, 1) do
+          true  -> adapter.load_database(database)
+          false -> :ok
+        end
+
+      false -> { :error, { :config, :unknown_adapter }}
     end
   end
 
+  defp load_database(%{ id: _ }), do: { :error,{ :config, :missing_adapter }}
+  defp load_database(_), do: { :error, { :config, :invalid }}
+
+
   defp load_error_message(:enoent), do: "file not found (:enoent)"
-  defp load_error_message(reason),  do: inspect(reason)
+  defp load_error_message({ :config, :missing_adapter }), do: "missing adapter configuration"
+  defp load_error_message({ :config, :unknown_adapter }), do: "unknown adapter configuration"
+  defp load_error_message(reason), do: inspect(reason)
 
   defp maybe_log_error(%{ state: :loaded }           = db), do: db
   defp maybe_log_error(%{ state: { :error, reason }} = db)  do

@@ -37,8 +37,6 @@ defmodule Geolix.Database.Supervisor do
 
 
   defp adapter_workers(adapter) do
-    { :module, ^adapter } = Code.ensure_loaded(adapter)
-
     case function_exported?(adapter, :database_workers, 0) do
       true  -> adapter.database_workers()
       false -> []
@@ -50,6 +48,7 @@ defmodule Geolix.Database.Supervisor do
     |> Enum.map(&( Map.get(&1, :adapter, nil) ))
     |> Enum.uniq()
     |> Enum.reject(&Kernel.is_nil/1)
+    |> Enum.filter(&Code.ensure_loaded?/1)
     |> Enum.flat_map(&adapter_workers/1)
     |> Enum.uniq_by(fn ({ id, _, _, _, _, _ }) -> id end)
   end
