@@ -41,9 +41,6 @@ defmodule Geolix.Database.LoaderErrorTest do
     assert capture_log(fn ->
       :ok = Application.put_env(:geolix, :databases, [ db ])
       :ok = restart_supervisor()
-
-      # ensure GenServer.cast/1 was processed
-      :timer.sleep(100)
     end) =~ "file not found"
 
     assert %{ id: ^id, state: { :error, _ }} =
