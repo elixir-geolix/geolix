@@ -1,11 +1,13 @@
-defmodule Geolix.TestFixtures.Download do
+defmodule Geolix.TestHelpers.FixtureDownload do
   @moduledoc false
+
+  alias Geolix.TestHelpers.FixtureList
 
   @doc """
   Downloads all fixture files.
   """
   def run() do
-    Enum.each(Geolix.TestFixtures.List.get(), &download/1)
+    Enum.each(FixtureList.get(), &download/1)
   end
 
   defp download({ _name, filename, remote }) do
@@ -30,7 +32,7 @@ defmodule Geolix.TestFixtures.Download do
   end
 
   defp local(filename) do
-    [ __DIR__, filename ]
+    [ __DIR__, "../fixtures/", filename ]
     |> Path.join()
     |> Path.expand()
   end

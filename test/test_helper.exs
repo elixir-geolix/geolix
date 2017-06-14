@@ -1,14 +1,12 @@
-Code.require_file("fixtures/list.exs", __DIR__)
-Code.require_file("fixtures/download.exs", __DIR__)
-
 alias Geolix.Adapter.MMDB2
-alias Geolix.TestFixtures
+alias Geolix.TestHelpers.FixtureDownload
+alias Geolix.TestHelpers.FixtureList
 
 
-TestFixtures.Download.run()
+FixtureDownload.run()
 
 
-databases = Enum.map TestFixtures.List.get(), fn ({ id, filename, _remote }) ->
+databases = Enum.map FixtureList.get(), fn ({ id, filename, _remote }) ->
   source =
     [ __DIR__, "fixtures", filename ]
     |> Path.join()

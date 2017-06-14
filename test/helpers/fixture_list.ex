@@ -1,4 +1,4 @@
-defmodule Geolix.TestFixtures.List do
+defmodule Geolix.TestHelpers.FixtureList do
   @moduledoc false
 
   @base_maxmind "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data"

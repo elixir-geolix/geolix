@@ -10,6 +10,7 @@ defmodule Geolix.Mixfile do
       elixir:  "~> 1.2",
       deps:    deps(),
 
+      elixirc_paths:   elixirc_paths(Mix.env),
       build_embedded:  Mix.env == :prod,
       start_permanent: Mix.env == :prod,
 
@@ -43,6 +44,9 @@ defmodule Geolix.Mixfile do
       source_ref: "master",
       source_url: @url_github ]
   end
+
+  defp elixirc_paths(:test), do: [ "lib", "test/helpers" ]
+  defp elixirc_paths(_),     do: [ "lib" ]
 
   defp package do
     %{ files:       [ "CHANGELOG.md", "LICENSE", "mix.exs", "README.md", "lib" ],
