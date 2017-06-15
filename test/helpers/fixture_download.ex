@@ -21,12 +21,7 @@ defmodule Geolix.TestHelpers.FixtureDownload do
   end
 
   defp download_fixture(remote, local) do
-    content = case Version.match?(System.version, ">= 1.1.0") do
-      false -> Mix.Utils.read_path!(remote)
-      true  ->
-        { :ok, data } = Mix.Utils.read_path(remote)
-        data
-    end
+    { :ok, content } = Mix.Utils.read_path(remote)
 
     File.write! local, content
   end
