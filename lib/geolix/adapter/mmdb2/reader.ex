@@ -26,6 +26,8 @@ defmodule Geolix.Adapter.MMDB2.Reader do
     end
   end
 
+  def read_database(nil), do: { :error, :enoent }
+
   def read_database(filename) do
     case File.regular?(filename) do
       true ->
