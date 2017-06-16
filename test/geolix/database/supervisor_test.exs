@@ -2,7 +2,7 @@ defmodule Geolix.Database.SupervisorTest do
   use ExUnit.Case, async: false
 
   alias Geolix.Adapter.Fake
-  alias Geolix.Database.Supervisor, as: DatabaseSupervisor
+  alias Geolix.TestHelpers.DatabaseSupervisor
 
 
   @ip        { 55, 55, 55, 55 }
@@ -18,25 +18,12 @@ defmodule Geolix.Database.SupervisorTest do
     databases = Application.get_env(:geolix, :databases)
 
     :ok = Application.put_env(:geolix, :databases, [ @reload_db ])
-    :ok = restart_supervisor()
+    :ok = DatabaseSupervisor.restart()
 
     on_exit fn ->
       :ok = Application.put_env(:geolix, :databases, databases)
-      :ok = restart_supervisor()
+      :ok = DatabaseSupervisor.restart()
     end
-  end
-
-  defp restart_supervisor() do
-    true =
-      DatabaseSupervisor
-      |> Process.whereis()
-      |> Process.exit(:kill)
-
-    :ok = :timer.sleep(100)
-    _   = Application.ensure_all_started(:geolix)
-    :ok = Geolix.reload_databases()
-    :ok = :timer.sleep(100)
-    :ok
   end
 
 

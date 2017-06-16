@@ -5,7 +5,7 @@ defmodule Geolix.Database.LoaderErrorTest do
 
   alias Geolix.Adapter.MMDB2
   alias Geolix.Database.Loader
-  alias Geolix.Database.Supervisor, as: DatabaseSupervisor
+  alias Geolix.TestHelpers.DatabaseSupervisor
 
 
   setup do
@@ -14,19 +14,6 @@ defmodule Geolix.Database.LoaderErrorTest do
     on_exit fn ->
       :ok = Application.put_env(:geolix, :databases, databases)
     end
-  end
-
-  defp restart_supervisor() do
-    true =
-      DatabaseSupervisor
-      |> Process.whereis()
-      |> Process.exit(:kill)
-
-    :ok = :timer.sleep(100)
-    _   = Application.ensure_all_started(:geolix)
-    :ok = Geolix.reload_databases()
-    :ok = :timer.sleep(100)
-    :ok
   end
 
 
@@ -43,7 +30,7 @@ defmodule Geolix.Database.LoaderErrorTest do
 
     log = capture_log(fn ->
       :ok = Application.put_env(:geolix, :databases, databases)
-      :ok = restart_supervisor()
+      :ok = DatabaseSupervisor.restart()
     end)
 
     assert log =~ "file not found"
