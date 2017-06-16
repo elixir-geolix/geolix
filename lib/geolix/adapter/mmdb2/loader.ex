@@ -18,7 +18,7 @@ defmodule Geolix.Adapter.MMDB2.Loader do
   Using `{ :system, "env_var_name", "/path/to/default.mmdb2" }` you can define
   a fallback value to be used if the environment variable is not set.
   """
-  @spec load_database(map) :: :ok
+  @spec load_database(map) :: :ok | { :error, term }
   def load_database(%{ source: { :system, var, default }} = database) do
     database
     |> Map.put(:source, System.get_env(var) || default)
