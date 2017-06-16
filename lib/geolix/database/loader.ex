@@ -93,7 +93,7 @@ defmodule Geolix.Database.Loader do
     end
   end
 
-  defp load_database(%{ id: _ }), do: { :error,{ :config, :missing_adapter }}
+  defp load_database(%{ id: _ }), do: { :error, { :config, :missing_adapter }}
   defp load_database(_), do: { :error, { :config, :invalid }}
 
 
