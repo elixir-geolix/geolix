@@ -1,6 +1,7 @@
 defmodule Geolix.Database.LoaderTest do
   use ExUnit.Case, async: true
 
+  alias Geolix.Adapter.Fake
   alias Geolix.Database.Loader
 
 
@@ -28,5 +29,23 @@ defmodule Geolix.Database.LoaderTest do
 
     assert Geolix.load_database(%{ id: id, adapter: __MODULE__.Missing }) ==
            { :error, { :config, :unknown_adapter }}
+  end
+
+
+  test "load/unload lifecycle" do
+    id = :lifecycle
+    ip = { 8, 8, 8, 8 }
+
+    Geolix.load_database(%{
+      id:      id,
+      adapter: Fake,
+      data:    Map.put(%{}, ip, :fake_result)
+    })
+
+    assert :fake_result = Geolix.lookup(ip, where: id)
+
+    Geolix.unload_database(id)
+
+    refute Geolix.lookup(ip, where: id)
   end
 end

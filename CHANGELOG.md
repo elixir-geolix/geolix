@@ -4,6 +4,8 @@
 
 - Enhancements
     - Configuration errors are logged and/or returned
+    - Databases can be unloaded. This is done lazy so while still being
+      in memory it won't be reloaded or used for lookups
     - Databases in tarball format (`.tar` or `.tar.gz`) are now supported
       ([#16](https://github.com/elixir-geolix/geolix/issues/16))
     - Errors are now always returned in a tuple format (`{ :error, type }`)

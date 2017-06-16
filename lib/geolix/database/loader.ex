@@ -49,6 +49,10 @@ defmodule Geolix.Database.Loader do
     end
   end
 
+  def handle_call({ :unload_database, which }, _, state) do
+    { :reply, :ok, Keyword.delete(state, which) }
+  end
+
   def handle_call(:loaded, _, state) do
     loaded =
       state

@@ -67,4 +67,13 @@ defmodule Geolix do
   """
   @spec reload_databases() :: :ok
   def reload_databases(), do: GenServer.cast(Loader, :reload_databases)
+
+  @doc """
+  Unloads a database.
+
+  This operation is lazy. The database will stay loaded but won't be reloaded
+  or used for lookups.
+  """
+  @spec unload_database(atom) :: :ok
+  def unload_database(id), do: GenServer.call(Loader, { :unload_database, id })
 end
