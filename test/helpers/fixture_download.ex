@@ -21,7 +21,9 @@ defmodule Geolix.TestHelpers.FixtureDownload do
   end
 
   defp download_fixture(remote, local) do
-    { :ok, content } = Mix.Utils.read_path(remote)
+    { :ok, _ }            = Application.ensure_all_started(:hackney)
+    { :ok, _, _, client } = :hackney.get(remote)
+    { :ok, content }      = :hackney.body(client)
 
     File.write! local, content
   end
