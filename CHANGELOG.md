@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.14.0-dev
+## v0.14.0 (2017-06-20)
 
 - Enhancements
     - Configuration errors are logged and/or returned
