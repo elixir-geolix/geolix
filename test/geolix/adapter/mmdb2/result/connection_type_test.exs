@@ -2,6 +2,8 @@ defmodule Geolix.Adapter.MMDB2.Result.ConnectionTypeTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Result.ConnectionType
+  alias Geolix.Util
+
 
   test "result type" do
     assert %ConnectionType{} = Geolix.lookup("1.0.0.0", where: :fixture_connection)
@@ -9,7 +11,7 @@ defmodule Geolix.Adapter.MMDB2.Result.ConnectionTypeTest do
 
   test "ipv6 lookup" do
     ip                  = "2003::"
-    { :ok, ip_address } = ip |> String.to_char_list() |> :inet.parse_address()
+    { :ok, ip_address } = ip |> Util.to_charlist() |> :inet.parse_address()
 
     result   = Geolix.lookup(ip, where: :fixture_connection)
     expected = %ConnectionType{ connection_type: "Cable/DSL",
