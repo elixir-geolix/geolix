@@ -56,8 +56,8 @@ And also add the appropriate `Geolix.Supervisor` to your hierarchy:
 # in your application/supervisor
 children = [
   # ...
-  supervise(Geolix.Supervisor, [])
-  # ..
+  supervisor(Geolix.Supervisor, [])
+  # ...
 ]
 ```
 
