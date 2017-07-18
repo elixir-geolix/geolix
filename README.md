@@ -196,7 +196,7 @@ databases. This may change in the future.
 
 ### Loading errors
 
-Erros occuring during database load are sent to `Logger` with level `:error`.
+Erros occurring during database load are sent to `Logger` with level `:error`.
 The contain an atom with the specific error (like `:enoent`) and, in some cases,
 are more readable error message.
 
