@@ -245,9 +245,8 @@ This environment performs the following 4 steps:
 - lookup using python ([geoip2](https://github.com/maxmind/GeoIP2-python))
 - compare the results
 
-To run these tests on a local machine please refer to the travis scripts
-executed on each run
-(i.e. `./travis/verify_install.sh` and `./travis/verify_script.sh`).
+To run these tests on a local machine please refer to the travis commands
+executed on each run (`.travis.yml`).
 
 
 ## Adapters
