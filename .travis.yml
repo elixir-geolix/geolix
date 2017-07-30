@@ -21,6 +21,10 @@ jobs:
       elixir:        1.4.5
       otp_release:   19.3
       after_success: true
+    - <<: *test
+      elixir:        1.4.5
+      otp_release:   20.0
+      after_success: true
 
     - stage:          verify
       elixir:         1.2.6
