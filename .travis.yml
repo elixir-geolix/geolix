@@ -18,11 +18,15 @@ jobs:
       otp_release:   18.3
       after_success: true
     - <<: *test
-      elixir:        1.4.5
+      elixir:        1.5.0
+      otp_release:   18.3
+      after_success: true
+    - <<: *test
+      elixir:        1.5.0
       otp_release:   19.3
       after_success: true
     - <<: *test
-      elixir:        1.4.5
+      elixir:        1.5.0
       otp_release:   20.0
       after_success: true
 
