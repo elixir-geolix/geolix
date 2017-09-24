@@ -30,9 +30,7 @@ defmodule Geolix do
   @spec lookup(ip :: tuple | String.t, opts  :: Keyword.t) :: nil | map
   def lookup(ip, opts \\ [])
   def lookup(ip, opts) when is_binary(ip) do
-    ip = Geolix.Util.to_charlist(ip)
-
-    case :inet.parse_address(ip) do
+    case :inet.parse_address(String.to_charlist(ip)) do
       { :ok, parsed } -> lookup(parsed, opts)
       { :error, _ }   -> nil
     end

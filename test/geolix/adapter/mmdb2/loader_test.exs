@@ -3,7 +3,6 @@ defmodule Geolix.Adapter.MMDB2.Database.LoaderTest do
 
   alias Geolix.Adapter.MMDB2
   alias Geolix.Result
-  alias Geolix.Util
 
 
   @fixture_path [ __DIR__, "../../../fixtures" ] |> Path.join() |> Path.expand()
@@ -67,8 +66,8 @@ defmodule Geolix.Adapter.MMDB2.Database.LoaderTest do
 
     httpd_opts         = [ port:          0,
                            server_name:   'geolix_test',
-                           server_root:   Util.to_charlist(@fixture_path),
-                           document_root: Util.to_charlist(@fixture_path) ]
+                           server_root:   String.to_charlist(@fixture_path),
+                           document_root: String.to_charlist(@fixture_path) ]
     { :ok, httpd_pid } = :inets.start(:httpd, httpd_opts)
 
     # test remote file loading

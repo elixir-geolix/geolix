@@ -7,7 +7,7 @@ defmodule Geolix.Mixfile do
     [ app:     :geolix,
       name:    "Geolix",
       version: "0.15.0-dev",
-      elixir:  "~> 1.2",
+      elixir:  "~> 1.3",
       deps:    deps(),
 
       elixirc_paths:   elixirc_paths(Mix.env),

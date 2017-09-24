@@ -13,7 +13,7 @@ defmodule Geolix.Adapter.MMDB2.Reader do
   def read_database("http" <> _ = filename) do
     { :ok, _ } = Application.ensure_all_started(:inets)
 
-    case :httpc.request(Geolix.Util.to_charlist(filename)) do
+    case :httpc.request(String.to_charlist(filename)) do
       { :ok, {{ _, 200, _ }, _, body }} ->
         body
         |> IO.iodata_to_binary()

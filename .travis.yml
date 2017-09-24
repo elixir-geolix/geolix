@@ -5,13 +5,9 @@ jobs:
   include:
     - &test
       stage:         test
-      elixir:        1.2.6
-      otp_release:   18.3
-      after_success: mix coveralls.travis
-    - <<: *test
       elixir:        1.3.4
       otp_release:   18.3
-      after_success: true
+      after_success: mix coveralls.travis
     - <<: *test
       elixir:        1.4.5
       otp_release:   18.3
@@ -30,7 +26,7 @@ jobs:
       after_success: true
 
     - stage:          verify
-      elixir:         1.2.6
+      elixir:         1.3.4
       otp_release:    18.3
       before_install: |-
         # setup pip for "sudo: false"

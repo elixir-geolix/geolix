@@ -2,7 +2,6 @@ defmodule Geolix.Adapter.MMDB2.Result.ISPTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Result.ISP
-  alias Geolix.Util
 
 
   test "result type" do
@@ -11,7 +10,7 @@ defmodule Geolix.Adapter.MMDB2.Result.ISPTest do
 
   test "ipv6 lookup" do
     ip                  = "2c0f:ff40::"
-    { :ok, ip_address } = ip |> Util.to_charlist() |> :inet.parse_address()
+    { :ok, ip_address } = ip |> String.to_charlist() |> :inet.parse_address()
 
     result   = Geolix.lookup(ip, where: :fixture_isp)
     expected = %ISP{ autonomous_system_number:       10474,

@@ -3,7 +3,6 @@ defmodule Geolix.Adapter.MMDB2.Result.CityTest do
 
   alias Geolix.Record.Subdivision
   alias Geolix.Result.City
-  alias Geolix.Util
 
 
   test "result type" do
@@ -33,7 +32,7 @@ defmodule Geolix.Adapter.MMDB2.Result.CityTest do
 
   test "ipv6 lookup" do
     ip                  = "2001:298::"
-    { :ok, ip_address } = ip |> Util.to_charlist() |> :inet.parse_address()
+    { :ok, ip_address } = ip |> String.to_charlist() |> :inet.parse_address()
 
     result = Geolix.lookup(ip, where: :fixture_city)
 
