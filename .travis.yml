@@ -1,7 +1,6 @@
 language: elixir
 sudo:     false
 
-
 jobs:
   include:
     - &test
