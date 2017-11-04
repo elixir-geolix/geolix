@@ -6,8 +6,6 @@ defmodule Geolix.Adapter.MMDB2.Database do
   entries.
   """
 
-  alias Geolix.Adapter.MMDB2.Decoder
-  alias Geolix.Adapter.MMDB2.LookupTree
   alias Geolix.Adapter.MMDB2.Storage
 
 
@@ -32,20 +30,10 @@ defmodule Geolix.Adapter.MMDB2.Database do
   end
 
   defp lookup(ip, data, meta, tree, opts) do
-    LookupTree.locate(ip, tree, meta)
-    |> lookup_pointer(data, meta.node_count)
+    ip
+    |> MMDB2Decoder.lookup(meta, tree, data)
     |> maybe_include_ip(ip)
     |> maybe_to_struct(meta.database_type, opts[:as] || :struct, opts)
-  end
-
-  defp lookup_pointer(0, _, _),              do: nil
-  defp lookup_pointer(ptr, data, node_count) do
-    offset = ptr - node_count - 16
-
-    case Decoder.value(data, offset) do
-      result when is_map(result) -> result
-      _                          -> nil
-    end
   end
 
   defp maybe_include_ip(nil,     _), do: nil

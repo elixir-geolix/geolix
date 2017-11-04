@@ -4,7 +4,7 @@ defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
 
   ## Usage
 
-      iex> alias Geolix.Adapter.MMDB2.Metadata
+      iex> alias MMDB2Decoder.Metadata
       iex> set(:some_database_name, %Metadata{ database_type: "doctest" })
       :ok
       iex> get(:some_database_name)
@@ -18,7 +18,7 @@ defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
       nil
   """
 
-  alias Geolix.Adapter.MMDB2.Metadata
+  alias MMDB2Decoder.Metadata
 
   @name Geolix.Adapter.MMDB2.Names.storage(:metadata)
 

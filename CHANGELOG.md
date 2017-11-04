@@ -2,6 +2,11 @@
 
 ## v0.15.0-dev
 
+- Enhancements
+    - The MMDB2 file format decoding logic has been extracted to the new
+      [`:mmdb2_decoder`](https://github.com/elixir-geolix/mmdb2_decoder)
+      library
+
 - Backwards incompatible changes
     - Minimum required elixir version is now "~> 1.3"
 

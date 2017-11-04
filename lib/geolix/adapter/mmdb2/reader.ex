@@ -3,13 +3,13 @@ defmodule Geolix.Adapter.MMDB2.Reader do
   Module to read mmdb2 database files and split them into data and metadata.
   """
 
-  @metadata_marker << 0xAB, 0xCD, 0xEF >> <> "MaxMind.com"
+  alias MMDB2Decoder.Metadata
 
   @doc """
   Reads a database file and returns the data and metadata parts from it.
   """
-  @spec read_database(String.t) :: { binary | :error,
-                                     binary | term }
+  @spec read_database(String.t) :: { Metadata.t(), binary, binary }
+                                   | { :error, term }
   def read_database("http" <> _ = filename) do
     { :ok, _ } = Application.ensure_all_started(:inets)
 
@@ -19,8 +19,7 @@ defmodule Geolix.Adapter.MMDB2.Reader do
         |> IO.iodata_to_binary()
         |> maybe_gunzip(filename)
         |> maybe_untar(filename)
-        |> :binary.split(@metadata_marker)
-        |> maybe_succeed()
+        |> MMDB2Decoder.parse_database()
 
       { :error, err } -> { :error, { :remote, err }}
     end
@@ -35,8 +34,7 @@ defmodule Geolix.Adapter.MMDB2.Reader do
         |> File.read!
         |> maybe_gunzip(filename)
         |> maybe_untar(filename)
-        |> :binary.split(@metadata_marker)
-        |> maybe_succeed()
+        |> MMDB2Decoder.parse_database()
 
       false -> { :error, :enoent }
     end
@@ -64,7 +62,4 @@ defmodule Geolix.Adapter.MMDB2.Reader do
       true  -> :zlib.gunzip(data)
     end
   end
-
-  defp maybe_succeed([ _data ]),      do: { :error, :no_metadata }
-  defp maybe_succeed([ data, meta ]), do: { data, meta }
 end

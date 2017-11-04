@@ -36,6 +36,7 @@ defmodule Geolix.Mixfile do
       { :excoveralls, "~> 0.7",   only: :test },
       { :hackney,     "~> 1.0",   only: :test },
 
+      { :mmdb2_decoder, "~> 0.1.0" },
       { :poolboy, "~> 1.0" } ]
   end
 
