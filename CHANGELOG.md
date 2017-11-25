@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.15.0-dev
+## v0.15.0 (2017-11-25)
 
 - Enhancements
     - The MMDB2 file format decoding logic has been extracted to the new
