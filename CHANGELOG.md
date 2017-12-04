@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.15.1-dev
+
+- Bug fixes
+    - The MMDB2 decoding library is now properly included in releases
+
 ## v0.15.0 (2017-11-25)
 
 - Enhancements
