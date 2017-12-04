@@ -27,8 +27,11 @@ defmodule Geolix.Mixfile do
   end
 
   def application do
-    [ applications: [ :logger, :poolboy ],
-      mod:          { Geolix, [] } ]
+    [
+      applications: [ :logger, :poolboy ],
+      included_applications: [ :mmdb2_decoder ],
+      mod: { Geolix, [] }
+    ]
   end
 
   defp deps do
