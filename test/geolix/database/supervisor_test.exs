@@ -4,28 +4,26 @@ defmodule Geolix.Database.SupervisorTest do
   alias Geolix.Adapter.Fake
   alias Geolix.TestHelpers.DatabaseSupervisor
 
-
-  @ip        { 55, 55, 55, 55 }
-  @result    :fake_result
+  @ip {55, 55, 55, 55}
+  @result :fake_result
   @reload_id :test_reload
   @reload_db %{
-    id:      @reload_id,
+    id: @reload_id,
     adapter: Fake,
-    data:    Map.put(%{}, @ip, @result)
+    data: Map.put(%{}, @ip, @result)
   }
 
   setup do
     databases = Application.get_env(:geolix, :databases)
 
-    :ok = Application.put_env(:geolix, :databases, [ @reload_db ])
+    :ok = Application.put_env(:geolix, :databases, [@reload_db])
     :ok = DatabaseSupervisor.restart()
 
-    on_exit fn ->
+    on_exit(fn ->
       :ok = Application.put_env(:geolix, :databases, databases)
       :ok = DatabaseSupervisor.restart()
-    end
+    end)
   end
-
 
   test "reload databases on supervisor restart" do
     assert @result == Geolix.lookup(@ip, where: @reload_id)

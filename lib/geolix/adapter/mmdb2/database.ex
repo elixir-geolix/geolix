@@ -8,18 +8,16 @@ defmodule Geolix.Adapter.MMDB2.Database do
 
   alias Geolix.Adapter.MMDB2.Storage
 
-
   @doc """
   Implementation of `Geolix.Adapter.MMDB2.lookup/2`.
   """
-  @spec lookup(tuple, Keyword.t) :: map | nil
+  @spec lookup(tuple, Keyword.t()) :: map | nil
   def lookup(ip, opts) do
     case opts[:where] do
-      nil   -> nil
+      nil -> nil
       where -> lookup(ip, where, opts)
     end
   end
-
 
   defp lookup(ip, where, opts) do
     data = Storage.Data.get(where)
@@ -36,10 +34,11 @@ defmodule Geolix.Adapter.MMDB2.Database do
     |> maybe_to_struct(meta.database_type, opts[:as] || :struct, opts)
   end
 
-  defp maybe_include_ip(nil,     _), do: nil
+  defp maybe_include_ip(nil, _), do: nil
   defp maybe_include_ip(result, ip), do: Map.put(result, :ip_address, ip)
 
-  defp maybe_to_struct(result,    _, :raw,       _),  do: result
+  defp maybe_to_struct(result, _, :raw, _), do: result
+
   defp maybe_to_struct(result, type, :struct, opts) do
     Geolix.Result.to_struct(type, result, opts[:locale])
   end

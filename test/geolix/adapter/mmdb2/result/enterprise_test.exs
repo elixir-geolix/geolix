@@ -7,12 +7,12 @@ defmodule Geolix.Adapter.MMDB2.Result.EnterpriseTest do
   test "result type" do
     result = Geolix.lookup("74.209.24.0", where: :fixture_enterprise)
 
-    assert %Enterprise{}            = result
+    assert %Enterprise{} = result
     assert %EnterpriseSubdivision{} = result.subdivisions |> hd()
   end
 
   test "locale result" do
-    result      = Geolix.lookup("74.209.24.0", [ locale: :en, where: :fixture_enterprise ])
+    result = Geolix.lookup("74.209.24.0", locale: :en, where: :fixture_enterprise)
     subdivision = result.subdivisions |> hd()
 
     assert result.continent.name == result.continent.names[:en]
@@ -23,7 +23,7 @@ defmodule Geolix.Adapter.MMDB2.Result.EnterpriseTest do
   end
 
   test "enterprise result" do
-    ip     = { 74, 209, 24, 0 }
+    ip = {74, 209, 24, 0}
     result = Geolix.lookup(ip, where: :fixture_enterprise)
 
     assert result.traits.ip_address == ip
@@ -39,9 +39,9 @@ defmodule Geolix.Adapter.MMDB2.Result.EnterpriseTest do
     assert result.traits.organization == "Fairpoint Communications"
     assert result.traits.user_type == "residential"
 
-    assert 5112335 == result.city.geoname_id
-    assert 6255149 == result.continent.geoname_id
-    assert 6252001 == result.registered_country.geoname_id
+    assert 5_112_335 == result.city.geoname_id
+    assert 6_255_149 == result.continent.geoname_id
+    assert 6_252_001 == result.registered_country.geoname_id
 
     subdivision = result.subdivisions |> hd()
 

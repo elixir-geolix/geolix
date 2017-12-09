@@ -13,6 +13,6 @@ defmodule Geolix.Record.Location do
     :time_zone
   ]
 
-  def from(nil,  _), do: nil
+  def from(nil, _), do: nil
   def from(data, _), do: struct(__MODULE__, data)
 end

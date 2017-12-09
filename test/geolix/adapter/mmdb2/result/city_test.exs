@@ -4,16 +4,15 @@ defmodule Geolix.Adapter.MMDB2.Result.CityTest do
   alias Geolix.Record.Subdivision
   alias Geolix.Result.City
 
-
   test "result type" do
     result = Geolix.lookup("2.125.160.216", where: :fixture_city)
 
-    assert %City{}        = result
+    assert %City{} = result
     assert %Subdivision{} = result.subdivisions |> hd()
   end
 
   test "locale result" do
-    result      = Geolix.lookup("2.125.160.216", [ locale: :fr, where: :fixture_city ])
+    result = Geolix.lookup("2.125.160.216", locale: :fr, where: :fixture_city)
     subdivision = result.subdivisions |> hd()
 
     assert result.continent.name == result.continent.names[:fr]
@@ -24,15 +23,15 @@ defmodule Geolix.Adapter.MMDB2.Result.CityTest do
   end
 
   test "locale result (default :en)" do
-    result = Geolix.lookup("2.125.160.216", [ where: :fixture_city ])
+    result = Geolix.lookup("2.125.160.216", where: :fixture_city)
 
     assert result.continent.name == result.continent.names[:en]
     assert result.country.name == result.country.names[:en]
   end
 
   test "ipv6 lookup" do
-    ip                  = "2001:298::"
-    { :ok, ip_address } = ip |> String.to_charlist() |> :inet.parse_address()
+    ip = "2001:298::"
+    {:ok, ip_address} = ip |> String.to_charlist() |> :inet.parse_address()
 
     result = Geolix.lookup(ip, where: :fixture_city)
 
@@ -45,7 +44,7 @@ defmodule Geolix.Adapter.MMDB2.Result.CityTest do
   end
 
   test "regular city" do
-    ip     = { 175, 16, 199, 0 }
+    ip = {175, 16, 199, 0}
     result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip
@@ -67,7 +66,7 @@ defmodule Geolix.Adapter.MMDB2.Result.CityTest do
   end
 
   test "represented country" do
-    ip     = { 202, 196, 224, 0 }
+    ip = {202, 196, 224, 0}
     result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip
@@ -80,36 +79,36 @@ defmodule Geolix.Adapter.MMDB2.Result.CityTest do
   end
 
   test "subdivisions: single" do
-    ip     = { 81, 2, 69, 144 }
+    ip = {81, 2, 69, 144}
     result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip
 
     assert "Londres" == result.city.names[:fr]
 
-    [ sub ] = result.subdivisions
+    [sub] = result.subdivisions
 
-    assert 6269131 == sub.geoname_id
+    assert 6_269_131 == sub.geoname_id
     assert "ENG" == sub.iso_code
     assert "Inglaterra" == sub.names[:"pt-BR"]
   end
 
   test "subdivisions: multiple" do
-    ip     = { 2, 125, 160, 216 }
+    ip = {2, 125, 160, 216}
     result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip
 
     assert "Boxford" == result.city.names[:en]
 
-    [ sub_1, sub_2 ] = result.subdivisions
+    [sub_1, sub_2] = result.subdivisions
 
-    assert 6269131 == sub_1.geoname_id
-    assert 3333217 == sub_2.geoname_id
+    assert 6_269_131 == sub_1.geoname_id
+    assert 3_333_217 == sub_2.geoname_id
   end
 
   test "with traits" do
-    ip     = { 67, 43, 156, 0 }
+    ip = {67, 43, 156, 0}
     result = Geolix.lookup(ip, where: :fixture_city)
 
     assert result.traits.ip_address == ip

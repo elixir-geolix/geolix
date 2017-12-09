@@ -8,7 +8,7 @@ defmodule Geolix.Result.ISP do
   defstruct %Geolix.Result.ASN{}
             |> Map.keys()
             |> List.delete(:__struct__)
-            |> List.flatten([ :isp, :organization ])
+            |> List.flatten([:isp, :organization])
 
   def from(data, _), do: struct(__MODULE__, data)
 end

@@ -5,9 +5,8 @@ defmodule Geolix.Adapter do
 
   @optional_callbacks [
     database_workers: 0,
-    load_database:    1
+    load_database: 1
   ]
-
 
   @doc """
   Returns the children to be supervised by `Geolix.Database.Supervisor`.
@@ -33,5 +32,5 @@ defmodule Geolix.Adapter do
   which database should be queried. If that key is not set then `nil`
   should be returned instead.
   """
-  @callback lookup(ip :: tuple, opts :: Keyword.t) :: map | nil
+  @callback lookup(ip :: tuple, opts :: Keyword.t()) :: map | nil
 end

@@ -14,11 +14,10 @@ defmodule Geolix.Adapter.MMDB2.Storage.Data do
 
   @name Geolix.Adapter.MMDB2.Names.storage(:data)
 
-
   @doc """
   Starts the data agent.
   """
-  @spec start_link() :: Agent.on_start
+  @spec start_link() :: Agent.on_start()
   def start_link(), do: Agent.start_link(fn -> %{} end, name: @name)
 
   @doc """

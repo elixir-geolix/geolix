@@ -14,11 +14,10 @@ defmodule Geolix.Adapter.MMDB2.Storage.Tree do
 
   @name Geolix.Adapter.MMDB2.Names.storage(:tree)
 
-
   @doc """
   Starts the tree agent.
   """
-  @spec start_link() :: Agent.on_start
+  @spec start_link() :: Agent.on_start()
   def start_link(), do: Agent.start_link(fn -> %{} end, name: @name)
 
   @doc """

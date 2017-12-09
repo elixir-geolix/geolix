@@ -6,7 +6,7 @@ defmodule Geolix.Adapter.MMDB2.ResultTest do
   defp result_for(type), do: Result.to_struct(type, %{}, nil).__struct__
 
   test "unknown type is unmodified" do
-    data = %{ foo: :bar }
+    data = %{foo: :bar}
 
     assert data == Result.to_struct("invalid-type", data, nil)
   end

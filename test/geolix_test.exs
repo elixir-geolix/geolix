@@ -2,10 +2,10 @@ defmodule GeolixTest do
   use ExUnit.Case, async: true
 
   test "result type" do
-    ip    = "81.2.69.160"
+    ip = "81.2.69.160"
     where = :fixture_city
 
-    assert %{}                   = Geolix.lookup(ip, as: :raw,    where: where)
+    assert %{} = Geolix.lookup(ip, as: :raw, where: where)
     assert %Geolix.Result.City{} = Geolix.lookup(ip, as: :struct, where: where)
   end
 
@@ -14,12 +14,12 @@ defmodule GeolixTest do
     ipv6 = "0:0:0:0:0:ffff:5102:45a0"
 
     ipv4_result =
-         ipv4
+      ipv4
       |> Geolix.lookup(as: :raw, where: :fixture_city)
       |> Map.put(:ip_address, nil)
 
     ipv6_result =
-         ipv6
+      ipv6
       |> Geolix.lookup(as: :raw, where: :fixture_city)
       |> Map.put(:ip_address, nil)
 
@@ -31,7 +31,7 @@ defmodule GeolixTest do
   end
 
   test "lookup returns ip address" do
-    ip     = { 1, 2, 0, 0 }
+    ip = {1, 2, 0, 0}
     result = Geolix.lookup(ip, where: :fixture_domain)
 
     assert ip == result.ip_address
@@ -52,7 +52,7 @@ defmodule GeolixTest do
   test "lookup from all registered databases" do
     results = Geolix.lookup("81.2.69.160")
 
-    assert %Geolix.Result.City{}    = results[:fixture_city]
+    assert %Geolix.Result.City{} = results[:fixture_city]
     assert %Geolix.Result.Country{} = results[:fixture_country]
   end
 
@@ -61,8 +61,8 @@ defmodule GeolixTest do
   end
 
   test "lookup using timeout" do
-    ip     = "81.2.69.160"
-    opts   = [ where: :fixture_city, timeout: 500 ]
+    ip = "81.2.69.160"
+    opts = [where: :fixture_city, timeout: 500]
     result = Geolix.lookup(ip, opts)
 
     assert %Geolix.Result.City{} = result
