@@ -13,6 +13,8 @@ defmodule Geolix.Server.Worker do
     GenServer.start_link(__MODULE__, default)
   end
 
+  def init(state), do: {:ok, state}
+
   def handle_call({:lookup, ip, opts}, _, state) do
     case opts[:where] do
       nil -> {:reply, lookup_all(ip, opts), state}
