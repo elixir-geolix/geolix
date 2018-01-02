@@ -33,10 +33,10 @@ defmodule Geolix.Server.Worker do
   defp lookup_all(ip, opts, databases) do
     databases
     |> Enum.map(fn database ->
-         task_opts = Keyword.put(opts, :where, database)
+      task_opts = Keyword.put(opts, :where, database)
 
-         {database, Task.async(fn -> lookup_single(ip, task_opts) end)}
-       end)
+      {database, Task.async(fn -> lookup_single(ip, task_opts) end)}
+    end)
     |> Enum.map(fn {database, task} -> {database, Task.await(task)} end)
     |> Enum.into(%{})
   end
