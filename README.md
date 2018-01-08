@@ -103,6 +103,12 @@ config :geolix,
       source:  { :system, "SOME_VARIABLE", "/path/to/fallback.mmdb2" }
     }
   ]
+
+# dynamic configuration
+# { mod, fun } tuple without arguments
+# called upon top-level supervisor (re-) start
+config :geolix
+  init: { MyInitModule, :my_init_fun }
 ```
 
 _Note_: if you do not want to use absolute paths or system variables please

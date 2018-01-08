@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.16.0-dev
+
+- Enhancements
+    - Configuration can be done on supervisor (re-) start by setting a
+      `{ mod, fun }` tuple for the config key `:init`. This method will be
+      called without arguments
+
 ## v0.15.1 (2017-12-04)
 
 - Bug fixes

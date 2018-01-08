@@ -18,6 +18,12 @@ defmodule Geolix.Supervisor do
 
   @doc false
   def init(_default) do
+    :ok =
+      case Application.get_env(:geolix, :init) do
+        nil -> :ok
+        {mod, fun} -> apply(mod, fun, [])
+      end
+
     children = [
       Pool.child_spec(),
       supervisor(Database.Supervisor, [])
