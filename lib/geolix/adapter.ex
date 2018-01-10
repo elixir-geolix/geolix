@@ -5,7 +5,8 @@ defmodule Geolix.Adapter do
 
   @optional_callbacks [
     database_workers: 0,
-    load_database: 1
+    load_database: 1,
+    unload_database: 1
   ]
 
   @doc """
@@ -24,6 +25,13 @@ defmodule Geolix.Adapter do
   fields depend on the adapter's requirements.
   """
   @callback load_database(map) :: :ok
+
+  @doc """
+  Unloads a given database from Geolix.
+
+  Receives the configuration used when initially loading the database.
+  """
+  @callback unload_database(map) :: :ok
 
   @doc """
   Looks up IP information.

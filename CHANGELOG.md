@@ -10,6 +10,9 @@
       key `:init`. This method, called upon database supervisor (re-) start,
       receives the current database configuration and is expected to return the
       full configuration used for starting the individual database
+    - Unloading a database now calls `unload_database/1` of the unloaded
+      database adapter passing the current configuration and expecting `:ok` as
+      a result
 
 ## v0.15.1 (2017-12-04)
 

@@ -49,6 +49,11 @@ defmodule Geolix.Database.Loader do
   end
 
   def handle_call({:unload_database, which}, _, state) do
+    :ok =
+      state
+      |> Keyword.get(which)
+      |> unload_database()
+
     {:reply, :ok, Keyword.delete(state, which)}
   end
 
@@ -115,4 +120,13 @@ defmodule Geolix.Database.Loader do
 
   defp register_state(:ok, db), do: Map.put(db, :state, :loaded)
   defp register_state({:error, _} = err, db), do: Map.put(db, :state, err)
+
+  defp unload_database(nil), do: :ok
+
+  defp unload_database(%{adapter: adapter} = database) do
+    case function_exported?(adapter, :unload_database, 1) do
+      true -> adapter.unload_database(database)
+      false -> :ok
+    end
+  end
 end
