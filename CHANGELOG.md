@@ -6,6 +6,10 @@
     - Configuration can be done on supervisor (re-) start by setting a
       `{ mod, fun }` tuple for the config key `:init`. This method will be
       called without arguments
+    - Every configured database can define a `{ mod, fun }` tuple for the config
+      key `:init`. This method, called upon database supervisor (re-) start,
+      receives the current database configuration and is expected to return the
+      full configuration used for starting the individual database
 
 ## v0.15.1 (2017-12-04)
 

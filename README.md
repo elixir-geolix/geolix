@@ -109,6 +109,19 @@ config :geolix,
 # called upon top-level supervisor (re-) start
 config :geolix
   init: { MyInitModule, :my_init_fun }
+
+# dynamic configuration
+# { mod, fun } tuple
+# called upon database supervisor (re-) start
+# -> receives (current) database configuration
+# -> expected to return database configuration used for startup
+config :geolix,
+  databases: [
+    %{
+      id:   :runtime_configuration,
+      init: { MyInitModule, :my_init_fun }
+    }
+  ]
 ```
 
 _Note_: if you do not want to use absolute paths or system variables please

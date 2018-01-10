@@ -17,7 +17,7 @@ defmodule Geolix.Database.Supervisor do
 
   @doc false
   def init(_default) do
-    databases = Application.get_env(:geolix, :databases, [])
+    databases = fetch_databases()
     children = [worker(Loader, [databases]) | workers(databases)]
 
     supervise(children, strategy: :one_for_all)
@@ -39,6 +39,15 @@ defmodule Geolix.Database.Supervisor do
       false -> []
     end
   end
+
+  defp fetch_databases() do
+    :geolix
+    |> Application.get_env(:databases, [])
+    |> Enum.map(&preconfigure_database/1)
+  end
+
+  defp preconfigure_database(%{init: {mod, fun}} = config), do: apply(mod, fun, [config])
+  defp preconfigure_database(config), do: config
 
   defp workers(databases) do
     databases
