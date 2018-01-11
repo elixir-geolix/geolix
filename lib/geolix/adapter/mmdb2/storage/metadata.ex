@@ -53,8 +53,8 @@ defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
   @doc """
   Stores a set of metadata for a specific database.
   """
-  @spec set(atom, Metadata.t()) :: :ok
-  def set(database, %Metadata{} = metadata) do
+  @spec set(atom, Metadata.t() | nil) :: :ok
+  def set(database, metadata) do
     Agent.update(@name, &Map.put(&1, database, metadata))
   end
 end

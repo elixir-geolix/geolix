@@ -31,7 +31,7 @@ defmodule Geolix.Adapter.MMDB2.Storage.Tree do
   @doc """
   Stores the tree for a specific database.
   """
-  @spec set(atom, binary) :: :ok
+  @spec set(atom, binary | nil) :: :ok
   def set(database, tree) do
     Agent.update(@name, &Map.put(&1, database, tree))
   end

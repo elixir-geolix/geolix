@@ -22,4 +22,6 @@ defmodule Geolix.Adapter.MMDB2 do
   defdelegate load_database(database), to: Loader
 
   defdelegate lookup(ip, opts), to: Database
+
+  defdelegate unload_database(database), to: Loader
 end

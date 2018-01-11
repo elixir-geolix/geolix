@@ -31,7 +31,7 @@ defmodule Geolix.Adapter.MMDB2.Storage.Data do
   @doc """
   Stores the data for a specific database.
   """
-  @spec set(atom, binary) :: :ok
+  @spec set(atom, binary | nil) :: :ok
   def set(database, data) do
     Agent.update(@name, &Map.put(&1, database, data))
   end

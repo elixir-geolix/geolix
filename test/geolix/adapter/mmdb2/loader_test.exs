@@ -53,6 +53,8 @@ defmodule Geolix.Adapter.MMDB2.Database.LoaderTest do
     assert %Result.City{} = Geolix.lookup("2.125.160.216", where: :system_env_default)
 
     Geolix.unload_database(:system_env_default)
+
+    refute Geolix.lookup("2.125.160.216", where: :system_env_default)
   end
 
   test "remote database" do
