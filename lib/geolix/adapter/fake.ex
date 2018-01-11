@@ -30,4 +30,6 @@ defmodule Geolix.Adapter.Fake do
       where -> where |> Storage.get() |> Map.get(ip, nil)
     end
   end
+
+  def unload_database(%{id: id}), do: Storage.set(id, nil)
 end
