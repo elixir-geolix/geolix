@@ -5,7 +5,8 @@ defmodule GeolixTest do
     ip = "81.2.69.160"
     where = :fixture_city
 
-    assert %{} = Geolix.lookup(ip, as: :raw, where: where)
+    refute Map.get(Geolix.lookup(ip, as: :raw, where: where), :__struct__)
+
     assert %Geolix.Result.City{} = Geolix.lookup(ip, as: :struct, where: where)
   end
 
