@@ -7,19 +7,16 @@ jobs:
       stage: test
       elixir: 1.3.4
       otp_release: 18.3
-      after_success: mix coveralls.travis
     - <<: *test
       elixir: 1.4.5
       otp_release: 19.3
-      after_success: true
     - <<: *test
       elixir: 1.5.3
       otp_release: 20.2
-      after_success: true
     - <<: *test
       elixir: 1.6.0
       otp_release: 20.2
-      after_success: true
+      after_success: mix coveralls.travis
 
     - stage: verify
       elixir: 1.3.4
