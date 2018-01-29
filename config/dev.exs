@@ -1,26 +1,27 @@
 use Mix.Config
 
-path_city =
-  [__DIR__, "../data/GeoLite2-City.tar.gz"]
+create_path = fn file ->
+  [__DIR__, file]
   |> Path.join()
   |> Path.expand()
-
-path_country =
-  [__DIR__, "../data/GeoLite2-Country.tar.gz"]
-  |> Path.join()
-  |> Path.expand()
+end
 
 config :geolix,
   databases: [
     %{
+      id: :asn,
+      adapter: Geolix.Adapter.MMDB2,
+      source: create_path.("../data/GeoLite2-ASN.mmdb")
+    },
+    %{
       id: :city,
       adapter: Geolix.Adapter.MMDB2,
-      source: path_city
+      source: create_path.("../data/GeoLite2-City.mmdb")
     },
     %{
       id: :country,
       adapter: Geolix.Adapter.MMDB2,
-      source: path_country
+      source: create_path.("../data/GeoLite2-Country.mmdb")
     }
   ],
   pool: [size: 5, max_overflow: 10]
