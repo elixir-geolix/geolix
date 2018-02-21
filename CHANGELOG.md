@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.16.0-dev
+## v0.16.0 (2018-02-21)
 
 - Enhancements
     - Configuration can be done on supervisor (re-) start by setting a

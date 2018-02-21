@@ -7,7 +7,7 @@ defmodule Geolix.Mixfile do
     [
       app: :geolix,
       name: "Geolix",
-      version: "0.16.0-dev",
+      version: "0.16.0",
       elixir: "~> 1.3",
       deps: deps(),
       description: "MaxMind GeoIP2 database reader/decoder",
@@ -45,7 +45,7 @@ defmodule Geolix.Mixfile do
     [
       extras: ["CHANGELOG.md", "README.md"],
       main: "readme",
-      source_ref: "master",
+      source_ref: "v0.16.0",
       source_url: @url_github
     ]
   end
