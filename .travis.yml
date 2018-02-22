@@ -14,7 +14,7 @@ jobs:
       elixir: 1.5.3
       otp_release: 20.2
     - <<: *test
-      elixir: 1.6.0
+      elixir: 1.6.1
       otp_release: 20.2
       after_success: mix coveralls.travis
 
