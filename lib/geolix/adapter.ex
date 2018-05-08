@@ -24,7 +24,7 @@ defmodule Geolix.Adapter do
   Requires at least the fields `:id` and `:adapter`. Any other required
   fields depend on the adapter's requirements.
   """
-  @callback load_database(map) :: :ok
+  @callback load_database(map) :: :ok | {:error, term}
 
   @doc """
   Unloads a given database from Geolix.
