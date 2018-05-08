@@ -128,13 +128,13 @@ config :geolix,
 defmodule MyInitModule do
   @spec my_init_fun_toplevel() :: :ok
   def my_init_fun_toplevel() do
-    priv_dir = to_string(:code.priv_dir(:my_app))
+    priv_dir = Application.app_dir(:my_app, "priv")
 
     databases = [
       %{
         id: :dynamic_city,
         adapter: Geolix.Adapter.MMDB2,
-        source: priv_dir <> "/GeoLite2-City.mmdb"
+        source: Path.join([priv_dir, "GeoLite2-City.mmdb"])
       }
       | Application.get_env(:geolix, :databases, [])
     ]
@@ -144,9 +144,9 @@ defmodule MyInitModule do
 
   @spec my_init_fun_database(map) :: map
   def my_init_fun_database(%{id: :dynamic_country} = database) do
-    priv_dir = to_string(:code.priv_dir(:my_app))
+    priv_dir = Application.app_dir(:my_app, "priv")
 
-    %{database | source: priv_dir <> "/GeoLite2-Country.mmdb"}
+    %{database | source: Path.join([priv_dir, "GeoLite2-Country.mmdb"])}
   end
 end
 ```
