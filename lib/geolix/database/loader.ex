@@ -39,13 +39,22 @@ defmodule Geolix.Database.Loader do
   def handle_call({:load_database, db}, _, state) do
     db =
       db
-      |> load_database()
+      |> load_database(:sync)
       |> register_state(db)
 
     case db[:state] do
       :loaded -> {:reply, :ok, Keyword.put(state, db[:id], db)}
       {:error, _} = err -> {:reply, err, state}
     end
+  end
+
+  def handle_call({:register_database, db, result}, _, state) do
+    db =
+      result
+      |> register_state(db)
+      |> maybe_log_error()
+
+    {:reply, :ok, Keyword.put(state, db[:id], db)}
   end
 
   def handle_call({:unload_database, which}, _, state) do
@@ -75,7 +84,7 @@ defmodule Geolix.Database.Loader do
       Enum.map(state, fn {id, db} ->
         db =
           db
-          |> load_database()
+          |> load_database(:async)
           |> register_state(db)
           |> maybe_log_error()
 
@@ -87,14 +96,19 @@ defmodule Geolix.Database.Loader do
 
   # Internal methods
 
-  defp load_database(%{adapter: adapter} = database) do
+  defp load_database(%{adapter: adapter} = database, sync_type) do
     case Code.ensure_loaded?(adapter) do
       true ->
         :ok = DatabaseSupervisor.start_adapter(adapter)
 
-        case function_exported?(adapter, :load_database, 1) do
-          true -> adapter.load_database(database)
-          false -> :ok
+        cond do
+          function_exported?(adapter, :load_database, 2) ->
+            adapter.load_database(database, sync_type)
+
+          function_exported?(adapter, :load_database, 1) ->
+            adapter.load_database(database)
+
+          true -> :ok
         end
 
       false ->
@@ -102,14 +116,15 @@ defmodule Geolix.Database.Loader do
     end
   end
 
-  defp load_database(%{id: _}), do: {:error, {:config, :missing_adapter}}
-  defp load_database(_), do: {:error, {:config, :invalid}}
+  defp load_database(%{id: _}, _), do: {:error, {:config, :missing_adapter}}
+  defp load_database(_, _), do: {:error, {:config, :invalid}}
 
   defp load_error_message(:enoent), do: "file not found (:enoent)"
   defp load_error_message({:config, :missing_adapter}), do: "missing adapter configuration"
   defp load_error_message({:config, :unknown_adapter}), do: "unknown adapter configuration"
   defp load_error_message(reason), do: inspect(reason)
 
+  defp maybe_log_error(%{state: :delayed} = db), do: db
   defp maybe_log_error(%{state: :loaded} = db), do: db
 
   defp maybe_log_error(%{state: {:error, reason}} = db) do
@@ -118,6 +133,7 @@ defmodule Geolix.Database.Loader do
     db
   end
 
+  defp register_state(:delayed, db), do: Map.put(db, :state, :delayed)
   defp register_state(:ok, db), do: Map.put(db, :state, :loaded)
   defp register_state({:error, _} = err, db), do: Map.put(db, :state, err)
 

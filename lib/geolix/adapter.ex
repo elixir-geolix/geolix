@@ -6,6 +6,7 @@ defmodule Geolix.Adapter do
   @optional_callbacks [
     database_workers: 0,
     load_database: 1,
+    load_database: 2,
     unload_database: 1
   ]
 
@@ -25,6 +26,22 @@ defmodule Geolix.Adapter do
   fields depend on the adapter's requirements.
   """
   @callback load_database(map) :: :ok | {:error, term}
+
+  @doc """
+  Loads a given database into Geolix with a specific synchronization style.
+
+  Allowed `sync_type` values:
+
+  - `:sync`
+  - `:async`
+
+  When called with `:async` the adapter may return an additional `:delayed`
+  response to announce a background loading process. The individual behaviour
+  is defined by the adapter and may ignore the `:async` request.
+
+  If this callback is not implemented then `load_database/1` will be tried.
+  """
+  @callback load_database(map, atom) :: :ok | :delayed | {:error, term}
 
   @doc """
   Unloads a given database from Geolix.
