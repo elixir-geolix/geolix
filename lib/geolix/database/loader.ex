@@ -85,6 +85,30 @@ defmodule Geolix.Database.Loader do
     {:noreply, state}
   end
 
+  # Public methods
+
+  @doc """
+  Returns state information for a specific database
+  """
+  @spec get_database(atom) :: map | nil
+  def get_database(which) do
+    GenServer.call(__MODULE__, {:get_database, which})
+  end
+
+  @doc """
+  Returns a list of all completely loaded databases.
+  """
+  @spec loaded_databases() :: [atom]
+  def loaded_databases, do: GenServer.call(__MODULE__, :loaded)
+
+  @doc """
+  Returns a list of all registered databases.
+
+  Registered databases may or may not be already loaded.
+  """
+  @spec registered_databases() :: [atom]
+  def registered_databases, do: GenServer.call(__MODULE__, :registered)
+
   # Internal methods
 
   defp load_database(%{adapter: adapter} = database) do

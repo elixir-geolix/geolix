@@ -32,13 +32,15 @@ defmodule Geolix.Database.LoaderTest do
 
   test "fetching registered database information" do
     id = :fixture_city
-    database = GenServer.call(Loader, {:get_database, id})
 
-    assert %{id: ^id, state: :loaded} = database
+    assert %{id: ^id, state: :loaded} = Loader.get_database(id)
+
+    assert id in Loader.registered_databases()
+    assert id in Loader.loaded_databases()
   end
 
   test "fetching un-registered database information" do
-    refute GenServer.call(Loader, {:get_database, :database_not_loaded})
+    refute Loader.get_database(:database_not_loaded)
   end
 
   test "error if configured without adapter" do

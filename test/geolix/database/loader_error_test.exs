@@ -41,10 +41,10 @@ defmodule Geolix.Database.LoaderErrorTest do
     |> Enum.each(fn db ->
       id = db[:id]
 
-      assert %{id: ^id, state: {:error, _}} = GenServer.call(Loader, {:get_database, id})
+      assert %{id: ^id, state: {:error, _}} = Loader.get_database(id)
 
-      assert Enum.member?(GenServer.call(Loader, :registered), id)
-      refute Enum.member?(GenServer.call(Loader, :loaded), id)
+      assert id in Loader.registered_databases()
+      refute id in Loader.loaded_databases()
     end)
   end
 end

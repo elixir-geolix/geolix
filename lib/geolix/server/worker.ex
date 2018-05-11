@@ -23,9 +23,7 @@ defmodule Geolix.Server.Worker do
   end
 
   defp lookup_all(ip, opts) do
-    databases = GenServer.call(Loader, :loaded)
-
-    lookup_all(ip, opts, databases)
+    lookup_all(ip, opts, Loader.loaded_databases())
   end
 
   defp lookup_all(_, _, []), do: %{}
@@ -42,9 +40,7 @@ defmodule Geolix.Server.Worker do
   end
 
   defp lookup_single(ip, opts) do
-    database = GenServer.call(Loader, {:get_database, opts[:where]})
-
-    case database do
+    case Loader.get_database(opts[:where]) do
       nil -> nil
       %{adapter: adapter} -> adapter.lookup(ip, opts)
     end
