@@ -37,10 +37,6 @@ defmodule Geolix.Database.Loader do
 
   # GenServer callbacks
 
-  def handle_call({:get_database, which}, _, state) do
-    {:reply, lookup_database(which), state}
-  end
-
   def handle_call({:load_database, db}, _, state) do
     result =
       db
@@ -56,29 +52,10 @@ defmodule Geolix.Database.Loader do
   def handle_call({:unload_database, which}, _, state) do
     result =
       which
-      |> lookup_database()
+      |> get_database()
       |> unload_database()
 
     {:reply, result, state}
-  end
-
-  def handle_call(:loaded, _, state) do
-    loaded =
-      @ets_state_name
-      |> :ets.tab2list()
-      |> Enum.filter(fn {_id, db} -> :loaded == Map.get(db, :state) end)
-      |> Enum.map(fn {id, _db} -> id end)
-
-    {:reply, loaded, state}
-  end
-
-  def handle_call(:registered, _, state) do
-    registered =
-      @ets_state_name
-      |> :ets.tab2list()
-      |> Enum.map(fn {id, _db} -> id end)
-
-    {:reply, registered, state}
   end
 
   def handle_cast(:reload_databases, state) do
@@ -101,14 +78,34 @@ defmodule Geolix.Database.Loader do
   """
   @spec get_database(atom) :: map | nil
   def get_database(which) do
-    GenServer.call(__MODULE__, {:get_database, which})
+    case :ets.info(@ets_state_name) do
+      :undefined ->
+        nil
+
+      _ ->
+        case :ets.lookup(@ets_state_name, which) do
+          [{^which, db}] -> db
+          _ -> nil
+        end
+    end
   end
 
   @doc """
   Returns a list of all completely loaded databases.
   """
   @spec loaded_databases() :: [atom]
-  def loaded_databases, do: GenServer.call(__MODULE__, :loaded)
+  def loaded_databases do
+    case :ets.info(@ets_state_name) do
+      :undefined ->
+        []
+
+      _ ->
+        @ets_state_name
+        |> :ets.tab2list()
+        |> Enum.filter(fn {_id, db} -> :loaded == Map.get(db, :state) end)
+        |> Enum.map(fn {id, _db} -> id end)
+    end
+  end
 
   @doc """
   Returns a list of all registered databases.
@@ -116,7 +113,17 @@ defmodule Geolix.Database.Loader do
   Registered databases may or may not be already loaded.
   """
   @spec registered_databases() :: [atom]
-  def registered_databases, do: GenServer.call(__MODULE__, :registered)
+  def registered_databases do
+    case :ets.info(@ets_state_name) do
+      :undefined ->
+        []
+
+      _ ->
+        @ets_state_name
+        |> :ets.tab2list()
+        |> Enum.map(fn {id, _db} -> id end)
+    end
+  end
 
   # Internal methods
 
@@ -142,13 +149,6 @@ defmodule Geolix.Database.Loader do
   defp load_error_message({:config, :missing_adapter}), do: "missing adapter configuration"
   defp load_error_message({:config, :unknown_adapter}), do: "unknown adapter configuration"
   defp load_error_message(reason), do: inspect(reason)
-
-  defp lookup_database(which) do
-    case :ets.lookup(@ets_state_name, which) do
-      [{^which, db}] -> db
-      _ -> nil
-    end
-  end
 
   defp maybe_log_error(%{state: :loaded} = db), do: db
 
