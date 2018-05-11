@@ -13,7 +13,7 @@
     - Storage of the internal database loader state has been migrated
       to a named ets table in order to allow reading from databases while
       the loading cycle has not yet been completed
-      ([#2](https://github.com/elixir-geolix/geolix/issues/20)).
+      ([#20](https://github.com/elixir-geolix/geolix/issues/20)).
     - Unloading a database now calls `unload_database/1` of the unloaded
       database adapter passing the current configuration and expecting `:ok` as
       a result
