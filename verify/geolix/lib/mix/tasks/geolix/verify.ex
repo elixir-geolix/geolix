@@ -13,6 +13,7 @@ defmodule Mix.Tasks.Geolix.Verify do
 
   def run(_args) do
     {:ok, _} = Application.ensure_all_started(:geolix)
+    :ok = wait_for_database_loader()
     result_file = @results |> File.open!([:write, :utf8])
 
     @ip_set
@@ -67,4 +68,23 @@ defmodule Mix.Tasks.Geolix.Verify do
   defp parse_country(%{country: country}), do: country
 
   defp parse_country(_), do: ""
+
+  defp wait_for_database_loader(), do: wait_for_database_loader(30_000)
+  defp wait_for_database_loader(0) do
+    IO.puts "Loading databases took longer than 30 seconds. Aborting..."
+    :error
+  end
+
+  defp wait_for_database_loader(timeout) do
+    delay = 250
+    loaded = Geolix.Database.Loader.loaded_databases()
+    registered = Geolix.Database.Loader.registered_databases()
+
+    if 0 < length(registered) && loaded == registered do
+      :ok
+    else
+      :timer.sleep(delay)
+      wait_for_database_loader(timeout - delay)
+    end
+  end
 end
