@@ -9,6 +9,9 @@ defmodule Geolix.Database.Loader do
 
   alias Geolix.Database.Supervisor, as: DatabaseSupervisor
 
+  @ets_state_name :geolix_database_loader
+  @ets_state_opts [:named_table, :protected, :set, read_concurrency: true]
+
   # GenServer lifecycle
 
   @doc """
@@ -20,67 +23,73 @@ defmodule Geolix.Database.Loader do
   end
 
   def init(databases) do
-    :ok = GenServer.cast(__MODULE__, :reload_databases)
+    :ok = prepare_ets_state()
 
-    state =
+    :ok =
       databases
       |> Enum.filter(&Map.has_key?(&1, :id))
-      |> Enum.map(&{Map.fetch!(&1, :id), &1})
+      |> Enum.each(&register_state(:registered, &1))
 
-    {:ok, state}
+    :ok = GenServer.cast(__MODULE__, :reload_databases)
+
+    {:ok, nil}
   end
 
   # GenServer callbacks
 
   def handle_call({:get_database, which}, _, state) do
-    {:reply, state[which], state}
+    {:reply, lookup_database(which), state}
   end
 
   def handle_call({:load_database, db}, _, state) do
-    db =
+    result =
       db
       |> load_database()
       |> register_state(db)
 
-    case db[:state] do
-      :loaded -> {:reply, :ok, Keyword.put(state, db[:id], db)}
+    case result[:state] do
+      :loaded -> {:reply, :ok, state}
       {:error, _} = err -> {:reply, err, state}
     end
   end
 
   def handle_call({:unload_database, which}, _, state) do
-    :ok =
-      state
-      |> Keyword.get(which)
+    result =
+      which
+      |> lookup_database()
       |> unload_database()
 
-    {:reply, :ok, Keyword.delete(state, which)}
+    {:reply, result, state}
   end
 
   def handle_call(:loaded, _, state) do
     loaded =
-      state
+      @ets_state_name
+      |> :ets.tab2list()
       |> Enum.filter(fn {_id, db} -> :loaded == Map.get(db, :state) end)
-      |> Keyword.keys()
+      |> Enum.map(fn {id, _db} -> id end)
 
     {:reply, loaded, state}
   end
 
   def handle_call(:registered, _, state) do
-    {:reply, Keyword.keys(state), state}
+    registered =
+      @ets_state_name
+      |> :ets.tab2list()
+      |> Enum.map(fn {id, _db} -> id end)
+
+    {:reply, registered, state}
   end
 
   def handle_cast(:reload_databases, state) do
-    state =
-      Enum.map(state, fn {id, db} ->
-        db =
-          db
-          |> load_database()
-          |> register_state(db)
-          |> maybe_log_error()
-
-        {id, db}
-      end)
+    @ets_state_name
+    |> :ets.tab2list()
+    |> Enum.map(fn {_id, db} ->
+      db
+      |> load_database()
+      |> register_state(db)
+      |> maybe_log_error()
+    end)
 
     {:noreply, state}
   end
@@ -134,6 +143,13 @@ defmodule Geolix.Database.Loader do
   defp load_error_message({:config, :unknown_adapter}), do: "unknown adapter configuration"
   defp load_error_message(reason), do: inspect(reason)
 
+  defp lookup_database(which) do
+    case :ets.lookup(@ets_state_name, which) do
+      [{^which, db}] -> db
+      _ -> nil
+    end
+  end
+
   defp maybe_log_error(%{state: :loaded} = db), do: db
 
   defp maybe_log_error(%{state: {:error, reason}} = db) do
@@ -142,15 +158,37 @@ defmodule Geolix.Database.Loader do
     db
   end
 
-  defp register_state(:ok, db), do: Map.put(db, :state, :loaded)
-  defp register_state({:error, _} = err, db), do: Map.put(db, :state, err)
+  defp prepare_ets_state() do
+    case :ets.info(@ets_state_name) do
+      :undefined ->
+        _ = :ets.new(@ets_state_name, @ets_state_opts)
+        :ok
+
+      _ ->
+        :ok
+    end
+  end
+
+  defp register_state(:ok, db), do: register_state(:loaded, db)
+
+  defp register_state(state, db) do
+    db = Map.put(db, :state, state)
+    true = :ets.insert(@ets_state_name, {db[:id], db})
+
+    db
+  end
 
   defp unload_database(nil), do: :ok
 
   defp unload_database(%{adapter: adapter} = database) do
-    case function_exported?(adapter, :unload_database, 1) do
-      true -> adapter.unload_database(database)
-      false -> :ok
-    end
+    :ok =
+      case function_exported?(adapter, :unload_database, 1) do
+        true -> adapter.unload_database(database)
+        false -> :ok
+      end
+
+    true = :ets.delete(@ets_state_name, database[:id])
+
+    :ok
   end
 end
