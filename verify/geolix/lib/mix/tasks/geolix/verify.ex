@@ -70,8 +70,9 @@ defmodule Mix.Tasks.Geolix.Verify do
   defp parse_country(_), do: ""
 
   defp wait_for_database_loader(), do: wait_for_database_loader(30_000)
+
   defp wait_for_database_loader(0) do
-    IO.puts "Loading databases took longer than 30 seconds. Aborting..."
+    IO.puts("Loading databases took longer than 30 seconds. Aborting...")
     :error
   end
 
