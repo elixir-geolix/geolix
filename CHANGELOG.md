@@ -14,6 +14,8 @@
       to a named ets table in order to allow reading from databases while
       the loading cycle has not yet been completed
       ([#20](https://github.com/elixir-geolix/geolix/issues/20)).
+    - The `:is_in_european_union` information has been added to the `Country`
+      and `RepresentedCountry` result structs
     - Unloading a database now calls `unload_database/1` of the unloaded
       database adapter passing the current configuration and expecting `:ok` as
       a result

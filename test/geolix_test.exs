@@ -55,6 +55,9 @@ defmodule GeolixTest do
 
     assert %Geolix.Result.City{} = results[:fixture_city]
     assert %Geolix.Result.Country{} = results[:fixture_country]
+
+    assert results[:fixture_city].country.is_in_european_union
+    assert results[:fixture_country].country.is_in_european_union
   end
 
   test "lookup from unregistered database" do
