@@ -26,7 +26,7 @@ end
 
 ### Package Startup (application)
 
-Probably the easiest way to manage startup is by simply
+Probably the easiest way to manage startup is by
 adding `:geolix` to the list of applications:
 
 ```elixir
@@ -84,7 +84,7 @@ Depending on the adapter you may need to provide additional values.
 
 ### Configuration (static)
 
-The most simply way is using a completely static configuration, i.e. for two
+One option for configuration is using a static configuration, i.e. for two
 databases handled by the pre-packaged adapter `Geolix.Adapter.MMDB2`:
 
 ```elixir
@@ -351,7 +351,7 @@ working on a plain `Agent` holding your IP lookup responses.
 
 ### Benchmarking
 
-If you are curious about how long a lookup of an IP takes, you can simply
+If you are curious about how long a lookup of an IP takes, you can
 measure it using the erlang `:timer` module:
 
 ```elixir
