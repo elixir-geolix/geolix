@@ -2,7 +2,7 @@ defmodule Geolix.TestHelpers.FixtureList do
   @moduledoc false
 
   @base_maxmind "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data"
-  @base_testdata "https://raw.githubusercontent.com/elixir-geolix/testdata/master/mmdb2"
+  @base_testdata "https://raw.githubusercontent.com/elixir-geolix/testdata/master/priv/mmdb2"
 
   @doc """
   Returns a list of all available/downloaded fixtures.
