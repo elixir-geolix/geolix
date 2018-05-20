@@ -2,7 +2,6 @@ defmodule Geolix.TestHelpers.FixtureList do
   @moduledoc false
 
   @base_maxmind "https://raw.githubusercontent.com/maxmind/MaxMind-DB/master/test-data"
-  @base_testdata "https://raw.githubusercontent.com/elixir-geolix/testdata/master/priv/mmdb2"
 
   @doc """
   Returns a list of all available/downloaded fixtures.
@@ -82,11 +81,7 @@ defmodule Geolix.TestHelpers.FixtureList do
         :fixture_no_ipv4_search_tree,
         "MaxMind-DB-no-ipv4-search-tree.mmdb",
         "#{@base_maxmind}/MaxMind-DB-no-ipv4-search-tree.mmdb"
-      },
-      {:testdata_gz, "Geolix.mmdb.gz", "#{@base_testdata}/Geolix.mmdb.gz"},
-      {:testdata_plain, "Geolix.mmdb", "#{@base_testdata}/Geolix.mmdb"},
-      {:testdata_tar, "Geolix.mmdb.tar", "#{@base_testdata}/Geolix.mmdb.tar"},
-      {:testdata_targz, "Geolix.mmdb.tar.gz", "#{@base_testdata}/Geolix.mmdb.tar.gz"}
+      }
     ]
   end
 end
