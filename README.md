@@ -8,7 +8,6 @@ file may be out of sync with the [Hex package](https://hex.pm/packages/geolix).
 If you are using this library through Hex please refer to the appropriate
 documentation on HexDocs (link available on Hex).
 
-
 ## Package Setup
 
 To use Geolix with your projects, edit your `mix.exs` file and add the project
@@ -68,7 +67,6 @@ children = [
   # ...
 ]
 ```
-
 
 ## Application Configuration
 
@@ -213,7 +211,6 @@ will reload/replace it without persisting the configuration. On success a result
 of `:ok` will be returned otherwise a tuple in the style of `{:error, message}`.
 The individual errors are defined by the adapter.
 
-
 ## Adapter Configuration
 
 ### Geolix.Adapter.MMDB2
@@ -273,7 +270,6 @@ _Note_: Be responsible with the source you configure! Having a public download
 mirror (or the official MaxMind location) set might flag you as a
 "not so nice person". Ideally use your own server or online storage.
 
-
 ## Database Loading
 
 ### Loading Errors
@@ -297,7 +293,6 @@ As this is done in a lazy fashion it will still be kept in memory while not
 being reloaded or used for lookups. If the database is configured via
 application environment it will still be reloaded as usual in case of a
 supervisor or application restart.
-
 
 ## Usage
 
@@ -334,7 +329,6 @@ _Note_: Please be aware that all results for enterprise databases are returned
 using separate structs if the data is not already included in the regular
 databases. This may change in the future.
 
-
 ## Custom Adapters
 
 If you need a different database or have other special needs for lookups you
@@ -345,7 +339,6 @@ Each adapter is expected to adhere to the `Geolix.Adapter` behaviour.
 The MMDB2 adapter (`Geolix.Adapter.MMDB2`) is pre-packaged and usable once you
 configure it. For testing you can use a fake adapter (`Geolix.Adapter.Fake`)
 working on a plain `Agent` holding your IP lookup responses.
-
 
 ## Additional Stuff
 
@@ -391,7 +384,6 @@ This environment performs the following 4 steps:
 
 To run these tests on a local machine please refer to the travis commands
 executed on each run (`.travis.yml`).
-
 
 ## License
 
