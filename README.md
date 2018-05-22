@@ -301,12 +301,12 @@ Lookups are done using `Geolix.lookup/1,2`:
 ```elixir
 iex(1)> Geolix.lookup("127.0.0.1")
 %{
-  city: %Geolix.Result.City{ ... },
-  country: %Geolix.Result.Country{ ... }
+  city: %Geolix.Result.City{...},
+  country: %Geolix.Result.Country{...}
 }
 
 iex(2)> Geolix.lookup({127, 0, 0, 1}, [as: :raw, where: :city])
-%{ ... }
+%{...}
 ```
 
 Using `Geolix.lookup/2` with only one parameter (the IP) will lookup the
@@ -322,7 +322,7 @@ Lookup options:
 * `:where` - Lookup information in a single registered database
 
 Every non-nil result will include the IP as a tuple either directly in the
-result field `:ip_address` or inside `%{traits: %{ ip_address: ... }}` if
+result field `:ip_address` or inside `%{traits: %{ip_address: ...}}` if
 a city or country (or enterprise) database is used.
 
 _Note_: Please be aware that all results for enterprise databases are returned
