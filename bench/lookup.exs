@@ -15,14 +15,14 @@ defmodule Geolix.Benchmark do
 
         :ok = wait_for_database_loader()
 
-        run_benchmark(database)
+        run_benchmark()
 
       false ->
         IO.warn("Expected database not found at #{database}")
     end
   end
 
-  defp run_benchmark(database) do
+  defp run_benchmark() do
     {:ok, lookup_ipv4} = :inet.parse_address('1.1.1.1')
     {:ok, lookup_ipv4_in_ipv6} = :inet.parse_address('::1.1.1.1')
 
