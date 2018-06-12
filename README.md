@@ -342,7 +342,15 @@ working on a plain `Agent` holding your IP lookup responses.
 
 ## Additional Stuff
 
-### Benchmarking
+### Benchmarking (scripted)
+
+A (minimal) benchmark script looking up a predefined ip address is included:
+
+```shell
+mix bench.lookup
+```
+
+### Benchmarking (manual)
 
 If you are curious about how long a lookup of an IP takes, you can
 measure it using the erlang `:timer` module:
