@@ -1,4 +1,4 @@
-defmodule Geolix.Benchmark do
+defmodule Geolix.Benchmark.Lookup do
   def run() do
     database =
       [Geolix.TestData.dir(:mmdb2), "Benchmark.mmdb"]
@@ -61,4 +61,4 @@ defmodule Geolix.Benchmark do
   end
 end
 
-Geolix.Benchmark.run()
+Geolix.Benchmark.Lookup.run()
