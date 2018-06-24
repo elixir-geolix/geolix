@@ -17,7 +17,7 @@ as a dependency:
 defp deps do
   [
     # ...
-    {:geolix, "~> 0.16"}
+    {:geolix, "~> 0.16"},
     # ...
   ]
 end
@@ -33,7 +33,7 @@ def application do
   [
     applications: [
       # ...
-      :geolix
+      :geolix,
       # ...
     ]
   ]
@@ -50,7 +50,7 @@ def application do
   [
     included_applications: [
       # ...
-      :geolix
+      :geolix,
       # ...
     ]
   ]
@@ -63,7 +63,7 @@ And also add the appropriate `Geolix.Supervisor` to your hierarchy:
 # in your application/supervisor
 children = [
   # ...
-  supervisor(Geolix.Supervisor, [])
+  supervisor(Geolix.Supervisor, []),
   # ...
 ]
 ```
