@@ -1,15 +1,17 @@
-defmodule Geolix.Result.Enterprise do
+defmodule Geolix.Adapter.MMDB2.Result.Enterprise do
   @moduledoc """
   Result for `GeoIP2 Enterprise` databases.
   """
 
-  alias Geolix.Record
+  alias Geolix.Adapter.MMDB2.Model
+  alias Geolix.Adapter.MMDB2.Record
+  alias Geolix.Adapter.MMDB2.Result
 
-  @behaviour Geolix.Model
-
-  defstruct %Geolix.Result.City{}
+  defstruct %Result.City{}
             |> Map.keys()
             |> List.delete(:__struct__)
+
+  @behaviour Model
 
   def from(data, locale) do
     %__MODULE__{

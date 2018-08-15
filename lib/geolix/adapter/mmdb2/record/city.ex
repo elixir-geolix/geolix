@@ -1,15 +1,17 @@
-defmodule Geolix.Record.City do
+defmodule Geolix.Adapter.MMDB2.Record.City do
   @moduledoc """
   Record for `city` information.
   """
 
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
 
   defstruct [
     :geoname_id,
     :name,
     :names
   ]
+
+  @behaviour Model
 
   def from(nil, _), do: nil
   def from(data, nil), do: struct(__MODULE__, data)

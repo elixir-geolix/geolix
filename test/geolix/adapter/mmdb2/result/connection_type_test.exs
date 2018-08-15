@@ -1,7 +1,7 @@
 defmodule Geolix.Adapter.MMDB2.Result.ConnectionTypeTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Result.ConnectionType
+  alias Geolix.Adapter.MMDB2.Result.ConnectionType
 
   test "result type" do
     assert %ConnectionType{} = Geolix.lookup("1.0.0.0", where: :fixture_connection)

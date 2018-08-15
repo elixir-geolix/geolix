@@ -1,7 +1,7 @@
 defmodule Geolix.Adapter.MMDB2.Result.ASNTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Result.ASN
+  alias Geolix.Adapter.MMDB2.Result.ASN
 
   test "result type" do
     assert %ASN{} = Geolix.lookup("1.128.0.0", where: :fixture_asn)

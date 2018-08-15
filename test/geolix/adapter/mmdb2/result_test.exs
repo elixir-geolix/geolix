@@ -1,7 +1,7 @@
 defmodule Geolix.Adapter.MMDB2.ResultTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Result
+  alias Geolix.Adapter.MMDB2.Result
 
   defp result_for(type), do: Result.to_struct(type, %{}, nil).__struct__
 

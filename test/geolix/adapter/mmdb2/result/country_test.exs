@@ -1,7 +1,7 @@
 defmodule Geolix.Adapter.MMDB2.Result.CountryTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Result.Country
+  alias Geolix.Adapter.MMDB2.Result.Country
 
   test "result type" do
     assert %Country{} = Geolix.lookup("2.125.160.216", where: :fixture_country)

@@ -1,8 +1,8 @@
 defmodule Geolix.Adapter.MMDB2.Result.CityTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Record.Subdivision
-  alias Geolix.Result.City
+  alias Geolix.Adapter.MMDB2.Record.Subdivision
+  alias Geolix.Adapter.MMDB2.Result.City
 
   test "result type" do
     result = Geolix.lookup("2.125.160.216", where: :fixture_city)

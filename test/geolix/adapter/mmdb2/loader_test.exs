@@ -2,7 +2,7 @@ defmodule Geolix.Adapter.MMDB2.Database.LoaderTest do
   use ExUnit.Case, async: true
 
   alias Geolix.Adapter.MMDB2
-  alias Geolix.Result
+  alias Geolix.Adapter.MMDB2.Result
 
   @fixture_path [__DIR__, "../../../fixtures"] |> Path.join() |> Path.expand()
 

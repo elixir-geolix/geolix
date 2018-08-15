@@ -1,7 +1,7 @@
 defmodule Geolix.Adapter.MMDB2.Result.DomainTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Result.Domain
+  alias Geolix.Adapter.MMDB2.Result.Domain
 
   test "result type" do
     assert %Domain{} = Geolix.lookup("1.2.0.0", where: :fixture_domain)

@@ -1,9 +1,9 @@
-defmodule Geolix.Result do
+defmodule Geolix.Adapter.MMDB2.Result do
   @moduledoc """
   Converts raw lookup results into structured data.
   """
 
-  alias Geolix.Result
+  alias Geolix.Adapter.MMDB2.Result
 
   @mapping [
     {"GeoIP2-City", Result.City},

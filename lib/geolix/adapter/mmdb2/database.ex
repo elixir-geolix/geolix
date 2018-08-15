@@ -6,6 +6,7 @@ defmodule Geolix.Adapter.MMDB2.Database do
   entries.
   """
 
+  alias Geolix.Adapter.MMDB2.Result
   alias Geolix.Adapter.MMDB2.Storage
 
   @doc """
@@ -44,6 +45,6 @@ defmodule Geolix.Adapter.MMDB2.Database do
   defp maybe_to_struct(result, _, :raw, _), do: result
 
   defp maybe_to_struct(result, type, :struct, opts) do
-    Geolix.Result.to_struct(type, result, opts[:locale])
+    Result.to_struct(type, result, opts[:locale])
   end
 end

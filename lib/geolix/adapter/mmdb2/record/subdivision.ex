@@ -1,9 +1,9 @@
-defmodule Geolix.Record.Subdivision do
+defmodule Geolix.Adapter.MMDB2.Record.Subdivision do
   @moduledoc """
   Record for `subdivision` information.
   """
 
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
 
   defstruct [
     :geoname_id,
@@ -11,6 +11,8 @@ defmodule Geolix.Record.Subdivision do
     :name,
     :names
   ]
+
+  @behaviour Model
 
   def from(nil, _), do: nil
 

@@ -1,7 +1,7 @@
 defmodule Geolix.Adapter.MMDB2.Result.AnonymousIPTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Result.AnonymousIP
+  alias Geolix.Adapter.MMDB2.Result.AnonymousIP
 
   test "result type" do
     assert %AnonymousIP{} = Geolix.lookup("1.2.0.0", where: :fixture_anonymous)

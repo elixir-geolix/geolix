@@ -10,6 +10,14 @@
     - The `:is_in_european_union` information has been added to the `Country`
       and `RepresentedCountry` result structs
 
+- Backwards incompatible changes
+    - Adapters are now responsible to return the complete (and final) result
+      of the lookup. No additional modifications will be made. Several module
+      namespaces have been renamed for this:
+      - `Geolix.Model -> Geolix.Adapter.MMDB2.Model`
+      - `Geolix.Record -> Geolix.Adapter.MMDB2.Record`
+      - `Geolix.Result -> Geolix.Adapter.MMDB2.Result`
+
 ## v0.16.0 (2018-02-21)
 
 - Enhancements

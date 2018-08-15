@@ -1,14 +1,17 @@
-defmodule Geolix.Record.EnterpriseSubdivision do
+defmodule Geolix.Adapter.MMDB2.Record.EnterpriseSubdivision do
   @moduledoc """
   Record for `subdivision` information (enterprise database).
   """
 
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
+  alias Geolix.Adapter.MMDB2.Record
 
-  defstruct %Geolix.Record.Subdivision{}
+  defstruct %Record.Subdivision{}
             |> Map.keys()
             |> List.delete(:__struct__)
             |> List.flatten([:confidence])
+
+  @behaviour Model
 
   def from(nil, _), do: nil
 

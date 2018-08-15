@@ -1,13 +1,15 @@
 defmodule GeolixTest do
   use ExUnit.Case, async: true
 
+  alias Geolix.Adapter.MMDB2.Result
+
   test "result type" do
     ip = "81.2.69.160"
     where = :fixture_city
 
     refute Map.get(Geolix.lookup(ip, as: :raw, where: where), :__struct__)
 
-    assert %Geolix.Result.City{} = Geolix.lookup(ip, as: :struct, where: where)
+    assert %Result.City{} = Geolix.lookup(ip, as: :struct, where: where)
   end
 
   test "ipv4 lookup in ipv6 notation" do
@@ -53,8 +55,8 @@ defmodule GeolixTest do
   test "lookup from all registered databases" do
     results = Geolix.lookup("81.2.69.160")
 
-    assert %Geolix.Result.City{} = results[:fixture_city]
-    assert %Geolix.Result.Country{} = results[:fixture_country]
+    assert %Result.City{} = results[:fixture_city]
+    assert %Result.Country{} = results[:fixture_country]
 
     assert results[:fixture_city].country.is_in_european_union
     assert results[:fixture_country].country.is_in_european_union
@@ -69,6 +71,6 @@ defmodule GeolixTest do
     opts = [where: :fixture_city, timeout: 500]
     result = Geolix.lookup(ip, opts)
 
-    assert %Geolix.Result.City{} = result
+    assert %Result.City{} = result
   end
 end

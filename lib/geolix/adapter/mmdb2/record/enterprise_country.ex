@@ -1,14 +1,17 @@
-defmodule Geolix.Record.EnterpriseCountry do
+defmodule Geolix.Adapter.MMDB2.Record.EnterpriseCountry do
   @moduledoc """
   Record for `country` information (enterprise database).
   """
 
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
+  alias Geolix.Adapter.MMDB2.Record
 
-  defstruct %Geolix.Record.Country{}
+  defstruct %Record.Country{}
             |> Map.keys()
             |> List.delete(:__struct__)
             |> List.flatten([:confidence])
+
+  @behaviour Model
 
   def from(nil, _), do: nil
   def from(data, nil), do: struct(__MODULE__, data)

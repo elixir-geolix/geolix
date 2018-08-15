@@ -1,9 +1,9 @@
-defmodule Geolix.Record.Location do
+defmodule Geolix.Adapter.MMDB2.Record.Location do
   @moduledoc """
   Record for `location` information.
   """
 
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
 
   defstruct [
     :accuracy_radius,
@@ -12,6 +12,8 @@ defmodule Geolix.Record.Location do
     :metro_code,
     :time_zone
   ]
+
+  @behaviour Model
 
   def from(nil, _), do: nil
   def from(data, _), do: struct(__MODULE__, data)

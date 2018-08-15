@@ -1,11 +1,10 @@
-defmodule Geolix.Result.City do
+defmodule Geolix.Adapter.MMDB2.Result.City do
   @moduledoc """
   Result for `GeoIP2 City` databases.
   """
 
-  alias Geolix.Record
-
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
+  alias Geolix.Adapter.MMDB2.Record
 
   defstruct [
     :city,
@@ -18,6 +17,8 @@ defmodule Geolix.Result.City do
     :subdivisions,
     :traits
   ]
+
+  @behaviour Model
 
   def from(data, locale) do
     %__MODULE__{

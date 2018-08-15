@@ -1,4 +1,4 @@
-defmodule Geolix.Model do
+defmodule Geolix.Adapter.MMDB2.Model do
   @moduledoc """
   Behaviour for records/results.
   """

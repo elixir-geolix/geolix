@@ -1,9 +1,9 @@
-defmodule Geolix.Record.RepresentedCountry do
+defmodule Geolix.Adapter.MMDB2.Record.RepresentedCountry do
   @moduledoc """
   Record for `represented country` information.
   """
 
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
 
   defstruct [
     :geoname_id,
@@ -13,6 +13,8 @@ defmodule Geolix.Record.RepresentedCountry do
     :names,
     :type
   ]
+
+  @behaviour Model
 
   def from(nil, _), do: nil
 

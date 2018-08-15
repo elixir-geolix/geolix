@@ -1,9 +1,9 @@
-defmodule Geolix.Record.Continent do
+defmodule Geolix.Adapter.MMDB2.Record.Continent do
   @moduledoc """
   Record for `continent` information.
   """
 
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
 
   defstruct [
     :code,
@@ -11,6 +11,8 @@ defmodule Geolix.Record.Continent do
     :name,
     :names
   ]
+
+  @behaviour Model
 
   def from(nil, _), do: nil
   def from(data, nil), do: struct(__MODULE__, data)

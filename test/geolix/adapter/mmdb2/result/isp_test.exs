@@ -1,7 +1,7 @@
 defmodule Geolix.Adapter.MMDB2.Result.ISPTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Result.ISP
+  alias Geolix.Adapter.MMDB2.Result.ISP
 
   test "result type" do
     assert %ISP{} = Geolix.lookup("1.0.128.0", where: :fixture_isp)

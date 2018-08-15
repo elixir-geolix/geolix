@@ -1,11 +1,10 @@
-defmodule Geolix.Result.Country do
+defmodule Geolix.Adapter.MMDB2.Result.Country do
   @moduledoc """
   Result for `GeoIP2 Country` databases.
   """
 
-  alias Geolix.Record
-
-  @behaviour Geolix.Model
+  alias Geolix.Adapter.MMDB2.Model
+  alias Geolix.Adapter.MMDB2.Record
 
   defstruct [
     :continent,
@@ -14,6 +13,8 @@ defmodule Geolix.Result.Country do
     :represented_country,
     :traits
   ]
+
+  @behaviour Model
 
   def from(data, locale) do
     %__MODULE__{

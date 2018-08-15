@@ -1,8 +1,8 @@
 defmodule Geolix.Adapter.MMDB2.Result.EnterpriseTest do
   use ExUnit.Case, async: true
 
-  alias Geolix.Record.EnterpriseSubdivision
-  alias Geolix.Result.Enterprise
+  alias Geolix.Adapter.MMDB2.Record.EnterpriseSubdivision
+  alias Geolix.Adapter.MMDB2.Result.Enterprise
 
   test "result type" do
     result = Geolix.lookup("74.209.24.0", where: :fixture_enterprise)
