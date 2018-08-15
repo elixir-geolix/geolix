@@ -13,12 +13,6 @@ defmodule Geolix do
           | {:system, String.t()}
           | {:system, String.t(), String.t()}
 
-  @lookup_default_opts [
-    as: :struct,
-    locale: :en,
-    where: nil
-  ]
-
   def start(_type, _args), do: Geolix.Supervisor.start_link()
 
   # Database lookup
@@ -37,10 +31,10 @@ defmodule Geolix do
   end
 
   def lookup(ip, opts) do
-    opts = Keyword.merge(@lookup_default_opts, opts)
+    request = {:lookup, ip, opts}
     timeout = Keyword.get(opts, :timeout, 5000)
 
-    :poolboy.transaction(Pool, &GenServer.call(&1, {:lookup, ip, opts}, timeout))
+    :poolboy.transaction(Pool, &GenServer.call(&1, request, timeout))
   end
 
   # Database management

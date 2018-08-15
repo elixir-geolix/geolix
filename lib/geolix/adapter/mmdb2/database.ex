@@ -45,6 +45,6 @@ defmodule Geolix.Adapter.MMDB2.Database do
   defp maybe_to_struct(result, _, :raw, _), do: result
 
   defp maybe_to_struct(result, type, :struct, opts) do
-    Result.to_struct(type, result, opts[:locale])
+    Result.to_struct(type, result, opts[:locale] || :en)
   end
 end
