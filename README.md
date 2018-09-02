@@ -17,7 +17,7 @@ as a dependency:
 defp deps do
   [
     # ...
-    {:geolix, "~> 0.16"},
+    {:geolix, "~> 0.17"},
     # ...
   ]
 end

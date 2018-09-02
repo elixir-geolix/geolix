@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.17.0-dev
+## v0.17.0 (2018-09-02)
 
 - Enhancements
     - Storage of the internal database loader state has been migrated
