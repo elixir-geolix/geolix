@@ -16,10 +16,13 @@ jobs:
     - <<: *test
       elixir: 1.6.6
       otp_release: 21.0
+    - <<: *test
+      elixir: 1.7.3
+      otp_release: 21.0
       after_success: mix coveralls.travis
 
     - stage: verify
-      elixir: 1.6.6
+      elixir: 1.7.3
       otp_release: 21.0
       before_install: |-
         # setup pip for "sudo: false"
