@@ -19,8 +19,8 @@ jobs:
       after_success: mix coveralls.travis
 
     - stage: verify
-      elixir: 1.3.4
-      otp_release: 18.3
+      elixir: 1.6.6
+      otp_release: 21.0
       before_install: |-
         # setup pip for "sudo: false"
         mkdir -p vendor/python
