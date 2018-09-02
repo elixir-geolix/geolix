@@ -12,10 +12,10 @@ jobs:
       otp_release: 19.3
     - <<: *test
       elixir: 1.5.3
-      otp_release: 20.2
+      otp_release: 20.3
     - <<: *test
-      elixir: 1.6.2
-      otp_release: 20.2
+      elixir: 1.6.6
+      otp_release: 21.0
       after_success: mix coveralls.travis
 
     - stage: verify
