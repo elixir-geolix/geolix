@@ -285,6 +285,24 @@ are more readable error message.
 
 The errors are defined by the adapter.
 
+### State Retrieval
+
+All databases are loaded, unless you called `Geolix.load_database/1`, asynchronously. This includes configured databases loaded upon application
+start.
+
+The database loader allows you to access the current state of loading:
+
+```elixir
+iex(1)> Geolix.Database.Loader.loaded_databases()
+[:city]
+
+iex(2)> Geolix.Database.Loader.registered_databases()
+[:city, :country]
+```
+
+Above example demonstrates a state where the database `:country` is known
+but not completely loaded yet. Please be aware that both lists are unsorted.
+
 ### Reloading
 
 To trigger a forceful reload of all databases configured in the application
