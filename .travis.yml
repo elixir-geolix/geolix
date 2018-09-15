@@ -55,7 +55,6 @@ jobs:
 
         # verify geolix results
         pushd geolix
-          mix compile
           mix geolix.verify
         popd
 
