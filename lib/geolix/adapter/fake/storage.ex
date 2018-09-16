@@ -1,7 +1,5 @@
 defmodule Geolix.Adapter.Fake.Storage do
-  @moduledoc """
-  Fake adapter storage agent.
-  """
+  @moduledoc false
 
   @doc """
   Starts the storage adapter.

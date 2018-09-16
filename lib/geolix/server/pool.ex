@@ -1,7 +1,5 @@
 defmodule Geolix.Server.Pool do
-  @moduledoc """
-  Geolix server pool definition.
-  """
+  @moduledoc false
 
   @doc """
   Returns poolboy child specification for supervision tree.

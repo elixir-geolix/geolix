@@ -1,7 +1,5 @@
 defmodule Geolix.Server.Worker do
-  @moduledoc """
-  Worker module reading a database and looking up IP information.
-  """
+  @moduledoc false
 
   alias Geolix.Database.Loader
 
