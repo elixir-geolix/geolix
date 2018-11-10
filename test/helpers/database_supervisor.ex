@@ -6,13 +6,19 @@ defmodule Geolix.TestHelpers.DatabaseSupervisor do
   """
   @spec restart() :: :ok
   def restart() do
-    :ok = Supervisor.stop(Geolix.Database.Supervisor, :normal)
-    :ok = :timer.sleep(50)
+    :ok =
+      case Process.whereis(Geolix.Database.Supervisor) do
+        nil ->
+          :ok
+
+        _pid ->
+          Supervisor.stop(Geolix.Database.Supervisor, :normal)
+          :timer.sleep(50)
+      end
 
     _ = Application.ensure_all_started(:geolix)
     :ok = Geolix.reload_databases()
 
-    :ok = :timer.sleep(50)
-    :ok
+    :timer.sleep(50)
   end
 end
