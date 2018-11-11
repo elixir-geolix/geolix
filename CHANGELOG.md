@@ -1,5 +1,7 @@
 # Changelog
 
+## v0.18.0-dev
+
 - Enhancements
     - Initializer modules can be defined with additional arguments by using `{mod, fun, args}`
 
