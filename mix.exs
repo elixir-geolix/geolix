@@ -8,7 +8,7 @@ defmodule Geolix.Mixfile do
       app: :geolix,
       name: "Geolix",
       version: "0.18.0-dev",
-      elixir: "~> 1.3",
+      elixir: "~> 1.5",
       aliases: aliases(),
       deps: deps(),
       description: "MaxMind GeoIP2 database reader/decoder",
