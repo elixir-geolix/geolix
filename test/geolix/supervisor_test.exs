@@ -6,14 +6,14 @@ defmodule Geolix.SupervisorTest do
   defmodule Initializer do
     def start_link, do: Agent.start_link(fn -> nil end, name: __MODULE__)
 
-    def call_init, do: Agent.update(__MODULE__, fn _ -> :ok end)
+    def call_init, do: call_init(:ok_empty)
+    def call_init(result), do: Agent.update(__MODULE__, fn _ -> result end)
+
     def get_init, do: Agent.get(__MODULE__, & &1)
   end
 
-  setup do
+  setup_all do
     init = Application.get_env(:geolix, :init)
-    :ok = Application.put_env(:geolix, :init, {Initializer, :call_init})
-
     {:ok, _} = Initializer.start_link()
 
     on_exit(fn ->
@@ -21,15 +21,29 @@ defmodule Geolix.SupervisorTest do
     end)
   end
 
-  test "init function called upon supervisor (re-) start" do
+  test "init {mod, fun} called upon supervisor (re-) start" do
     capture_log(fn ->
       Supervisor.stop(Geolix.Supervisor, :normal)
 
       :ok = :timer.sleep(100)
+      :ok = Application.put_env(:geolix, :init, {Initializer, :call_init})
       _ = Application.ensure_all_started(:geolix)
       :ok = :timer.sleep(100)
 
-      assert :ok == Initializer.get_init()
+      assert :ok_empty == Initializer.get_init()
+    end)
+  end
+
+  test "init {mod, fun, args} called upon supervisor (re-) start" do
+    capture_log(fn ->
+      Supervisor.stop(Geolix.Supervisor, :normal)
+
+      :ok = :timer.sleep(100)
+      :ok = Application.put_env(:geolix, :init, {Initializer, :call_init, [:ok_passed]})
+      _ = Application.ensure_all_started(:geolix)
+      :ok = :timer.sleep(100)
+
+      assert :ok_passed == Initializer.get_init()
     end)
   end
 end

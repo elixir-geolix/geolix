@@ -3,34 +3,47 @@ defmodule Geolix.Database.SupervisorInitTest do
 
   import ExUnit.CaptureLog
 
+  alias Geolix.TestHelpers.DatabaseSupervisor
+
   defmodule Initializer do
-    def adapter(%{init: {__MODULE__, :adapter}}) do
+    def adapter(database), do: adapter(database, :ok_empty)
+
+    def adapter(_config, result) do
       %{
         id: :per_database_init,
         adapter: Geolix.Adapter.Fake,
-        data: Map.put(%{}, {1, 2, 3, 4}, :per_database_init_result)
+        data: Map.put(%{}, {1, 2, 3, 4}, result)
       }
     end
   end
 
-  setup do
+  setup_all do
     databases = Application.get_env(:geolix, :databases)
-    :ok = Application.put_env(:geolix, :databases, [%{init: {Initializer, :adapter}}])
 
     on_exit(fn ->
       :ok = Application.put_env(:geolix, :databases, databases)
     end)
   end
 
-  test "per-database init function called upon supervisor (re-) start" do
+  test "per-database init {mod, fun} called upon supervisor (re-) start" do
     capture_log(fn ->
-      Supervisor.stop(Geolix.Supervisor, :normal)
+      databases = [%{init: {Initializer, :adapter}}]
 
-      :ok = :timer.sleep(100)
-      _ = Application.ensure_all_started(:geolix)
-      :ok = :timer.sleep(100)
+      :ok = Application.put_env(:geolix, :databases, databases)
+      :ok = DatabaseSupervisor.restart()
 
-      assert :per_database_init_result == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
+      assert :ok_empty == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
+    end)
+  end
+
+  test "per-database init {mod, fun, args} called upon supervisor (re-) start" do
+    capture_log(fn ->
+      databases = [%{init: {Initializer, :adapter, [:ok_passed]}}]
+
+      :ok = Application.put_env(:geolix, :databases, databases)
+      :ok = DatabaseSupervisor.restart()
+
+      assert :ok_passed == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
     end)
   end
 end

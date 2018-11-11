@@ -102,21 +102,39 @@ If there are any reasons you cannot use a pre-defined configuration you can also
 This may be the most suitable configuration if you have the database located in the `:priv_dir` of your application.
 
 ```elixir
+# {mod, fun}
 config :geolix,
-  init: {MyInitModule, :my_init_fun_toplevel}
+  init: {MyInitModule, :my_init_mf_toplevel}
 
 config :geolix,
   databases: [
     %{
       id: :dynamic_country,
       adapter: Geolix.Adapter.MMDB2,
-      init: {MyInitModule, :my_init_fun_database}
+      init: {MyInitModule, :my_init_mf_database}
     }
   ]
 
+# {mod, fun, args}
+config :geolix,
+  init: {MyInitModule, :my_init_mfa_toplevel, [:foo, :bar]}
+
+config :geolix,
+  databases: [
+    %{
+      id: :dynamic_country,
+      adapter: Geolix.Adapter.MMDB2,
+      init: {MyInitModule, :my_init_mfa_database, [:foo, :bar]}
+    }
+  ]
+
+# initializer module
 defmodule MyInitModule do
-  @spec my_init_fun_toplevel() :: :ok
-  def my_init_fun_toplevel() do
+  @spec my_init_mf_toplevel() :: :ok
+  def my_init_mf_toplevel(), do: my_init_mfa_toplevel(:foo, :bar)
+
+  @spec my_init_mfa_toplevel(atom, atom) :: :ok
+  def my_init_mfa_toplevel(:foo, :bar) do
     priv_dir = Application.app_dir(:my_app, "priv")
 
     databases = [
@@ -131,8 +149,13 @@ defmodule MyInitModule do
     Application.put_env(:geolix, :databases, databases)
   end
 
-  @spec my_init_fun_database(map) :: map
-  def my_init_fun_database(%{id: :dynamic_country} = database) do
+  @spec my_init_mf_database(map) :: map
+  def my_init_mf_database(database) do
+    my_init_mfa_database(database, :foo, :bar)
+  end
+
+  @spec my_init_mfa_database(map, atom, atom) :: map
+  def my_init_mfa_database(%{id: :dynamic_country} = database, :foo, :bar) do
     priv_dir = Application.app_dir(:my_app, "priv")
 
     %{database | source: Path.join([priv_dir, "GeoLite2-Country.mmdb"])}
@@ -142,7 +165,7 @@ end
 
 Above example illustrates both types of dynamic initialization.
 
-The top-level initializer is called without arguments and expected to always return `:ok`. At the database level the current database configuration is passed as the first (and only) parameter and the new, complete configuration is expected as the return.
+The top-level initializer is called as defined (`{mod, fun}` or `{mod, fun, args}`) and expected to always return `:ok`. At the database level the current database configuration is passed as the first parameter with optional `{m, f, a}` parameters following. It is expected that this function return the new, complete configuration.
 
 If you choose to use the dynamic database initialization the only requirement for your config file is a plain `%{init: {MyInitModule, :my_init_fun}}` entry. Every additional field in the example is only used for illustration and only required for the complete return value.
 

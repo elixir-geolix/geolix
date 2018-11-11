@@ -20,8 +20,9 @@ defmodule Geolix.Supervisor do
   def init(_default) do
     :ok =
       case Application.get_env(:geolix, :init) do
-        nil -> :ok
+        {mod, fun, args} -> apply(mod, fun, args)
         {mod, fun} -> apply(mod, fun, [])
+        nil -> :ok
       end
 
     children = [

@@ -46,7 +46,14 @@ defmodule Geolix.Database.Supervisor do
     |> Enum.map(&preconfigure_database/1)
   end
 
-  defp preconfigure_database(%{init: {mod, fun}} = config), do: apply(mod, fun, [config])
+  defp preconfigure_database(%{init: {mod, fun, extra_args}} = config) do
+    apply(mod, fun, [config | extra_args])
+  end
+
+  defp preconfigure_database(%{init: {mod, fun}} = config) do
+    apply(mod, fun, [config])
+  end
+
   defp preconfigure_database(config), do: config
 
   defp workers(databases) do
