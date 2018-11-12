@@ -216,7 +216,7 @@ Running `load_database/1` on an already configured database (matched by `:id`) w
 
 ### Geolix.Adapter.MMDB2
 
-This is the default pre-packaged adapter for usage with the databases provided by MaxMind. Depending on the details of your configuration you may need to fetch a suitable distribution of the [MaxMind GeoIP2](https://www.maxmind.com/en/geoip2-databases) database (or the free [GeoLite2](http://dev.maxmind.com/geoip/geoip2/geolite2/) variant).
+This is the default pre-packaged adapter for usage with the databases provided by MaxMind. Depending on the details of your configuration you may need to fetch a suitable distribution of the [MaxMind GeoIP2](https://www.maxmind.com/en/geoip2-databases) database (or the free [GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) variant).
 
 The adapter requires the `:source` configuration field to point to the database to use for lookups:
 
@@ -373,4 +373,4 @@ To run these tests on a local machine please refer to the travis commands execut
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-License information about the supported [MaxMind GeoIP2 Country](http://www.maxmind.com/en/country), [MaxMind GeoIP2 City](http://www.maxmind.com/en/city) and [MaxMind GeoLite2](http://dev.maxmind.com/geoip/geoip2/geolite2/) databases can be found on their respective sites.
+License information about the supported [MaxMind GeoIP2 Country](https://www.maxmind.com/en/geoip2-country-database), [MaxMind GeoIP2 City](https://www.maxmind.com/en/geoip2-city) and [MaxMind GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) databases can be found on their respective sites.
