@@ -7,9 +7,9 @@ defmodule Mix.Tasks.Geolix.Verify do
 
   @shortdoc "Verifies parser results"
 
-  @data_path [__DIR__, "../../../../.."] |> Path.join()
-  @ip_set [@data_path, "ip_set.txt"] |> Path.join() |> Path.expand()
-  @results [@data_path, "geolix_results.txt"] |> Path.join() |> Path.expand()
+  @data_path Path.expand("../../../../..", __DIR__)
+  @ip_set Path.join(@data_path, "ip_set.txt")
+  @results Path.join(@data_path, "geolix_results.txt")
 
   def run(_args) do
     {:ok, _} = Application.ensure_all_started(:geolix)

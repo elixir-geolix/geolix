@@ -4,7 +4,7 @@ defmodule Geolix.Adapter.MMDB2.Database.LoaderTest do
   alias Geolix.Adapter.MMDB2
   alias Geolix.Adapter.MMDB2.Result
 
-  @fixture_path [__DIR__, "../../../fixtures"] |> Path.join() |> Path.expand()
+  @fixture_path Path.expand("../../../fixtures", __DIR__)
 
   test "compressed databases" do
     ip = {1, 1, 1, 1}
