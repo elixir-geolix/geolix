@@ -4,7 +4,6 @@ sudo: false
 jobs:
   include:
     - &test
-    - <<: *test
       elixir: 1.5.3
       otp_release: 19.3
     - <<: *test
