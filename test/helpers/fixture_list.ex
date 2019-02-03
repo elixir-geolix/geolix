@@ -15,7 +15,7 @@ defmodule Geolix.TestHelpers.FixtureList do
       }
   """
   @spec get() :: list
-  def get() do
+  def get do
     [
       {
         :fixture_anonymous,

@@ -21,7 +21,7 @@ defmodule Geolix.Adapter.MMDB2.Storage.Metadata do
   Starts the metadata agent.
   """
   @spec start_link() :: Agent.on_start()
-  def start_link(), do: Agent.start_link(fn -> %{} end, name: @name)
+  def start_link, do: Agent.start_link(fn -> %{} end, name: @name)
 
   @doc """
   Fetches a metadata entry for a database.

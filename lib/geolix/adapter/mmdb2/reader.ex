@@ -43,6 +43,15 @@ defmodule Geolix.Adapter.MMDB2.Reader do
     end
   end
 
+  defp find_mmdb_contents([]), do: nil
+
+  defp find_mmdb_contents([{file, contents} | files]) do
+    case String.ends_with?(to_string(file), ".mmdb") do
+      false -> find_mmdb_contents(files)
+      true -> contents
+    end
+  end
+
   defp maybe_untar(data, filename) do
     case String.ends_with?(filename, [".tar", ".tar.gz"]) do
       false ->
@@ -51,12 +60,7 @@ defmodule Geolix.Adapter.MMDB2.Reader do
       true ->
         {:ok, files} = :erl_tar.extract({:binary, data}, [:memory])
 
-        Enum.find_value(files, fn {file, contents} ->
-          case String.ends_with?(to_string(file), ".mmdb") do
-            false -> false
-            true -> contents
-          end
-        end)
+        find_mmdb_contents(files)
     end
   end
 

@@ -40,7 +40,7 @@ defmodule Geolix.Database.Supervisor do
     end
   end
 
-  defp fetch_databases() do
+  defp fetch_databases do
     :geolix
     |> Application.get_env(:databases, [])
     |> Enum.map(&preconfigure_database/1)

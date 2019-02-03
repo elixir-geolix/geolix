@@ -61,7 +61,7 @@ defmodule Geolix.Database.Loader do
   def handle_cast(:reload_databases, state) do
     @ets_state_name
     |> :ets.tab2list()
-    |> Enum.map(fn {_id, db} ->
+    |> Enum.each(fn {_id, db} ->
       db
       |> load_database()
       |> register_state(db)
@@ -158,7 +158,7 @@ defmodule Geolix.Database.Loader do
     db
   end
 
-  defp prepare_ets_state() do
+  defp prepare_ets_state do
     case :ets.info(@ets_state_name) do
       :undefined ->
         _ = :ets.new(@ets_state_name, @ets_state_opts)

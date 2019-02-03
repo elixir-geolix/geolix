@@ -13,12 +13,12 @@ defmodule Geolix.Database.LoaderTest do
     @behaviour Geolix.Adapter
 
     defmodule LifecycleStorage do
-      def start_link(), do: Agent.start_link(fn -> %{} end, name: __MODULE__)
+      def start_link, do: Agent.start_link(fn -> %{} end, name: __MODULE__)
       def get(action), do: Agent.get(__MODULE__, &Map.get(&1, action))
       def set(action, id), do: Agent.update(__MODULE__, &Map.put(&1, action, id))
     end
 
-    def database_workers() do
+    def database_workers do
       import Supervisor.Spec
 
       [worker(LifecycleStorage, [])]

@@ -28,7 +28,7 @@ defmodule Geolix.Adapter.MMDB2.Result.EnterpriseTest do
 
     assert result.traits.ip_address == ip
 
-    assert result.traits.autonomous_system_number == 14671
+    assert result.traits.autonomous_system_number == 14_671
     assert result.traits.autonomous_system_organization == "FairPoint Communications"
     assert result.traits.connection_type == "Cable/DSL"
     assert result.traits.domain == "frpt.net"

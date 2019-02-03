@@ -27,14 +27,14 @@ defmodule Geolix.Server.Worker do
   defp lookup_all(_, _, []), do: %{}
 
   defp lookup_all(ip, opts, databases) do
+    # credo:disable-for-lines:7 Credo.Check.Refactor.MapInto
     databases
     |> Enum.map(fn database ->
       task_opts = Keyword.put(opts, :where, database)
 
       {database, Task.async(fn -> lookup_single(ip, task_opts) end)}
     end)
-    |> Enum.map(fn {database, task} -> {database, Task.await(task)} end)
-    |> Enum.into(%{})
+    |> Enum.into(%{}, fn {database, task} -> {database, Task.await(task)} end)
   end
 
   defp lookup_single(ip, opts) do

@@ -14,7 +14,7 @@ defmodule Geolix.Adapter.MMDB2.Result.ISPTest do
     result = Geolix.lookup(ip, where: :fixture_isp)
 
     expected = %ISP{
-      autonomous_system_number: 10474,
+      autonomous_system_number: 10_474,
       autonomous_system_organization: "MWEB-10474",
       ip_address: ip_address
     }
@@ -40,7 +40,7 @@ defmodule Geolix.Adapter.MMDB2.Result.ISPTest do
     result = Geolix.lookup(ip, where: :fixture_isp)
 
     expected = %ISP{
-      autonomous_system_number: 12844,
+      autonomous_system_number: 12_844,
       autonomous_system_organization: "Bouygues Telecom",
       ip_address: ip,
       isp: "Bouygues Telecom",
@@ -68,7 +68,7 @@ defmodule Geolix.Adapter.MMDB2.Result.ISPTest do
     result = Geolix.lookup(ip, where: :fixture_isp)
 
     expected = %ISP{
-      autonomous_system_number: 35911,
+      autonomous_system_number: 35_911,
       ip_address: ip,
       isp: "Telebec",
       organization: "LINO Solutions Internet de Télébec"

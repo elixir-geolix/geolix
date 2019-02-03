@@ -5,7 +5,7 @@ defmodule Geolix.TestHelpers.DatabaseSupervisor do
   Restarts the database supervisor.
   """
   @spec restart() :: :ok
-  def restart() do
+  def restart do
     :ok =
       case Process.whereis(Geolix.Database.Supervisor) do
         nil ->

@@ -18,7 +18,7 @@ defmodule Geolix.Adapter.MMDB2.Storage.Tree do
   Starts the tree agent.
   """
   @spec start_link() :: Agent.on_start()
-  def start_link(), do: Agent.start_link(fn -> %{} end, name: @name)
+  def start_link, do: Agent.start_link(fn -> %{} end, name: @name)
 
   @doc """
   Fetches the tree for a database.

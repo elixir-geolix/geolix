@@ -54,7 +54,7 @@ defmodule Geolix do
   Reloads all configured databases in the background.
   """
   @spec reload_databases() :: :ok
-  def reload_databases(), do: GenServer.cast(Loader, :reload_databases)
+  def reload_databases, do: GenServer.cast(Loader, :reload_databases)
 
   @doc """
   Unloads a database.
