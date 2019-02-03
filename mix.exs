@@ -41,7 +41,7 @@ defmodule Geolix.Mixfile do
 
   defp deps do
     [
-      {:benchee, "~> 0.11.0", only: :bench},
+      {:benchee, "~> 0.13.0", only: :bench},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:excoveralls, "~> 0.10", only: :test},
       {:geolix_testdata, "~> 0.3.0", only: [:bench, :test]},
