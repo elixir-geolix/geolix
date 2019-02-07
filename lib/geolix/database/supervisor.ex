@@ -26,7 +26,7 @@ defmodule Geolix.Database.Supervisor do
   @doc """
   Starts the worker processes of an adapter if not already under supervision.
   """
-  @spec start_adapter(Module.t()) :: :ok
+  @spec start_adapter(module) :: :ok
   def start_adapter(adapter) do
     adapter
     |> adapter_workers()
