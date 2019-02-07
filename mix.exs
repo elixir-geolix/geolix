@@ -12,6 +12,7 @@ defmodule Geolix.Mixfile do
       aliases: aliases(),
       deps: deps(),
       description: "MaxMind GeoIP2 database reader/decoder",
+      dialyzer: dialyzer(),
       docs: docs(),
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
@@ -50,6 +51,17 @@ defmodule Geolix.Mixfile do
       {:hackney, "~> 1.0", only: :test},
       {:mmdb2_decoder, "~> 0.4.0"},
       {:poolboy, "~> 1.0"}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      flags: [
+        :error_handling,
+        :race_conditions,
+        :underspecs,
+        :unmatched_returns
+      ]
     ]
   end
 
