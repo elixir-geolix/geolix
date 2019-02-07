@@ -61,7 +61,8 @@ defmodule Geolix.Mixfile do
         :race_conditions,
         :underspecs,
         :unmatched_returns
-      ]
+      ],
+      plt_add_apps: [:inets, :mmdb2_decoder]
     ]
   end
 
