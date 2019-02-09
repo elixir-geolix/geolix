@@ -153,7 +153,7 @@ defmodule Geolix.Database.Loader do
   defp maybe_log_error(%{state: :loaded} = db), do: db
 
   defp maybe_log_error(%{state: {:error, reason}} = db) do
-    Logger.error("Failed to load database #{inspect(db[:id])}: #{load_error_message(reason)}")
+    _ = Logger.error("Failed to load database #{inspect(db[:id])}: #{load_error_message(reason)}")
 
     db
   end
