@@ -20,7 +20,7 @@ defmodule Geolix.Adapter.Fake.Storage do
   @doc """
   Stores the data for a specific database.
   """
-  @spec set(atom, map) :: :ok
+  @spec set(atom, term) :: :ok
   def set(database, data) do
     Agent.update(__MODULE__, &Map.put(&1, database, data))
   end
