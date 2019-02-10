@@ -1,5 +1,7 @@
 defmodule Geolix.Benchmark.Lookup do
-  def run() do
+  alias Geolix.Database.Loader
+
+  def run do
     database = determine_database()
 
     case File.exists?(database) do
@@ -20,7 +22,7 @@ defmodule Geolix.Benchmark.Lookup do
     end
   end
 
-  defp determine_database() do
+  defp determine_database do
     case System.argv() do
       [] ->
         [Geolix.TestData.dir(:mmdb2), "Benchmark.mmdb"]
@@ -32,7 +34,7 @@ defmodule Geolix.Benchmark.Lookup do
     end
   end
 
-  defp run_benchmark() do
+  defp run_benchmark do
     {:ok, lookup_ipv4} = :inet.parse_address('1.1.1.1')
     {:ok, lookup_ipv4_in_ipv6} = :inet.parse_address('::1.1.1.1')
 
@@ -51,7 +53,7 @@ defmodule Geolix.Benchmark.Lookup do
     )
   end
 
-  defp wait_for_database_loader(), do: wait_for_database_loader(30_000)
+  defp wait_for_database_loader, do: wait_for_database_loader(30_000)
 
   defp wait_for_database_loader(0) do
     IO.puts("Loading database took longer than 30 seconds. Aborting...")
@@ -60,8 +62,8 @@ defmodule Geolix.Benchmark.Lookup do
 
   defp wait_for_database_loader(timeout) do
     delay = 50
-    loaded = Geolix.Database.Loader.loaded_databases()
-    registered = Geolix.Database.Loader.registered_databases()
+    loaded = Loader.loaded_databases()
+    registered = Loader.registered_databases()
 
     if 0 < length(registered) && loaded == registered do
       :ok

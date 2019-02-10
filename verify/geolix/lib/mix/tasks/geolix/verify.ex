@@ -3,6 +3,8 @@ defmodule Mix.Tasks.Geolix.Verify do
   Verifies Geolix results.
   """
 
+  alias Geolix.Database.Loader
+
   use Mix.Task
 
   @shortdoc "Verifies parser results"
@@ -69,7 +71,7 @@ defmodule Mix.Tasks.Geolix.Verify do
 
   defp parse_country(_), do: ""
 
-  defp wait_for_database_loader(), do: wait_for_database_loader(30_000)
+  defp wait_for_database_loader, do: wait_for_database_loader(30_000)
 
   defp wait_for_database_loader(0) do
     IO.puts("Loading databases took longer than 30 seconds. Aborting...")
@@ -78,8 +80,8 @@ defmodule Mix.Tasks.Geolix.Verify do
 
   defp wait_for_database_loader(timeout) do
     delay = 250
-    loaded = Geolix.Database.Loader.loaded_databases()
-    registered = Geolix.Database.Loader.registered_databases()
+    loaded = Loader.loaded_databases()
+    registered = Loader.registered_databases()
 
     if 0 < length(registered) && loaded == registered do
       :ok
