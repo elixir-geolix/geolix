@@ -35,6 +35,7 @@ defmodule Geolix.Adapter.MMDB2.Database do
   defp lookup(ip, data, meta, tree, opts) do
     ip
     |> MMDB2Decoder.lookup(meta, tree, data)
+    |> unroll()
     |> maybe_include_ip(ip)
     |> maybe_to_struct(meta.database_type, opts[:as] || :struct, opts)
   end
@@ -47,4 +48,7 @@ defmodule Geolix.Adapter.MMDB2.Database do
   defp maybe_to_struct(result, type, :struct, opts) do
     Result.to_struct(type, result, opts[:locale] || :en)
   end
+
+  defp unroll({:error, _}), do: nil
+  defp unroll({:ok, result}), do: result
 end

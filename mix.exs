@@ -49,7 +49,7 @@ defmodule Geolix.Mixfile do
       {:excoveralls, "~> 0.10", only: :test},
       {:geolix_testdata, "~> 0.3.0", only: [:bench, :test]},
       {:hackney, "~> 1.0", only: :test},
-      {:mmdb2_decoder, "~> 0.4.0"},
+      {:mmdb2_decoder, "~> 1.0"},
       {:poolboy, "~> 1.0"}
     ]
   end

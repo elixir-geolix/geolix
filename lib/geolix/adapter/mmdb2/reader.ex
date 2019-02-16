@@ -9,7 +9,7 @@ defmodule Geolix.Adapter.MMDB2.Reader do
   Reads a database file and returns the data and metadata parts from it.
   """
   @spec read_database(String.t()) ::
-          {Metadata.t(), binary, binary}
+          {:ok, Metadata.t(), binary, binary}
           | {:error, term}
   def read_database("http" <> _ = filename) do
     {:ok, _} = Application.ensure_all_started(:inets)
