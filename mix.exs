@@ -47,7 +47,7 @@ defmodule Geolix.Mixfile do
       {:dialyxir, "~> 1.0.0-rc", only: :dev, runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:excoveralls, "~> 0.10", only: :test},
-      {:geolix_testdata, "~> 0.3.0", only: [:bench, :test]},
+      {:geolix_testdata, "~> 0.4.0", only: [:bench, :test]},
       {:hackney, "~> 1.0", only: :test},
       {:mmdb2_decoder, "~> 1.0"},
       {:poolboy, "~> 1.0"}
