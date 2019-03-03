@@ -1,6 +1,7 @@
 defmodule Geolix.TestHelpers.FixtureDownload do
   @moduledoc false
 
+  alias Geolix.TestData.MMDB2Fixture
   alias Geolix.TestHelpers.FixtureList
 
   @doc """
@@ -8,27 +9,13 @@ defmodule Geolix.TestHelpers.FixtureDownload do
   """
   def run, do: Enum.each(FixtureList.get(), &download/1)
 
-  defp download({_name, filename, remote}) do
-    local = local(filename)
+  defp download({_name, filename}) do
+    path = Path.join([__DIR__, "../fixtures"])
+    local = Path.join([path, filename])
 
     if not File.regular?(local) do
       Mix.shell().info([:yellow, "Downloading fixture database: #{filename}"])
-
-      download_fixture(remote, local)
+      MMDB2Fixture.download(filename, path)
     end
-  end
-
-  defp download_fixture(remote, local) do
-    {:ok, _} = Application.ensure_all_started(:hackney)
-    {:ok, _, _, client} = :hackney.get(remote)
-    {:ok, content} = :hackney.body(client)
-
-    File.write!(local, content)
-  end
-
-  defp local(filename) do
-    [__DIR__, "../fixtures/", filename]
-    |> Path.join()
-    |> Path.expand()
   end
 end

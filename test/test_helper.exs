@@ -27,11 +27,8 @@ databases =
       source: Path.join([Geolix.TestData.dir(:mmdb2), "Geolix.mmdb.tar.gz"])
     }
   ] ++
-    Enum.map(FixtureList.get(), fn {id, filename, _remote} ->
-      source =
-        [__DIR__, "fixtures", filename]
-        |> Path.join()
-        |> Path.expand()
+    Enum.map(FixtureList.get(), fn {id, filename} ->
+      source = Path.join([__DIR__, "fixtures", filename])
 
       %{id: id, adapter: MMDB2, source: source}
     end)
