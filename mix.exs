@@ -42,12 +42,12 @@ defmodule Geolix.Mixfile do
 
   defp deps do
     [
-      {:benchee, "~> 0.14", only: :bench},
+      {:benchee, "~> 0.14", only: :bench, runtime: false},
       {:credo, "~> 1.0", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0.0-rc", only: :dev, runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev},
-      {:excoveralls, "~> 0.10", only: :test},
-      {:geolix_testdata, "~> 0.4.0", only: [:bench, :test]},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.10", only: :test, runtime: false},
+      {:geolix_testdata, "~> 0.4.0", only: [:bench, :test], runtime: false},
       {:mmdb2_decoder, "~> 1.0"},
       {:poolboy, "~> 1.0"}
     ]
