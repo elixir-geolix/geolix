@@ -1,19 +1,10 @@
-defmodule Geolix.TestHelpers.FixtureList do
+defmodule Geolix.TestHelpers.Fixture do
   @moduledoc false
 
-  @doc """
-  Returns a list of all available/downloaded fixtures.
+  alias Geolix.TestData.MMDB2Fixture
 
-  Each returned entry consists of the following values:
-
-      {
-        :name_as_atom,
-        "local_filename.mmdb"
-      }
-  """
-  @spec get() :: list
-  def get do
-    [
+  @path Path.join([__DIR__, "../fixtures"])
+  @fixtures     [
       {:fixture_anonymous, "GeoIP2-Anonymous-IP-Test.mmdb"},
       {:fixture_asn, "GeoLite2-ASN-Test.mmdb"},
       {:fixture_city, "GeoIP2-City-Test.mmdb"},
@@ -32,5 +23,12 @@ defmodule Geolix.TestHelpers.FixtureList do
       {:fixture_broken_pointers, "MaxMind-DB-test-broken-pointers-24.mmdb"},
       {:fixture_no_ipv4_search_tree, "MaxMind-DB-no-ipv4-search-tree.mmdb"}
     ]
+
+  def download do
+    Enum.each(@fixtures, fn {_name, file} ->
+      MMDB2Fixture.download(file, @path)
+    end)
   end
+
+  def list, do: @fixtures
 end

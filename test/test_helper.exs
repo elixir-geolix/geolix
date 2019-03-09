@@ -1,8 +1,7 @@
 alias Geolix.Adapter.MMDB2
-alias Geolix.TestHelpers.FixtureDownload
-alias Geolix.TestHelpers.FixtureList
+alias Geolix.TestHelpers.Fixture
 
-FixtureDownload.run()
+Fixture.download()
 
 databases =
   [
@@ -27,7 +26,7 @@ databases =
       source: Path.join([Geolix.TestData.dir(:mmdb2), "Geolix.mmdb.tar.gz"])
     }
   ] ++
-    Enum.map(FixtureList.get(), fn {id, filename} ->
+    Enum.map(Fixture.list(), fn {id, filename} ->
       source = Path.join([__DIR__, "fixtures", filename])
 
       %{id: id, adapter: MMDB2, source: source}
