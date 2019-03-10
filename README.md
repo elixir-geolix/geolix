@@ -319,6 +319,22 @@ Each adapter is expected to adhere to the `Geolix.Adapter` behaviour.
 
 The MMDB2 adapter (`Geolix.Adapter.MMDB2`) is pre-packaged and usable once you configure it. For testing you can use a fake adapter (`Geolix.Adapter.Fake`) working on a plain `Agent` holding your IP lookup responses.
 
+An example of how you might use `Geolix.Adapter.Fake`:
+
+```
+config :geolix,
+  databases: [
+    %{
+      id: :country,
+      adapter: Geolix.Adapter.Fake,
+      data:
+        %{}
+        |> Map.put({1, 1, 1, 1}, %{country: %{iso_code: "US"}})
+        |> Map.put({2, 2, 2, 2}, %{country: %{iso_code: "GB"}})
+    }
+  ]
+```
+
 ## Additional Stuff
 
 ### Benchmarking (scripted)
