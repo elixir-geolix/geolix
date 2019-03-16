@@ -13,13 +13,6 @@ defmodule Geolix.TestHelpers.Fixture do
     {:fixture_domain, "GeoIP2-Domain-Test.mmdb"},
     {:fixture_enterprise, "GeoIP2-Enterprise-Test.mmdb"},
     {:fixture_isp, "GeoIP2-ISP-Test.mmdb"},
-    {:fixture_decoder, "MaxMind-DB-test-decoder.mmdb"},
-    {:fixture_ipv4_24, "MaxMind-DB-test-ipv4-24.mmdb"},
-    {:fixture_ipv4_28, "MaxMind-DB-test-ipv4-28.mmdb"},
-    {:fixture_ipv4_32, "MaxMind-DB-test-ipv4-32.mmdb"},
-    {:fixture_ipv6_24, "MaxMind-DB-test-ipv6-24.mmdb"},
-    {:fixture_ipv6_28, "MaxMind-DB-test-ipv6-28.mmdb"},
-    {:fixture_ipv6_32, "MaxMind-DB-test-ipv6-32.mmdb"},
     {:fixture_broken_pointers, "MaxMind-DB-test-broken-pointers-24.mmdb"},
     {:fixture_no_ipv4_search_tree, "MaxMind-DB-no-ipv4-search-tree.mmdb"}
   ]
