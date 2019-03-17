@@ -12,7 +12,7 @@ To use Geolix with your projects, edit your `mix.exs` file and add the project a
 defp deps do
   [
     # ...
-    {:geolix, "~> 0.17"},
+    {:geolix, "~> 0.18"},
     # ...
   ]
 end
