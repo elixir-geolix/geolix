@@ -7,7 +7,7 @@ defmodule Geolix.Mixfile do
     [
       app: :geolix,
       name: "Geolix",
-      version: "0.18.0",
+      version: "1.0.0-dev",
       elixir: "~> 1.5",
       aliases: aliases(),
       deps: deps(),
@@ -69,7 +69,7 @@ defmodule Geolix.Mixfile do
     [
       extras: ["CHANGELOG.md", "README.md"],
       main: "readme",
-      source_ref: "v0.18.0",
+      source_ref: "master",
       source_url: @url_github
     ]
   end
