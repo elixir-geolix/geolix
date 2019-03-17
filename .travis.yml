@@ -13,12 +13,12 @@ jobs:
       elixir: 1.7.4
       otp_release: 20.3
     - <<: *test
-      elixir: 1.8.0
+      elixir: 1.8.1
       otp_release: 21.0
       after_success: mix coveralls.travis
 
     - stage: verify
-      elixir: 1.8.0
+      elixir: 1.8.1
       otp_release: 21.0
       before_install: |-
         # setup pip for "sudo: false"
@@ -63,7 +63,7 @@ jobs:
         diff geolix_results.txt python_results.txt
 
     - stage: code quality
-      elixir: 1.8.0
+      elixir: 1.8.1
       otp_release: 21.0
       script:
         - mix format --check-formatted
