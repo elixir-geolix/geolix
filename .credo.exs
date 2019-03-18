@@ -3,7 +3,7 @@
     %{
       name: "default",
       files: %{
-        included: ["bench/", "config/", "lib/", "test/", "verify/geolix/"]
+        included: ["config/", "lib/", "test/", "verify/geolix/"]
       }
     }
   ]

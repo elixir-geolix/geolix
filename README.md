@@ -337,41 +337,6 @@ config :geolix,
 
 ## Additional Stuff
 
-### Benchmarking (scripted)
-
-A (minimal) benchmark script looking up a predefined ip address is included:
-
-```shell
-mix bench.lookup
-```
-
-By default the benchmark uses the `Benchmark.mmdb` database provided by `:geolix_testdata`. To use a different database pass it's path as the sole argument to the `mix bench.lookup` call.
-
-### Benchmarking (manual)
-
-If you are curious about how long a lookup of an IP takes, you can measure it using the erlang `:timer` module:
-
-```elixir
-iex(1)> # display runtime in microseconds and the result
-iex(2)> :timer.tc(fn -> Geolix.lookup({108, 168, 255, 243}) end)
-{
-  1337,
-  %{
-    city: ... ,
-    country: ...
-  }
-}
-
-iex(3)> # display only runtime in microseconds
-iex(4)> (fn ->
-...(4)>   {t, _} = :timer.tc(fn -> Geolix.lookup({82, 212, 250, 99}) end)
-...(4)>   t
-...(4)> end).()
-1337
-```
-
-The time returned are the `microseconds` of the complete lookup including every overhead by for example the process pool. For more details refer to the [official erlang documentation](http://www.erlang.org/doc/man/timer.html#tc-1).
-
 ### Result Verification
 
 For (ongoing) verification of the result accuracy a special test environment is configured for each travis run.

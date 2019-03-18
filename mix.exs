@@ -9,7 +9,6 @@ defmodule Geolix.Mixfile do
       name: "Geolix",
       version: "1.0.0-dev",
       elixir: "~> 1.5",
-      aliases: aliases(),
       deps: deps(),
       description: "MaxMind GeoIP2 database reader/decoder",
       dialyzer: dialyzer(),
@@ -17,7 +16,6 @@ defmodule Geolix.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
       preferred_cli_env: [
-        "bench.lookup": :bench,
         coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.travis": :test
@@ -34,20 +32,13 @@ defmodule Geolix.Mixfile do
     ]
   end
 
-  defp aliases() do
-    [
-      "bench.lookup": ["run bench/lookup.exs"]
-    ]
-  end
-
   defp deps do
     [
-      {:benchee, "~> 0.14", only: :bench, runtime: false},
       {:credo, "~> 1.0", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0.0-rc", only: :dev, runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: :test, runtime: false},
-      {:geolix_testdata, "~> 0.4.0", only: [:bench, :test], runtime: false},
+      {:geolix_testdata, "~> 0.4.0", only: :test, runtime: false},
       {:mmdb2_decoder, "~> 1.0"},
       {:poolboy, "~> 1.0"}
     ]
