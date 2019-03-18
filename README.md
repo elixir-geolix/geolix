@@ -335,21 +335,6 @@ config :geolix,
   ]
 ```
 
-## Additional Stuff
-
-### Result Verification
-
-For (ongoing) verification of the result accuracy a special test environment is configured for each travis run.
-
-This environment performs the following 4 steps:
-
-- generate a set of random IPs
-- lookup using geolix
-- lookup using python ([geoip2](https://github.com/maxmind/GeoIP2-python))
-- compare the results
-
-To run these tests on a local machine please refer to the travis commands executed on each run (`.travis.yml`).
-
 ## License
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
