@@ -255,7 +255,7 @@ _Note_: Be responsible with the source you configure! Having a public download m
 
 ### Loading Errors
 
-Erros occurring during database load are sent to `Logger` with level `:error`. The contain an atom with the specific error (like `:enoent`) and, in some cases, are more readable error message.
+Errors occurring during database load are sent to `Logger` with level `:error`. They contain an atom with the specific error (like `:enoent`) and, in some cases, are more readable error message.
 
 The errors are defined by the adapter.
 
