@@ -10,7 +10,7 @@ defmodule Geolix.Mixfile do
       version: "1.0.0-dev",
       elixir: "~> 1.5",
       deps: deps(),
-      description: "MaxMind GeoIP2 database reader/decoder",
+      description: "IP location lookup provider",
       dialyzer: dialyzer(),
       docs: docs(),
       elixirc_paths: elixirc_paths(Mix.env()),
