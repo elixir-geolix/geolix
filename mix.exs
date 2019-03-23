@@ -27,7 +27,6 @@ defmodule Geolix.Mixfile do
   def application do
     [
       applications: [:logger, :poolboy],
-      included_applications: [:mmdb2_decoder],
       mod: {Geolix, []}
     ]
   end
@@ -38,8 +37,6 @@ defmodule Geolix.Mixfile do
       {:dialyxir, "~> 1.0.0-rc", only: :dev, runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: :test, runtime: false},
-      {:geolix_testdata, "~> 0.4.0", only: :test, runtime: false},
-      {:mmdb2_decoder, "~> 1.0"},
       {:poolboy, "~> 1.0"}
     ]
   end
@@ -51,8 +48,7 @@ defmodule Geolix.Mixfile do
         :race_conditions,
         :underspecs,
         :unmatched_returns
-      ],
-      plt_add_apps: [:inets, :mmdb2_decoder]
+      ]
     ]
   end
 

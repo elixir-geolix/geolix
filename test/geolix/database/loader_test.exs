@@ -3,12 +3,6 @@ defmodule Geolix.Database.LoaderTest do
 
   alias Geolix.Database.Loader
 
-  @lifecycle_id :loader_lifecycle
-  @lifecycle_db %{
-    id: @lifecycle_id,
-    adapter: __MODULE__.LifecycleAdapter
-  }
-
   defmodule LifecycleAdapter do
     @behaviour Geolix.Adapter
 
@@ -30,15 +24,6 @@ defmodule Geolix.Database.LoaderTest do
     def lookup(_ip, _opts), do: :ok
   end
 
-  test "fetching registered database information" do
-    id = :fixture_city
-
-    assert %{id: ^id, state: :loaded} = Loader.get_database(id)
-
-    assert id in Loader.registered_databases()
-    assert id in Loader.loaded_databases()
-  end
-
   test "fetching un-registered database information" do
     refute Loader.get_database(:database_not_loaded)
   end
@@ -57,13 +42,24 @@ defmodule Geolix.Database.LoaderTest do
   end
 
   test "load/unload lifecycle" do
-    assert :ok = Geolix.load_database(@lifecycle_db)
+    id = :loader_lifecycle
+    db = %{
+      id: id,
+      adapter: __MODULE__.LifecycleAdapter
+    }
 
-    assert @lifecycle_id = LifecycleAdapter.LifecycleStorage.get(:load_database)
+    assert :ok = Geolix.load_database(db)
+
+    assert id = LifecycleAdapter.LifecycleStorage.get(:load_database)
     refute LifecycleAdapter.LifecycleStorage.get(:unload_database)
 
-    assert :ok = Geolix.unload_database(@lifecycle_id)
+    assert %{id: ^id, state: :loaded} = Loader.get_database(id)
 
-    assert @lifecycle_id = LifecycleAdapter.LifecycleStorage.get(:unload_database)
+    assert id in Loader.registered_databases()
+    assert id in Loader.loaded_databases()
+
+    assert :ok = Geolix.unload_database(id)
+
+    assert id = LifecycleAdapter.LifecycleStorage.get(:unload_database)
   end
 end

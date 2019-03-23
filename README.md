@@ -77,20 +77,20 @@ Depending on the adapter you may need to provide additional values.
 
 ### Configuration (static)
 
-One option for configuration is using a static configuration, i.e. for two databases handled by the pre-packaged adapter `Geolix.Adapter.MMDB2`:
+One option for configuration is using a static configuration, i.e. for two databases handled by the adapter `MyAdapter`:
 
 ```elixir
 config :geolix,
   databases: [
     %{
       id: :city,
-      adapter: Geolix.Adapter.MMDB2,
-      source: "/absolute/path/to/cities/db"
+      adapter: MyAdapter,
+      source: "/absolute/path/to/city.db"
     },
     %{
       id: :country,
-      adapter: Geolix.Adapter.MMDB2,
-      source: "/absolute/path/to/countries/db"
+      adapter: MyAdapter,
+      source: "/absolute/path/to/country.db"
     }
   ]
 ```
@@ -110,7 +110,7 @@ config :geolix,
   databases: [
     %{
       id: :dynamic_country,
-      adapter: Geolix.Adapter.MMDB2,
+      adapter: MyAdapter,
       init: {MyInitModule, :my_init_mf_database}
     }
   ]
@@ -123,7 +123,7 @@ config :geolix,
   databases: [
     %{
       id: :dynamic_country,
-      adapter: Geolix.Adapter.MMDB2,
+      adapter: MyAdapter,
       init: {MyInitModule, :my_init_mfa_database, [:foo, :bar]}
     }
   ]
@@ -140,8 +140,8 @@ defmodule MyInitModule do
     databases = [
       %{
         id: :dynamic_city,
-        adapter: Geolix.Adapter.MMDB2,
-        source: Path.join([priv_dir, "GeoLite2-City.mmdb"])
+        adapter: MyAdapter,
+        source: Path.join([priv_dir, "city.db"])
       }
       | Application.get_env(:geolix, :databases, [])
     ]
@@ -158,7 +158,7 @@ defmodule MyInitModule do
   def my_init_mfa_database(%{id: :dynamic_country} = database, :foo, :bar) do
     priv_dir = Application.app_dir(:my_app, "priv")
 
-    %{database | source: Path.join([priv_dir, "GeoLite2-Country.mmdb"])}
+    %{database | source: Path.join([priv_dir, "country.db"])}
   end
 end
 ```
@@ -178,13 +178,13 @@ config :geolix,
   databases: [
     %{
       id: :system_city,
-      adapter: Geolix.Adapter.MMDB2,
+      adapter: MyAdapter,
       source: {:system, "SOME_SYSTEM_ENV_VARIABLE"}
     },
     %{
       id: :system_country,
-      adapter: Geolix.Adapter.MMDB2,
-      source: {:system, "SOME_VARIABLE", "/path/to/fallback.mmdb2"}
+      adapter: MyAdapter,
+      source: {:system, "SOME_VARIABLE", "/path/to/fallback.db"}
     }
   ]
 ```
@@ -196,13 +196,13 @@ If you do not want to use a pre-defined or dynamically initialized configuration
 ```elixir
 iex(1)> Geolix.load_database(%{
 ...(1)>   id: :runtime_city,
-...(1)>   adapter: Geolix.Adapter.MMDB2,
-...(1)>   source: "/absolute/path/to/cities/db.mmdb"
+...(1)>   adapter: MyAdapter,
+...(1)>   source: "/absolute/path/to/city.db"
 ...(1)> })
 :ok
 iex(2)> Geolix.load_database(%{
 ...(2)>   id: :runtime_country,
-...(2)>   adapter: Geolix.Adapter.MMDB2,
+...(2)>   adapter: MyAdapter,
 ...(2)>   source: {:system, "SOME_SYSTEM_ENV_VARIABLE"}
 ...(2)> })
 :ok
@@ -214,42 +214,11 @@ Running `load_database/1` on an already configured database (matched by `:id`) w
 
 ## Adapter Configuration
 
-### Geolix.Adapter.MMDB2
+For detailed information how to configure an adapter please read the adapter's configuration.
 
-This is the default pre-packaged adapter for usage with the databases provided by MaxMind. Depending on the details of your configuration you may need to fetch a suitable distribution of the [MaxMind GeoIP2](https://www.maxmind.com/en/geoip2-databases) database (or the free [GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) variant).
+Known adapters:
 
-The adapter requires the `:source` configuration field to point to the database to use for lookups:
-
-```elixir
-config :geolix,
-  databases: [
-    %{
-      id: :mmdb2,
-      adapter: Geolix.Adapter.MMDB2,
-      source: "/absolute/path/to/db.mmdb"
-    }
-  ]
-```
-
-To avoid any problems with finding the file you should always provide an absolute path to the database file (most likely with the `.mmdb` extension).
-
-By default it is expected that all databases are provided uncompressed. The only compression directly supported is `gzip` (not `zip`!) if the database source configured ends in `.gz`. If the loader detects a tarball (`.tar` or `.tar.gz`) the first file in the archive ending in `.mmdb` will be loaded.
-
-#### Floating Point Precision
-
-Please be aware that all values of the type `float` are rounded to 4 decimal digits and `double` values to 8 decimal digits.
-
-This might be changed in the future if there are datasets known to return values with a higher precision.
-
-#### Remote Sources
-
-If you configure a database with a filename starting with "http" (yep, also matches "https"), the application will request it from that location.
-
-Returning a status of `200` and the actual contents of the database then results in the regular loading process. Using this configuration you can load a database during startup from basically any location you can reach.
-
-_Note_: Please be aware of the drawbacks of remote files! You should take into account the startup times as the file will be requested during `GenServer.init/1`. Unstable or slow networks could result in nasty timeouts.
-
-_Note_: Be responsible with the source you configure! Having a public download mirror (or the official MaxMind location) set might flag you as a "not so nice person". Ideally use your own server or online storage.
+- [`Geolix.Adapter.MMDB2`](https://github.com/elixir-geolix/adapter_mmdb2)
 
 ## Database Loading
 
@@ -317,9 +286,7 @@ If you need a different database or have other special needs for lookups you can
 
 Each adapter is expected to adhere to the `Geolix.Adapter` behaviour.
 
-The MMDB2 adapter (`Geolix.Adapter.MMDB2`) is pre-packaged and usable once you configure it. For testing you can use a fake adapter (`Geolix.Adapter.Fake`) working on a plain `Agent` holding your IP lookup responses.
-
-An example of how you might use `Geolix.Adapter.Fake`:
+Pre-packaged is a fake/static adapter (`Geolix.Adapter.Fake`) working on a plain `Agent` holding your IP lookup responses. An example of how you might use this adapter:
 
 ```
 config :geolix,
@@ -338,5 +305,3 @@ config :geolix,
 ## License
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
-License information about the supported [MaxMind GeoIP2 Country](https://www.maxmind.com/en/geoip2-country-database), [MaxMind GeoIP2 City](https://www.maxmind.com/en/geoip2-city) and [MaxMind GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) databases can be found on their respective sites.

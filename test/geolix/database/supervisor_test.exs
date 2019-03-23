@@ -14,7 +14,7 @@ defmodule Geolix.Database.SupervisorTest do
   }
 
   setup do
-    databases = Application.get_env(:geolix, :databases)
+    databases = Application.get_env(:geolix, :databases, [])
 
     :ok = Application.put_env(:geolix, :databases, [@reload_db])
     :ok = DatabaseSupervisor.restart()

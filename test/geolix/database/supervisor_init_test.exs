@@ -18,7 +18,7 @@ defmodule Geolix.Database.SupervisorInitTest do
   end
 
   setup_all do
-    databases = Application.get_env(:geolix, :databases)
+    databases = Application.get_env(:geolix, :databases, [])
 
     on_exit(fn ->
       :ok = Application.put_env(:geolix, :databases, databases)

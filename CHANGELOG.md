@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0-dev
+
+The adapter `Geolix.Adapter.MMDB2` has been extracted a [separate repository](https://github.com/elixir-geolix/adapter_mmdb2). You should be able to upgrade to the external adapter by changing your project's dependencies from `:geolix` to `:geolix_adapter_mmdb2` with an appropriate version requirement.
+
 ## v0.18.0 (2019-03-17)
 
 - Enhancements
