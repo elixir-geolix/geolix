@@ -43,6 +43,7 @@ defmodule Geolix.Database.LoaderTest do
 
   test "load/unload lifecycle" do
     id = :loader_lifecycle
+
     db = %{
       id: id,
       adapter: __MODULE__.LifecycleAdapter
