@@ -224,9 +224,7 @@ Known adapters:
 
 ### Loading Errors
 
-Errors occurring during database load are sent to `Logger` with level `:error`. They contain an atom with the specific error (like `:enoent`) and, in some cases, are more readable error message.
-
-The errors are defined by the adapter.
+If the configuration is erroneous a message will be sent to `Logger` with the level `:error`. Any other error during the load process is expected to be defined and logged by the adapter itself.
 
 ### State Retrieval
 

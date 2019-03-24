@@ -145,17 +145,20 @@ defmodule Geolix.Database.Loader do
   defp load_database(%{id: _}), do: {:error, {:config, :missing_adapter}}
   defp load_database(_), do: {:error, {:config, :invalid}}
 
-  defp load_error_message({:config, :missing_adapter}), do: "missing adapter configuration"
-  defp load_error_message({:config, :unknown_adapter}), do: "unknown adapter configuration"
-  defp load_error_message(reason), do: inspect(reason)
+  defp load_error_message(:missing_adapter), do: "missing adapter configuration"
+  defp load_error_message(:unknown_adapter), do: "unknown adapter configuration"
+  defp load_error_message(reason), do: reason
 
-  defp maybe_log_error(%{state: :loaded} = db), do: db
-
-  defp maybe_log_error(%{state: {:error, reason}} = db) do
-    _ = Logger.error("Failed to load database #{inspect(db[:id])}: #{load_error_message(reason)}")
+  defp maybe_log_error(%{state: {:error, {:config, reason}}} = db) do
+    _ =
+      Logger.error(fn ->
+        "Failed to load database #{inspect(db[:id])}: #{load_error_message(reason)}"
+      end)
 
     db
   end
+
+  defp maybe_log_error(db), do: db
 
   defp prepare_ets_state do
     case :ets.info(@ets_state_name) do
