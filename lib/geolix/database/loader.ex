@@ -145,7 +145,6 @@ defmodule Geolix.Database.Loader do
   defp load_database(%{id: _}), do: {:error, {:config, :missing_adapter}}
   defp load_database(_), do: {:error, {:config, :invalid}}
 
-  defp load_error_message(:enoent), do: "file not found (:enoent)"
   defp load_error_message({:config, :missing_adapter}), do: "missing adapter configuration"
   defp load_error_message({:config, :unknown_adapter}), do: "unknown adapter configuration"
   defp load_error_message(reason), do: inspect(reason)
