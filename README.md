@@ -56,12 +56,7 @@ And also add the appropriate `Geolix.Supervisor` to your hierarchy:
 # in your application/supervisor
 children = [
   # ...
-
-  # elixir < 1.5.0
-  Supervisor.Spec.supervisor(Geolix.Supervisor, []),
-  # elixir >= 1.5.0
   Geolix.Supervisor,
-
   # ...
 ]
 ```
