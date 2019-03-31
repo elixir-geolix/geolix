@@ -1,6 +1,31 @@
 defmodule Geolix.Supervisor do
   @moduledoc """
-  Geolix Supervisor.
+  This supervisor module takes care of starting the required database adapter
+  processes. It is automatically started with the `:geolix` application.
+
+  If you do not want to automatically start the application itself you can
+  adapt your configuration for a more manual supervision approach.
+
+  Instead of adding `:geolix` to your `:applications` list or using the
+  automatic discovery you need to add it to your `:included_applications`:
+
+      def application do
+        [
+          included_applications: [
+            # ...
+            :geolix,
+            # ...
+          ]
+        ]
+      end
+
+  That done you can add `Geolix.Supervisor` to your hierarchy:
+
+      children = [
+        # ...
+        Geolix.Supervisor,
+        # ..
+      ]
   """
 
   use Supervisor

@@ -18,48 +18,7 @@ defp deps do
 end
 ```
 
-### Package Startup (application)
-
-Probably the easiest way to manage startup is by adding `:geolix` to the list of applications:
-
-```elixir
-def application do
-  [
-    applications: [
-      # ...
-      :geolix,
-      # ...
-    ]
-  ]
-end
-```
-
-### Package Startup (manual supervision)
-
-A second possible approach is to take care of supervision yourself. This means you should add `:geolix` to your included applications instead:
-
-```elixir
-def application do
-  [
-    included_applications: [
-      # ...
-      :geolix,
-      # ...
-    ]
-  ]
-end
-```
-
-And also add the appropriate `Geolix.Supervisor` to your hierarchy:
-
-```elixir
-# in your application/supervisor
-children = [
-  # ...
-  Geolix.Supervisor,
-  # ...
-]
-```
+If you want to use a manual supervision approach (without starting the application) please look at the inline documentation of `Geolix.Supervisor`.
 
 ## Application Configuration
 
