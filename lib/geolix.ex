@@ -1,6 +1,6 @@
 defmodule Geolix do
   @moduledoc """
-  Geolix Application.
+  IP location lookup provider.
   """
 
   use Application
