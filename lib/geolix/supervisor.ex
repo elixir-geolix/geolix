@@ -8,10 +8,7 @@ defmodule Geolix.Supervisor do
   alias Geolix.Database
   alias Geolix.Server.Pool
 
-  @doc """
-  Starts the supervisor.
-  """
-  @spec start_link(term) :: Supervisor.on_start()
+  @doc false
   def start_link(default \\ []) do
     Supervisor.start_link(__MODULE__, default, name: __MODULE__)
   end
