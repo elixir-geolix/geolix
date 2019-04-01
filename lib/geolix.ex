@@ -8,11 +8,6 @@ defmodule Geolix do
   alias Geolix.Database.Loader
   alias Geolix.Server.Pool
 
-  @type database_file ::
-          String.t()
-          | {:system, String.t()}
-          | {:system, String.t(), String.t()}
-
   def start(_type, _args), do: Geolix.Supervisor.start_link()
 
   # Database lookup
