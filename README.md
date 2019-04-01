@@ -123,26 +123,6 @@ The top-level initializer is called as defined (`{mod, fun}` or `{mod, fun, args
 
 If you choose to use the dynamic database initialization the only requirement for your config file is a plain `%{init: {MyInitModule, :my_init_fun}}` entry. Every additional field in the example is only used for illustration and only required for the complete return value.
 
-### Configuration (system environment)
-
-Each of the static config values can be grabbed upon start (or restart) from your current system environment:
-
-```elixir
-config :geolix,
-  databases: [
-    %{
-      id: :system_city,
-      adapter: MyAdapter,
-      source: {:system, "SOME_SYSTEM_ENV_VARIABLE"}
-    },
-    %{
-      id: :system_country,
-      adapter: MyAdapter,
-      source: {:system, "SOME_VARIABLE", "/path/to/fallback.db"}
-    }
-  ]
-```
-
 ### Configuration (runtime)
 
 If you do not want to use a pre-defined or dynamically initialized configuration you can also define adapters at runtime. This may be useful in a testing environment.
@@ -153,12 +133,6 @@ iex(1)> Geolix.load_database(%{
 ...(1)>   adapter: MyAdapter,
 ...(1)>   source: "/absolute/path/to/city.db"
 ...(1)> })
-:ok
-iex(2)> Geolix.load_database(%{
-...(2)>   id: :runtime_country,
-...(2)>   adapter: MyAdapter,
-...(2)>   source: {:system, "SOME_SYSTEM_ENV_VARIABLE"}
-...(2)> })
 :ok
 ```
 
