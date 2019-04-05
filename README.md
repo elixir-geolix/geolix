@@ -185,26 +185,22 @@ Lookups are done using `Geolix.lookup/1,2`:
 ```elixir
 iex(1)> Geolix.lookup("127.0.0.1")
 %{
-  city: %Geolix.Result.City{...},
-  country: %Geolix.Result.Country{...}
+  city: %{...},
+  country: %{...}
 }
 
-iex(2)> Geolix.lookup({127, 0, 0, 1}, [as: :raw, where: :city])
+iex(2)> Geolix.lookup({127, 0, 0, 1}, where: :city)
 %{...}
 ```
 
-Using `Geolix.lookup/2` with only one parameter (the IP) will lookup the information on all registered databases, returning `nil` if the IP was not found.
+Using `Geolix.lookup/2` with only one parameter (the IP) will lookup the information in all registered databases as a map with the database name as the key. The individual database result types are defined by the adapter used.
 
 Lookup options:
 
-* `:as` - Return the result as a `:struct` or `:raw` (plain map)
-* `:locale` - Language (atom) to fetch information for. Only affects "top level" struct values. Defaults to `:en`.
 * `:timeout` - GenServer call timeout for the lookup. Defaults to `5_000`.
 * `:where` - Lookup information in a single registered database
 
-Every non-nil result will include the IP as a tuple either directly in the result field `:ip_address` or inside `%{traits: %{ip_address: ...}}` if a city or country (or enterprise) database is used.
-
-_Note_: Please be aware that all results for enterprise databases are returned using separate structs if the data is not already included in the regular databases. This may change in the future.
+All options are passed unmodified to the adapter's `lookup/2` implementation.
 
 ## Custom Adapters
 
