@@ -14,10 +14,7 @@ defmodule Geolix.Database.Loader do
 
   # GenServer lifecycle
 
-  @doc """
-  Starts the database loader.
-  """
-  @spec start_link(list) :: GenServer.on_start()
+  @doc false
   def start_link(databases \\ []) do
     GenServer.start_link(__MODULE__, databases, name: __MODULE__)
   end

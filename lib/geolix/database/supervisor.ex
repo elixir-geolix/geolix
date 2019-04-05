@@ -1,16 +1,11 @@
 defmodule Geolix.Database.Supervisor do
-  @moduledoc """
-  Supervisor for database processes (storage + loader).
-  """
+  @moduledoc false
 
   use Supervisor
 
   alias Geolix.Database.Loader
 
-  @doc """
-  Starts the database supervisor.
-  """
-  @spec start_link(term) :: Supervisor.on_start()
+  @doc false
   def start_link(default \\ []) do
     Supervisor.start_link(__MODULE__, default, name: __MODULE__)
   end
