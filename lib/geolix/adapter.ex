@@ -40,5 +40,5 @@ defmodule Geolix.Adapter do
   which database should be queried. If that key is not set then `nil`
   should be returned instead.
   """
-  @callback lookup(ip :: tuple, opts :: Keyword.t()) :: map | nil
+  @callback lookup(ip :: :inet.ip_address(), opts :: Keyword.t()) :: map | nil
 end

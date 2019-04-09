@@ -15,7 +15,7 @@ defmodule Geolix do
   @doc """
   Looks up IP information.
   """
-  @spec lookup(ip :: tuple | String.t(), opts :: Keyword.t()) :: nil | map
+  @spec lookup(ip :: :inet.ip_address() | String.t(), opts :: Keyword.t()) :: nil | map
   def lookup(ip, opts \\ [])
 
   def lookup(ip, opts) when is_binary(ip) do
