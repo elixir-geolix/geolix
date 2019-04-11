@@ -25,7 +25,7 @@ If you want to use a manual supervision approach (without starting the applicati
 To get started you need to define one or more `:databases` to use for lookups. Each database definition is a map with at least two fields:
 
 - `:id` - an identifier for this database, usable to limit lookups to a single database if you have defined more than one
-- `:adapter` - the adapter module used to handle lookup requests. See the part "Adapter Configuration" in this document for additional information
+- `:adapter` - the adapter module used to handle lookup requests. See the part "Adapters" in this document for additional information
 
 Depending on the adapter you may need to provide additional values.
 
@@ -140,13 +140,40 @@ Please be aware that these databases will not be reloaded if, for any reason, th
 
 Running `load_database/1` on an already configured database (matched by `:id`) will reload/replace it without persisting the configuration. On success a result of `:ok` will be returned otherwise a tuple in the style of `{:error, message}`. The individual errors are defined by the adapter.
 
-## Adapter Configuration
+## Adapters
 
-For detailed information how to configure an adapter please read the adapter's configuration.
+All the work done by geolix is handled using adapters. These adapters can use a database, a webservice or any other means available to handle your lookup requests.
 
 Known adapters:
 
+- [`Geolix.Adapter.Fake`](#fake-adapter)
 - [`Geolix.Adapter.MMDB2`](https://github.com/elixir-geolix/adapter_mmdb2)
+
+For detailed information how to configure the adapter of your choice please read the adapter's configuration.
+
+### Fake Adapter
+
+Pre-packaged is a fake/static adapter (`Geolix.Adapter.Fake`) working on a plain `Agent` holding your IP lookup responses. An example of how you might use this adapter:
+
+```elixir
+config :geolix,
+  databases: [
+    %{
+      id: :country,
+      adapter: Geolix.Adapter.Fake,
+      data:
+        %{}
+        |> Map.put({1, 1, 1, 1}, %{country: %{iso_code: "US"}})
+        |> Map.put({2, 2, 2, 2}, %{country: %{iso_code: "GB"}})
+    }
+  ]
+```
+
+### Custom Adapters
+
+If you need a different database or have other special needs for lookups you can write your own adapter. The only requirement is the usage of the `Geolix.Adapter` behaviour.
+
+As a starting point you can take a close look at the aforementioned `Geolix.Adapter.Fake` implementation.
 
 ## Database Loading
 
@@ -201,28 +228,6 @@ Lookup options:
 * `:where` - Lookup information in a single registered database
 
 All options are passed unmodified to the adapter's `lookup/2` implementation.
-
-## Custom Adapters
-
-If you need a different database or have other special needs for lookups you can write your own adapter and configure it.
-
-Each adapter is expected to adhere to the `Geolix.Adapter` behaviour.
-
-Pre-packaged is a fake/static adapter (`Geolix.Adapter.Fake`) working on a plain `Agent` holding your IP lookup responses. An example of how you might use this adapter:
-
-```
-config :geolix,
-  databases: [
-    %{
-      id: :country,
-      adapter: Geolix.Adapter.Fake,
-      data:
-        %{}
-        |> Map.put({1, 1, 1, 1}, %{country: %{iso_code: "US"}})
-        |> Map.put({2, 2, 2, 2}, %{country: %{iso_code: "GB"}})
-    }
-  ]
-```
 
 ## License
 
