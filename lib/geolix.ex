@@ -25,7 +25,7 @@ defmodule Geolix do
     end
   end
 
-  def lookup(ip, opts) do
+  def lookup(ip, opts) when is_tuple(ip) do
     request = {:lookup, ip, opts}
     timeout = Keyword.get(opts, :timeout, 5000)
 
