@@ -14,7 +14,11 @@ defmodule Geolix.Database.LoaderTest do
       def set(action, id), do: Agent.update(__MODULE__, &Map.put(&1, action, id))
     end
 
-    def database_workers, do: [LifecycleStorage]
+    def database_workers do
+      import Supervisor.Spec
+
+      [worker(LifecycleStorage, [])]
+    end
 
     def load_database(%{id: id}), do: LifecycleStorage.set(:load_database, id)
     def unload_database(%{id: id}), do: LifecycleStorage.set(:unload_database, id)
