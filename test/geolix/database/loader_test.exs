@@ -51,7 +51,7 @@ defmodule Geolix.Database.LoaderTest do
 
     assert :ok = Geolix.load_database(db)
 
-    assert id = LifecycleAdapter.LifecycleStorage.get(:load_database)
+    assert ^id = LifecycleAdapter.LifecycleStorage.get(:load_database)
     refute LifecycleAdapter.LifecycleStorage.get(:unload_database)
 
     assert %{id: ^id, state: :loaded} = Loader.get_database(id)
@@ -60,7 +60,6 @@ defmodule Geolix.Database.LoaderTest do
     assert id in Loader.loaded_databases()
 
     assert :ok = Geolix.unload_database(id)
-
-    assert id = LifecycleAdapter.LifecycleStorage.get(:unload_database)
+    assert ^id = LifecycleAdapter.LifecycleStorage.get(:unload_database)
   end
 end
