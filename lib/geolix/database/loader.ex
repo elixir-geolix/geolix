@@ -35,12 +35,11 @@ defmodule Geolix.Database.Loader do
   # GenServer callbacks
 
   def handle_call({:load_database, db}, _, state) do
-    result =
-      db
-      |> load_database()
-      |> register_state(db)
-
-    case result[:state] do
+    db
+    |> load_database()
+    |> register_state(db)
+    |> Map.get(:state)
+    |> case do
       :loaded -> {:reply, :ok, state}
       {:error, _} = err -> {:reply, err, state}
     end
@@ -146,10 +145,10 @@ defmodule Geolix.Database.Loader do
   defp load_error_message(:unknown_adapter), do: "unknown adapter configuration"
   defp load_error_message(reason), do: reason
 
-  defp maybe_log_error(%{state: {:error, {:config, reason}}} = db) do
+  defp maybe_log_error(%{id: id, state: {:error, {:config, reason}}} = db) do
     _ =
       Logger.error(fn ->
-        "Failed to load database #{inspect(db[:id])}: #{load_error_message(reason)}"
+        "Failed to load database #{id}: #{load_error_message(reason)}"
       end)
 
     db
@@ -170,23 +169,23 @@ defmodule Geolix.Database.Loader do
 
   defp register_state(:ok, db), do: register_state(:loaded, db)
 
-  defp register_state(state, db) do
+  defp register_state(state, %{id: id} = db) do
     db = Map.put(db, :state, state)
-    true = :ets.insert(@ets_state_name, {db[:id], db})
+    true = :ets.insert(@ets_state_name, {id, db})
 
     db
   end
 
   defp unload_database(nil), do: :ok
 
-  defp unload_database(%{adapter: adapter} = database) do
+  defp unload_database(%{adapter: adapter, id: id} = database) do
     :ok =
       case function_exported?(adapter, :unload_database, 1) do
         true -> adapter.unload_database(database)
         false -> :ok
       end
 
-    true = :ets.delete(@ets_state_name, database[:id])
+    true = :ets.delete(@ets_state_name, id)
 
     :ok
   end
