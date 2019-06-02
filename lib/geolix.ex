@@ -3,12 +3,8 @@ defmodule Geolix do
   IP location lookup provider.
   """
 
-  use Application
-
   alias Geolix.Database.Loader
   alias Geolix.Server.Pool
-
-  def start(_type, _args), do: Geolix.Supervisor.start_link()
 
   @doc """
   Looks up IP information.

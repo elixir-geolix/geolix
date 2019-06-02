@@ -27,7 +27,7 @@ defmodule Geolix.MixProject do
   def application do
     [
       applications: [:logger, :poolboy],
-      mod: {Geolix, []}
+      mod: {Geolix.Application, []}
     ]
   end
 
