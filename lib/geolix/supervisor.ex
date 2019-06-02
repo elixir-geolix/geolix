@@ -24,7 +24,7 @@ defmodule Geolix.Supervisor do
       children = [
         # ...
         Geolix.Supervisor,
-        # ..
+        # ...
       ]
   """
 

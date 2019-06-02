@@ -12,8 +12,6 @@ defmodule Geolix.Database.Loader do
   @ets_state_name :geolix_database_loader
   @ets_state_opts [:named_table, :protected, :set, read_concurrency: true]
 
-  # GenServer lifecycle
-
   @doc false
   def start_link(databases \\ []) do
     GenServer.start_link(__MODULE__, databases, name: __MODULE__)
@@ -31,8 +29,6 @@ defmodule Geolix.Database.Loader do
 
     {:ok, nil}
   end
-
-  # GenServer callbacks
 
   def handle_call({:load_database, db}, _, state) do
     db
@@ -66,8 +62,6 @@ defmodule Geolix.Database.Loader do
 
     {:noreply, state}
   end
-
-  # Public methods
 
   @doc """
   Returns state information for a specific database
@@ -120,8 +114,6 @@ defmodule Geolix.Database.Loader do
         |> Enum.map(fn {id, _db} -> id end)
     end
   end
-
-  # Internal methods
 
   defp load_database(%{adapter: adapter} = database) do
     case Code.ensure_loaded?(adapter) do

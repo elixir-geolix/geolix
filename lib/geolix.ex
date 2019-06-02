@@ -10,8 +10,6 @@ defmodule Geolix do
 
   def start(_type, _args), do: Geolix.Supervisor.start_link()
 
-  # Database lookup
-
   @doc """
   Looks up IP information.
   """
@@ -31,8 +29,6 @@ defmodule Geolix do
 
     :poolboy.transaction(Pool, &GenServer.call(&1, request, timeout))
   end
-
-  # Database management
 
   @doc """
   Loads a database according to its specification.
