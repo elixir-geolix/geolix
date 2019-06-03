@@ -205,7 +205,7 @@ To trigger a forceful reload of all databases configured in the application envi
 
 Calling `Geolix.unload_database/1` with a database id will unload this database. As this is done in a lazy fashion it will still be kept in memory while not being reloaded or used for lookups. If the database is configured via application environment it will still be reloaded as usual in case of a supervisor or application restart.
 
-## Usage
+## Basic Usage
 
 Lookups are done using `Geolix.lookup/1,2`:
 
@@ -216,18 +216,11 @@ iex(1)> Geolix.lookup("127.0.0.1")
   country: %{...}
 }
 
-iex(2)> Geolix.lookup({127, 0, 0, 1}, where: :city)
+iex(2)> Geolix.lookup({127, 0, 0, 1}, where: :my_database)
 %{...}
 ```
 
-Using `Geolix.lookup/2` with only one parameter (the IP) will lookup the information in all registered databases as a map with the database name as the key. The individual database result types are defined by the adapter used.
-
-Lookup options:
-
-* `:timeout` - GenServer call timeout for the lookup. Defaults to `5_000`.
-* `:where` - Lookup information in a single registered database
-
-All options are passed unmodified to the adapter's `lookup/2` implementation.
+Full documentation is available inline in the `Geolix` module and at [https://hexdocs.pm/geolix](https://hexdocs.pm/geolix).
 
 ## License
 

@@ -1,6 +1,40 @@
 defmodule Geolix do
   @moduledoc """
   IP location lookup provider.
+
+  ## Usage
+
+  Fetching information for a single IP is done by passing it as a binary or
+  tuple to `Geolix.lookup/1`:
+
+      iex> Geolix.lookup("127.0.0.1")
+      %{
+        city: %{...},
+        country: %{...}
+      }
+
+  The response will be a map with the `:id` of each configured database as the
+  key and the database response as the value.
+
+  If you are only interested in the response of a specific database you can use
+  `Geolix.lookup/2`:
+
+      iex> Geolix.lookup({127, 0, 0, 1}, where: :my_database)
+      %{...}
+
+  The result structured of each database is specific to the adapter used.
+
+  ### Lookup Options
+
+  There are two options you can pass to `Geolix.lookup/2` to modify the lookup
+  behaviour:
+
+  - `:timeout` - GenServer call timeout for the lookup. Defaults to `5_000`.
+  - `:where` - Lookup information in a single registered database
+
+  The adapter used can require and/or understand additional options. To
+  accomodate this the options are passed unmodified to the adapter's on lookup
+  function.
   """
 
   alias Geolix.Database.Loader
