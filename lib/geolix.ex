@@ -43,11 +43,11 @@ defmodule Geolix do
   @doc """
   Looks up IP information.
   """
-  @spec lookup(ip :: :inet.ip_address() | String.t(), opts :: Keyword.t()) :: map | nil
+  @spec lookup(ip :: :inet.ip_address() | binary, opts :: Keyword.t()) :: map | nil
   def lookup(ip, opts \\ [])
 
   def lookup(ip, opts) when is_binary(ip) do
-    case :inet.parse_address(String.to_charlist(ip)) do
+    case :inet.parse_address(Kernel.to_charlist(ip)) do
       {:ok, parsed} -> lookup(parsed, opts)
       {:error, _} -> nil
     end
