@@ -43,10 +43,10 @@ defmodule Geolix.Adapter.Fake do
 
   @impl Geolix.Adapter
   def lookup(ip, opts) do
-    case opts[:where] do
-      nil -> nil
-      where -> where |> Storage.get() |> Map.get(ip, nil)
-    end
+    opts
+    |> Keyword.fetch!(:where)
+    |> Storage.get()
+    |> Map.get(ip, nil)
   end
 
   @impl Geolix.Adapter

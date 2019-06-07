@@ -36,9 +36,8 @@ defmodule Geolix.Adapter do
   @doc """
   Looks up IP information.
 
-  The passed `opts` are expected to contain a key `:where` to define
-  which database should be queried. If that key is not set then `nil`
-  should be returned instead.
+  The adapter should expect the `opts` argument to contain a
+  key `:where` defining the specific database to use for the lookup.
   """
   @callback lookup(ip :: :inet.ip_address(), opts :: Keyword.t()) :: map | nil
 end
