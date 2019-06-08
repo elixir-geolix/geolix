@@ -18,7 +18,7 @@ defmodule Geolix.Database.Loader do
   end
 
   def init(databases) do
-    :ok = prepare_ets_state()
+    @ets_state_name = :ets.new(@ets_state_name, @ets_state_opts)
 
     :ok =
       databases
@@ -147,17 +147,6 @@ defmodule Geolix.Database.Loader do
   end
 
   defp maybe_log_error(db), do: db
-
-  defp prepare_ets_state do
-    case :ets.info(@ets_state_name) do
-      :undefined ->
-        _ = :ets.new(@ets_state_name, @ets_state_opts)
-        :ok
-
-      _ ->
-        :ok
-    end
-  end
 
   defp register_state(:ok, db), do: register_state(:loaded, db)
 
