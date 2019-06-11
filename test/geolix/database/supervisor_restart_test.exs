@@ -1,8 +1,6 @@
 defmodule Geolix.Database.SupervisorRestartTest do
   use ExUnit.Case, async: false
 
-  import ExUnit.CaptureLog
-
   alias Geolix.Adapter.Fake
   alias Geolix.TestHelpers.DatabaseSupervisor
 
@@ -36,9 +34,7 @@ defmodule Geolix.Database.SupervisorRestartTest do
     assert nil == Geolix.lookup(@ip, where: @reload_id)
 
     # reload to fix lookup
-    capture_log(fn ->
-      :ok = DatabaseSupervisor.restart()
-    end)
+    :ok = DatabaseSupervisor.restart()
 
     assert @result == Geolix.lookup(@ip, where: @reload_id)
   end

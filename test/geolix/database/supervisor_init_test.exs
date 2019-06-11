@@ -1,8 +1,6 @@
 defmodule Geolix.Database.SupervisorInitTest do
   use ExUnit.Case, async: false
 
-  import ExUnit.CaptureLog
-
   alias Geolix.TestHelpers.DatabaseSupervisor
 
   defmodule Initializer do
@@ -26,24 +24,20 @@ defmodule Geolix.Database.SupervisorInitTest do
   end
 
   test "per-database init {mod, fun} called upon supervisor (re-) start" do
-    capture_log(fn ->
-      databases = [%{init: {Initializer, :adapter}}]
+    databases = [%{init: {Initializer, :adapter}}]
 
-      :ok = Application.put_env(:geolix, :databases, databases)
-      :ok = DatabaseSupervisor.restart()
+    :ok = Application.put_env(:geolix, :databases, databases)
+    :ok = DatabaseSupervisor.restart()
 
-      assert :ok_empty == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
-    end)
+    assert :ok_empty == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
   end
 
   test "per-database init {mod, fun, args} called upon supervisor (re-) start" do
-    capture_log(fn ->
-      databases = [%{init: {Initializer, :adapter, [:ok_passed]}}]
+    databases = [%{init: {Initializer, :adapter, [:ok_passed]}}]
 
-      :ok = Application.put_env(:geolix, :databases, databases)
-      :ok = DatabaseSupervisor.restart()
+    :ok = Application.put_env(:geolix, :databases, databases)
+    :ok = DatabaseSupervisor.restart()
 
-      assert :ok_passed == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
-    end)
+    assert :ok_passed == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
   end
 end
