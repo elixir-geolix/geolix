@@ -4,8 +4,8 @@ defmodule Geolix.Server.Pool do
   @doc """
   Returns poolboy child specification for supervision tree.
   """
-  @spec child_spec :: Supervisor.Spec.spec()
-  def child_spec do
+  @spec child_spec(term) :: Supervisor.Spec.spec()
+  def child_spec(_ \\ nil) do
     opts = [
       name: {:local, __MODULE__},
       worker_module: Geolix.Server.Worker,

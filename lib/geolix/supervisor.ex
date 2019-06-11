@@ -30,9 +30,6 @@ defmodule Geolix.Supervisor do
 
   use Supervisor
 
-  alias Geolix.Database
-  alias Geolix.Server.Pool
-
   @doc false
   def start_link(default \\ []) do
     Supervisor.start_link(__MODULE__, default, name: __MODULE__)
@@ -48,10 +45,10 @@ defmodule Geolix.Supervisor do
       end
 
     children = [
-      Pool.child_spec(),
-      supervisor(Database.Supervisor, [])
+      Geolix.Server.Pool,
+      Geolix.Database.Supervisor
     ]
 
-    supervise(children, strategy: :one_for_one)
+    Supervisor.init(children, strategy: :one_for_one)
   end
 end
