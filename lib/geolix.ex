@@ -33,7 +33,7 @@ defmodule Geolix do
   - `:where` - Lookup information in a single registered database
 
   The adapter used can require and/or understand additional options. To
-  accomodate this the options are passed unmodified to the adapter's on lookup
+  accommodate this the options are passed unmodified to the adapter's on lookup
   function.
   """
 
