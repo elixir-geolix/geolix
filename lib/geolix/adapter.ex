@@ -24,14 +24,7 @@ defmodule Geolix.Adapter do
   Requires at least the fields `:id` and `:adapter`. Any other required
   fields depend on the adapter's requirements.
   """
-  @callback load_database(map) :: :ok | {:error, term}
-
-  @doc """
-  Unloads a given database from Geolix.
-
-  Receives the configuration used when initially loading the database.
-  """
-  @callback unload_database(map) :: :ok
+  @callback load_database(database :: map) :: :ok | {:error, term}
 
   @doc """
   Looks up IP information.
@@ -40,4 +33,9 @@ defmodule Geolix.Adapter do
   key `:where` defining the specific database to use for the lookup.
   """
   @callback lookup(ip :: :inet.ip_address(), opts :: Keyword.t()) :: map | nil
+
+  @doc """
+  Unloads a given database from Geolix.
+  """
+  @callback unload_database(database :: map) :: :ok
 end
