@@ -28,11 +28,8 @@ defmodule Geolix.Adapter do
 
   @doc """
   Looks up IP information.
-
-  The adapter should expect the `opts` argument to contain a
-  key `:where` defining the specific database to use for the lookup.
   """
-  @callback lookup(ip :: :inet.ip_address(), opts :: Keyword.t()) :: map | nil
+  @callback lookup(ip :: :inet.ip_address(), opts :: Keyword.t(), database :: map) :: map | nil
 
   @doc """
   Unloads a given database from Geolix.

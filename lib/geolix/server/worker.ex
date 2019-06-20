@@ -16,7 +16,7 @@ defmodule Geolix.Server.Worker do
   def handle_call({:lookup, ip, opts}, _, state) do
     case opts[:where] do
       nil -> {:reply, lookup_all(ip, opts), state}
-      _where -> {:reply, lookup_single(ip, opts), state}
+      where -> {:reply, lookup_single(ip, opts, where), state}
     end
   end
 
@@ -30,17 +30,17 @@ defmodule Geolix.Server.Worker do
     databases
     |> Task.async_stream(
       fn database ->
-        {database, lookup_single(ip, [{:where, database} | opts])}
+        {database, lookup_single(ip, opts, database)}
       end,
       ordered: false
     )
     |> Enum.into(%{})
   end
 
-  defp lookup_single(ip, opts) do
-    case Loader.get_database(opts[:where]) do
+  defp lookup_single(ip, opts, where) do
+    case Loader.get_database(where) do
       nil -> nil
-      %{adapter: adapter} -> adapter.lookup(ip, opts)
+      %{adapter: adapter} = database -> adapter.lookup(ip, opts, database)
     end
   end
 end

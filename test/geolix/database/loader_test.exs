@@ -21,7 +21,7 @@ defmodule Geolix.Database.LoaderTest do
     def load_database(%{id: id}), do: LifecycleStorage.set(:load_database, id)
     def unload_database(%{id: id}), do: LifecycleStorage.set(:unload_database, id)
 
-    def lookup(_ip, _opts), do: :ok
+    def lookup(_ip, _opts, _database), do: :ok
   end
 
   test "fetching un-registered database information" do

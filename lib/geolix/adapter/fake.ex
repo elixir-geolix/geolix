@@ -42,9 +42,8 @@ defmodule Geolix.Adapter.Fake do
   def load_database(%{data: data, id: id}), do: Storage.set(id, data)
 
   @impl Geolix.Adapter
-  def lookup(ip, opts) do
-    opts
-    |> Keyword.fetch!(:where)
+  def lookup(ip, _opts, %{id: id}) do
+    id
     |> Storage.get()
     |> Map.get(ip, nil)
   end
