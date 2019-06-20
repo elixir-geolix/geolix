@@ -34,7 +34,7 @@ defmodule Geolix.Server.Worker do
       end,
       ordered: false
     )
-    |> Enum.into(%{})
+    |> Enum.into(%{}, fn {:ok, result} -> result end)
   end
 
   defp lookup_single(ip, opts, where) do
