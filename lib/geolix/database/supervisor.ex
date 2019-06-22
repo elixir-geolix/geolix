@@ -19,21 +19,23 @@ defmodule Geolix.Database.Supervisor do
   end
 
   @doc """
-  Starts the worker processes of an adapter if not already under supervision.
+  Starts the worker processes of a database if not already under supervision.
   """
-  @spec start_adapter(module) :: :ok
-  def start_adapter(adapter) do
-    adapter
-    |> adapter_workers()
+  @spec start_database(map) :: :ok
+  def start_database(database) do
+    database
+    |> database_workers()
     |> Enum.each(&Supervisor.start_child(__MODULE__, &1))
   end
 
-  defp adapter_workers(adapter) do
-    case function_exported?(adapter, :database_workers, 0) do
-      true -> adapter.database_workers()
+  defp database_workers(%{adapter: adapter} = database) do
+    case function_exported?(adapter, :database_workers, 1) do
+      true -> adapter.database_workers(database)
       false -> []
     end
   end
+
+  defp database_workers(_), do: []
 
   defp fetch_databases do
     :geolix
@@ -53,11 +55,7 @@ defmodule Geolix.Database.Supervisor do
 
   defp workers(databases) do
     databases
-    |> Enum.map(&Map.get(&1, :adapter, nil))
-    |> Enum.uniq()
-    |> Enum.reject(&Kernel.is_nil/1)
-    |> Enum.filter(&Code.ensure_loaded?/1)
-    |> Enum.flat_map(&adapter_workers/1)
+    |> Enum.flat_map(&database_workers/1)
     |> Enum.uniq_by(fn {id, _, _, _, _, _} -> id end)
   end
 end

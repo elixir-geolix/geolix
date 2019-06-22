@@ -4,7 +4,7 @@ defmodule Geolix.Adapter do
   """
 
   @optional_callbacks [
-    database_workers: 0,
+    database_workers: 1,
     load_database: 1,
     unload_database: 1
   ]
@@ -16,7 +16,7 @@ defmodule Geolix.Adapter do
   adapter specific supervisor (e.g. using the application config) this callback
   should be either unimplemented or return an empty list.
   """
-  @callback database_workers() :: list
+  @callback database_workers(database :: map) :: list
 
   @doc """
   Loads a given database into Geolix.

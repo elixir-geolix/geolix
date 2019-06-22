@@ -116,17 +116,15 @@ defmodule Geolix.Database.Loader do
   end
 
   defp load_database(%{adapter: adapter} = database) do
-    case Code.ensure_loaded?(adapter) do
-      true ->
-        :ok = DatabaseSupervisor.start_adapter(adapter)
+    if Code.ensure_loaded?(adapter) do
+      :ok = DatabaseSupervisor.start_database(database)
 
-        case function_exported?(adapter, :load_database, 1) do
-          true -> adapter.load_database(database)
-          false -> :ok
-        end
-
-      false ->
-        {:error, {:config, :unknown_adapter}}
+      case function_exported?(adapter, :load_database, 1) do
+        true -> adapter.load_database(database)
+        false -> :ok
+      end
+    else
+      {:error, {:config, :unknown_adapter}}
     end
   end
 

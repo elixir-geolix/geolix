@@ -12,7 +12,7 @@ defmodule Geolix.Database.LoaderTest do
       def set(action, id), do: Agent.update(__MODULE__, &Map.put(&1, action, id))
     end
 
-    def database_workers do
+    def database_workers(_database) do
       import Supervisor.Spec
 
       [worker(LifecycleStorage, [])]
