@@ -119,9 +119,10 @@ defmodule Geolix.Database.Loader do
     if Code.ensure_loaded?(adapter) do
       :ok = DatabaseSupervisor.start_database(database)
 
-      case function_exported?(adapter, :load_database, 1) do
-        true -> adapter.load_database(database)
-        false -> :ok
+      if function_exported?(adapter, :load_database, 1) do
+        adapter.load_database(database)
+      else
+        :ok
       end
     else
       {:error, {:config, :unknown_adapter}}
@@ -158,11 +159,9 @@ defmodule Geolix.Database.Loader do
   defp unload_database(nil), do: :ok
 
   defp unload_database(%{adapter: adapter, id: id} = database) do
-    :ok =
-      case function_exported?(adapter, :unload_database, 1) do
-        true -> adapter.unload_database(database)
-        false -> :ok
-      end
+    if function_exported?(adapter, :unload_database, 1) do
+      adapter.unload_database(database)
+    end
 
     true = :ets.delete(@ets_state_name, id)
 

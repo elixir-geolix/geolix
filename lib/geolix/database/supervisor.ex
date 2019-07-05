@@ -29,9 +29,10 @@ defmodule Geolix.Database.Supervisor do
   end
 
   defp database_workers(%{adapter: adapter} = database) do
-    case function_exported?(adapter, :database_workers, 1) do
-      true -> adapter.database_workers(database)
-      false -> []
+    if function_exported?(adapter, :database_workers, 1) do
+      adapter.database_workers(database)
+    else
+      []
     end
   end
 
