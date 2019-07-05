@@ -159,7 +159,7 @@ defmodule Geolix.Database.Loader do
   defp unload_database(nil), do: :ok
 
   defp unload_database(%{adapter: adapter, id: id} = database) do
-    if function_exported?(adapter, :unload_database, 1) do
+    if Code.ensure_loaded?(adapter) and function_exported?(adapter, :unload_database, 1) do
       adapter.unload_database(database)
     end
 
