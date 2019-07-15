@@ -12,7 +12,7 @@ defmodule Geolix.Adapter do
   @doc """
   Returns the children to be supervised by `Geolix.Database.Supervisor`.
 
-  If no automatic supervision should take place or it is intended to use a
+  If no automatic supervision should take place or it is intended to use an
   adapter specific supervisor (e.g. using the application config) this callback
   should be either unimplemented or return an empty list.
   """
