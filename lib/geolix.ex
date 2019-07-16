@@ -61,6 +61,17 @@ defmodule Geolix do
   end
 
   @doc """
+  Fetch metadata from one or multiple databases.
+  """
+  @spec metadata(opts :: Keyword.t()) :: map | nil
+  def metadata(opts \\ []) do
+    request = {:metadata, opts}
+    timeout = Keyword.get(opts, :timeout, 5000)
+
+    :poolboy.transaction(Pool, &GenServer.call(&1, request, timeout))
+  end
+
+  @doc """
   Loads a database according to its specification.
 
   Requires at least the fields `:id` and `:adapter`. Any other required

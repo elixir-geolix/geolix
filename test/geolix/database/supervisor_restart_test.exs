@@ -29,7 +29,7 @@ defmodule Geolix.Database.SupervisorRestartTest do
     assert @result == Geolix.lookup(@ip, where: @reload_id)
 
     # break data
-    Fake.Storage.set(@reload_id, %{})
+    Fake.Storage.set(@reload_id, {%{}, %{}})
 
     assert nil == Geolix.lookup(@ip, where: @reload_id)
 

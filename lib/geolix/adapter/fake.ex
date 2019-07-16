@@ -25,6 +25,12 @@ defmodule Geolix.Adapter.Fake do
 
   The lookup is done by exactly matching the IP address tuple received
   and will return the predefined result as is.
+
+  ## Metadata
+
+  The adapter provides access to the time the database was loaded:
+
+      metadata = %{load_epoch: System.os_time(:second)}
   """
 
   alias Geolix.Adapter.Fake.Storage
@@ -39,15 +45,20 @@ defmodule Geolix.Adapter.Fake do
   end
 
   @impl Geolix.Adapter
-  def load_database(%{data: data, id: id}), do: Storage.set(id, data)
+  def load_database(%{data: data, id: id}) do
+    Storage.set(id, {data, %{load_epoch: System.os_time(:second)}})
+  end
 
   @impl Geolix.Adapter
   def lookup(ip, _opts, %{id: id}) do
     id
-    |> Storage.get()
+    |> Storage.get_data()
     |> Map.get(ip, nil)
   end
 
   @impl Geolix.Adapter
-  def unload_database(%{id: id}), do: Storage.set(id, nil)
+  def metadata(%{id: id}), do: Storage.get_meta(id)
+
+  @impl Geolix.Adapter
+  def unload_database(%{id: id}), do: Storage.set(id, {nil, nil})
 end
