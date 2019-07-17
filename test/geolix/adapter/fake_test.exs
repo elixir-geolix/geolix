@@ -5,7 +5,7 @@ defmodule Geolix.Adapter.FakeTest do
 
   test "fake adapter (loading) lifecycle" do
     ip = {42, 42, 42, 42}
-    result = :fake_result
+    result = %{test: :result}
     lifecycle_id = :test_fake_adapter_lifecycle
 
     lifecycle_db = %{

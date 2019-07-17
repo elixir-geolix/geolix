@@ -4,7 +4,7 @@ defmodule Geolix.Database.SupervisorInitTest do
   alias Geolix.TestHelpers.DatabaseSupervisor
 
   defmodule Initializer do
-    def adapter(database), do: adapter(database, :ok_empty)
+    def adapter(database), do: adapter(database, %{test: :empty})
 
     def adapter(_config, result) do
       %{
@@ -29,15 +29,16 @@ defmodule Geolix.Database.SupervisorInitTest do
     :ok = Application.put_env(:geolix, :databases, databases)
     :ok = DatabaseSupervisor.restart()
 
-    assert :ok_empty == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
+    assert %{test: :empty} == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
   end
 
   test "per-database init {mod, fun, args} called upon supervisor (re-) start" do
-    databases = [%{init: {Initializer, :adapter, [:ok_passed]}}]
+    result = %{test: :result}
+    databases = [%{init: {Initializer, :adapter, [result]}}]
 
     :ok = Application.put_env(:geolix, :databases, databases)
     :ok = DatabaseSupervisor.restart()
 
-    assert :ok_passed == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
+    assert result == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
   end
 end

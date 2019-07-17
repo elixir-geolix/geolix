@@ -5,7 +5,7 @@ defmodule Geolix.Database.SupervisorRestartTest do
   alias Geolix.TestHelpers.DatabaseSupervisor
 
   @ip {55, 55, 55, 55}
-  @result :fake_result
+  @result %{test: :result}
   @reload_id :test_reload
   @reload_db %{
     id: @reload_id,
