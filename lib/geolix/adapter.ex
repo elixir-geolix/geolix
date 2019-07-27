@@ -6,6 +6,7 @@ defmodule Geolix.Adapter do
   @optional_callbacks [
     database_workers: 1,
     load_database: 1,
+    metadata: 1,
     unload_database: 1
   ]
 
@@ -30,6 +31,11 @@ defmodule Geolix.Adapter do
   Looks up IP information.
   """
   @callback lookup(ip :: :inet.ip_address(), opts :: Keyword.t(), database :: map) :: map | nil
+
+  @doc """
+  Returns metadata information for a database if available.
+  """
+  @callback metadata(database :: map) :: map | nil
 
   @doc """
   Unloads a given database from Geolix.
