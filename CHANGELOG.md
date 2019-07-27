@@ -4,6 +4,9 @@
 
 The adapter `Geolix.Adapter.MMDB2` has been extracted a [separate repository](https://github.com/elixir-geolix/adapter_mmdb2). You should be able to upgrade to the external adapter by changing your project's dependencies from `:geolix` to `:geolix_adapter_mmdb2` with an appropriate version requirement.
 
+- Enhancements
+    - Database metadata is now available via `Geolix.metadata/0,1` ([#26](https://github.com/elixir-geolix/geolix/pull/26))
+
 - Backwards incompatible changes
     - The database workers function of an adapter will now receive the full database configuration to be configured as the sole parameter
     - The lookup function of an adapter will now receive the full database configuration to be used for the lookup as a third parameter
