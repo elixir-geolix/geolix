@@ -1,7 +1,5 @@
 defmodule Geolix.SupervisorTest do
-  use ExUnit.Case, async: false
-
-  import ExUnit.CaptureLog
+  use ExUnit.Case, async: true
 
   defmodule Initializer do
     use Agent
@@ -25,30 +23,18 @@ defmodule Geolix.SupervisorTest do
   test "init {mod, fun} called upon supervisor (re-) start" do
     {:ok, _} = start_supervised(Initializer)
 
-    capture_log(fn ->
-      Supervisor.stop(Geolix.Supervisor, :normal)
+    :ok = Application.put_env(:geolix, :init, {Initializer, :call_init})
+    _ = Geolix.Supervisor.init([])
 
-      :ok = :timer.sleep(100)
-      :ok = Application.put_env(:geolix, :init, {Initializer, :call_init})
-      _ = Application.ensure_all_started(:geolix)
-      :ok = :timer.sleep(100)
-
-      assert :ok_empty == Initializer.get_init()
-    end)
+    assert :ok_empty == Initializer.get_init()
   end
 
   test "init {mod, fun, args} called upon supervisor (re-) start" do
     {:ok, _} = start_supervised(Initializer)
 
-    capture_log(fn ->
-      Supervisor.stop(Geolix.Supervisor, :normal)
+    :ok = Application.put_env(:geolix, :init, {Initializer, :call_init, [:ok_passed]})
+    _ = Geolix.Supervisor.init([])
 
-      :ok = :timer.sleep(100)
-      :ok = Application.put_env(:geolix, :init, {Initializer, :call_init, [:ok_passed]})
-      _ = Application.ensure_all_started(:geolix)
-      :ok = :timer.sleep(100)
-
-      assert :ok_passed == Initializer.get_init()
-    end)
+    assert :ok_passed == Initializer.get_init()
   end
 end
