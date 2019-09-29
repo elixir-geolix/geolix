@@ -4,7 +4,6 @@ defmodule Geolix.Database.Supervisor do
   use Supervisor
 
   alias Geolix.Database.Fetcher
-  alias Geolix.Database.Loader
 
   @doc false
   def start_link(default \\ []) do
@@ -13,10 +12,9 @@ defmodule Geolix.Database.Supervisor do
 
   @doc false
   def init(_default) do
-    databases = Fetcher.databases()
-    children = [worker(Loader, [databases]) | workers(databases)]
-
-    supervise(children, strategy: :one_for_all)
+    Fetcher.databases()
+    |> workers()
+    |> supervise(strategy: :one_for_all)
   end
 
   @doc """

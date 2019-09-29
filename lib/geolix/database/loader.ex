@@ -7,25 +7,26 @@ defmodule Geolix.Database.Loader do
 
   require Logger
 
+  alias Geolix.Database.Fetcher
   alias Geolix.Database.Supervisor, as: DatabaseSupervisor
 
   @ets_state_name :geolix_database_loader
   @ets_state_opts [:named_table, :protected, :set, read_concurrency: true]
 
   @doc false
-  def start_link(databases \\ []) do
-    GenServer.start_link(__MODULE__, databases, name: __MODULE__)
+  def start_link(default \\ []) do
+    GenServer.start_link(__MODULE__, default, name: __MODULE__)
   end
 
-  def init(databases) do
+  def init(_default) do
     @ets_state_name = :ets.new(@ets_state_name, @ets_state_opts)
 
     :ok =
-      databases
+      Fetcher.databases()
       |> Enum.filter(&Map.has_key?(&1, :id))
       |> Enum.each(&register_state(:registered, &1))
 
-    :ok = GenServer.cast(__MODULE__, :reload_databases)
+    :ok = reload_databases()
 
     {:ok, nil}
   end
@@ -51,14 +52,7 @@ defmodule Geolix.Database.Loader do
   end
 
   def handle_cast(:reload_databases, state) do
-    @ets_state_name
-    |> :ets.tab2list()
-    |> Enum.each(fn {_id, db} ->
-      db
-      |> load_database()
-      |> register_state(db)
-      |> maybe_log_error()
-    end)
+    :ok = reload_databases()
 
     {:noreply, state}
   end
@@ -154,6 +148,17 @@ defmodule Geolix.Database.Loader do
     true = :ets.insert(@ets_state_name, {id, db})
 
     db
+  end
+
+  defp reload_databases do
+    @ets_state_name
+    |> :ets.tab2list()
+    |> Enum.each(fn {_id, db} ->
+      db
+      |> load_database()
+      |> register_state(db)
+      |> maybe_log_error()
+    end)
   end
 
   defp unload_database(nil), do: :ok

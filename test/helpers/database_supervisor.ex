@@ -6,8 +6,10 @@ defmodule Geolix.TestHelpers.DatabaseSupervisor do
   """
   @spec restart() :: :ok
   def restart do
+    Supervisor.terminate_child(Geolix.Supervisor, Geolix.Database.Loader)
     Supervisor.terminate_child(Geolix.Supervisor, Geolix.Database.Supervisor)
     Supervisor.restart_child(Geolix.Supervisor, Geolix.Database.Supervisor)
+    Supervisor.restart_child(Geolix.Supervisor, Geolix.Database.Loader)
 
     :timer.sleep(50)
     :ok
