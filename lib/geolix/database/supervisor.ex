@@ -3,19 +3,13 @@ defmodule Geolix.Database.Supervisor do
 
   use Supervisor
 
-  alias Geolix.Database.Fetcher
-
   @doc false
   def start_link(default \\ []) do
     Supervisor.start_link(__MODULE__, default, name: __MODULE__)
   end
 
   @doc false
-  def init(_default) do
-    Fetcher.databases()
-    |> workers()
-    |> supervise(strategy: :one_for_all)
-  end
+  def init(_default), do: supervise([], strategy: :one_for_all)
 
   @doc """
   Starts the worker processes of a database if not already under supervision.
@@ -36,10 +30,4 @@ defmodule Geolix.Database.Supervisor do
   end
 
   defp database_workers(_), do: []
-
-  defp workers(databases) do
-    databases
-    |> Enum.flat_map(&database_workers/1)
-    |> Enum.uniq_by(fn {id, _, _, _, _, _} -> id end)
-  end
 end
