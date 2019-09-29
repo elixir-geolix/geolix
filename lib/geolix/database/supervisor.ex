@@ -3,6 +3,7 @@ defmodule Geolix.Database.Supervisor do
 
   use Supervisor
 
+  alias Geolix.Database.Fetcher
   alias Geolix.Database.Loader
 
   @doc false
@@ -12,7 +13,7 @@ defmodule Geolix.Database.Supervisor do
 
   @doc false
   def init(_default) do
-    databases = fetch_databases()
+    databases = Fetcher.databases()
     children = [worker(Loader, [databases]) | workers(databases)]
 
     supervise(children, strategy: :one_for_all)
@@ -37,22 +38,6 @@ defmodule Geolix.Database.Supervisor do
   end
 
   defp database_workers(_), do: []
-
-  defp fetch_databases do
-    :geolix
-    |> Application.get_env(:databases, [])
-    |> Enum.map(&preconfigure_database/1)
-  end
-
-  defp preconfigure_database(%{init: {mod, fun, extra_args}} = config) do
-    apply(mod, fun, [config | extra_args])
-  end
-
-  defp preconfigure_database(%{init: {mod, fun}} = config) do
-    apply(mod, fun, [config])
-  end
-
-  defp preconfigure_database(config), do: config
 
   defp workers(databases) do
     databases
