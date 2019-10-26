@@ -147,6 +147,7 @@ All the work done by geolix is handled using adapters. These adapters can use a 
 Known adapters:
 
 - [`Geolix.Adapter.Fake`](#fake-adapter)
+- [`Geolix.Adapter.LookupCache`](https://github.com/elixir-geolix/adapter_lookup_cache)
 - [`Geolix.Adapter.MMDB2`](https://github.com/elixir-geolix/adapter_mmdb2)
 
 For detailed information how to configure the adapter of your choice please read the adapter's configuration.
