@@ -17,7 +17,7 @@ defmodule Geolix.Adapter do
   adapter specific supervisor (e.g. using the application config) this callback
   should be either unimplemented or return an empty list.
   """
-  @callback database_workers(database :: map) :: list
+  @callback database_workers(database :: map) :: [Supervisor.child_spec()]
 
   @doc """
   Loads a given database into Geolix.
