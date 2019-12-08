@@ -62,16 +62,12 @@ defmodule Geolix.Database.Loader do
   """
   @spec get_database(atom) :: map | nil
   def get_database(which) do
-    case :ets.info(@ets_state_name) do
-      :undefined ->
-        nil
-
-      _ ->
-        case :ets.lookup(@ets_state_name, which) do
-          [{^which, db}] -> db
-          _ -> nil
-        end
+    case :ets.lookup(@ets_state_name, which) do
+      [{^which, db}] -> db
+      _ -> nil
     end
+  rescue
+    _ -> nil
   end
 
   @doc """
@@ -79,16 +75,12 @@ defmodule Geolix.Database.Loader do
   """
   @spec loaded_databases() :: [atom]
   def loaded_databases do
-    case :ets.info(@ets_state_name) do
-      :undefined ->
-        []
-
-      _ ->
-        @ets_state_name
-        |> :ets.tab2list()
-        |> Enum.filter(fn {_id, db} -> :loaded == Map.get(db, :state) end)
-        |> Enum.map(fn {id, _db} -> id end)
-    end
+    @ets_state_name
+    |> :ets.tab2list()
+    |> Enum.filter(fn {_id, db} -> :loaded == Map.get(db, :state) end)
+    |> Enum.map(fn {id, _db} -> id end)
+  rescue
+    _ -> []
   end
 
   @doc """
@@ -98,15 +90,11 @@ defmodule Geolix.Database.Loader do
   """
   @spec registered_databases() :: [atom]
   def registered_databases do
-    case :ets.info(@ets_state_name) do
-      :undefined ->
-        []
-
-      _ ->
-        @ets_state_name
-        |> :ets.tab2list()
-        |> Enum.map(fn {id, _db} -> id end)
-    end
+    @ets_state_name
+    |> :ets.tab2list()
+    |> Enum.map(fn {id, _db} -> id end)
+  rescue
+    _ -> []
   end
 
   defp load_database(%{adapter: adapter} = database) do
