@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.0-dev
+
+- Enhancements
+    - Configuring `startup_sync: true` allows you to ensure a synchronous database load is done during startup. This may have unwanted consequences when your loading process takes longer than around 5 seconds (default startup timeout), e.g. when loading a database from a remote location
+
 ## v1.0.0 (2019-09-08)
 
 The adapter `Geolix.Adapter.MMDB2` has been extracted a [separate repository](https://github.com/elixir-geolix/adapter_mmdb2). You should be able to upgrade to the external adapter by changing your project's dependencies from `:geolix` to `:geolix_adapter_mmdb2` with an appropriate version requirement.

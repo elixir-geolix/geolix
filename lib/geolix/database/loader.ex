@@ -26,7 +26,11 @@ defmodule Geolix.Database.Loader do
       |> Enum.filter(&Map.has_key?(&1, :id))
       |> Enum.each(&register_state(:registered, &1))
 
-    :ok = reload_databases()
+    :ok =
+      case Application.get_env(:geolix, :startup_sync) do
+        true -> reload_databases()
+        _ -> GenServer.cast(__MODULE__, :reload_databases)
+      end
 
     {:ok, nil}
   end
