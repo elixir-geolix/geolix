@@ -39,9 +39,7 @@ defmodule Geolix.Adapter.Fake do
 
   @impl Geolix.Adapter
   def database_workers(_database) do
-    import Supervisor.Spec
-
-    [worker(Storage, [])]
+    [Storage.child_spec(%{})]
   end
 
   @impl Geolix.Adapter
