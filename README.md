@@ -71,24 +71,24 @@ config :geolix,
 
 # {mod, fun, args}
 config :geolix,
-  init: {MyInitModule, :my_init_mfa_toplevel, [:foo, :bar]}
+  init: {MyInitModule, :my_init_mfargs_toplevel, [:foo, :bar]}
 
 config :geolix,
   databases: [
     %{
       id: :dynamic_country,
       adapter: MyAdapter,
-      init: {MyInitModule, :my_init_mfa_database, [:foo, :bar]}
+      init: {MyInitModule, :my_init_mfargs_database, [:foo, :bar]}
     }
   ]
 
 # initializer module
 defmodule MyInitModule do
   @spec my_init_mf_toplevel() :: :ok
-  def my_init_mf_toplevel(), do: my_init_mfa_toplevel(:foo, :bar)
+  def my_init_mf_toplevel(), do: my_init_mfargs_toplevel(:foo, :bar)
 
-  @spec my_init_mfa_toplevel(atom, atom) :: :ok
-  def my_init_mfa_toplevel(:foo, :bar) do
+  @spec my_init_mfargs_toplevel(atom, atom) :: :ok
+  def my_init_mfargs_toplevel(:foo, :bar) do
     priv_dir = Application.app_dir(:my_app, "priv")
 
     databases = [
@@ -105,11 +105,11 @@ defmodule MyInitModule do
 
   @spec my_init_mf_database(map) :: map
   def my_init_mf_database(database) do
-    my_init_mfa_database(database, :foo, :bar)
+    my_init_mfargs_database(database, :foo, :bar)
   end
 
-  @spec my_init_mfa_database(map, atom, atom) :: map
-  def my_init_mfa_database(%{id: :dynamic_country} = database, :foo, :bar) do
+  @spec my_init_mfargs_database(map, atom, atom) :: map
+  def my_init_mfargs_database(%{id: :dynamic_country} = database, :foo, :bar) do
     priv_dir = Application.app_dir(:my_app, "priv")
 
     %{database | source: Path.join([priv_dir, "country.db"])}
