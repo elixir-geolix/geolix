@@ -9,7 +9,7 @@ defmodule Geolix.Database.Supervisor do
   end
 
   @doc false
-  def init(_default), do: supervise([], strategy: :one_for_all)
+  def init(_default), do: Supervisor.init([], strategy: :one_for_all)
 
   @doc """
   Starts the worker processes of a database if not already under supervision.
