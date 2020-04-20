@@ -4,6 +4,7 @@
 
 - Enhancements
     - Configuring `startup_sync: true` allows you to ensure a synchronous database load is done during startup. This may have unwanted consequences when your loading process takes longer than around 5 seconds (default startup timeout), e.g. when loading a database from a remote location
+    - Usage of deprecated `Supervisor` functions has been removed ([#30](https://github.com/elixir-geolix/geolix/pull/30))
 
 ## v1.0.0 (2019-09-08)
 
