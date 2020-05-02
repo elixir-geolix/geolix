@@ -20,12 +20,12 @@ jobs:
       otp_release: 22.0
     - <<: *test
       elixir: 1.10.3
-      otp_release: 22.0
+      otp_release: 22.3
       after_success: mix coveralls.travis
 
     - stage: code quality
       elixir: 1.10.3
-      otp_release: 22.0
+      otp_release: 22.3
       script:
         - mix format --check-formatted
         - mix credo --strict
