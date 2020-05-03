@@ -23,7 +23,7 @@ The adapter `Geolix.Adapter.MMDB2` has been extracted a [separate repository](ht
     - Initializer modules can be defined with additional arguments by using `{mod, fun, args}`
 
 - Backwards incompatible changes
-    - Minimum required elixir version is now `~> 1.5`
+    - Minimum required Elixir version is now `~> 1.5`
 
 ## v0.17.0 (2018-09-02)
 
@@ -55,7 +55,7 @@ The adapter `Geolix.Adapter.MMDB2` has been extracted a [separate repository](ht
     - The MMDB2 file format decoding logic has been extracted to the new [`:mmdb2_decoder`](https://github.com/elixir-geolix/mmdb2_decoder) library
 
 - Backwards incompatible changes
-    - Minimum required elixir version is now `~> 1.3`
+    - Minimum required Elixir version is now `~> 1.3`
 
 ## v0.14.0 (2017-06-20)
 
@@ -75,8 +75,8 @@ The adapter `Geolix.Adapter.MMDB2` has been extracted a [separate repository](ht
 ## v0.13.0 (2017-04-12)
 
 - Backwards incompatible changes
-    - Minimum required elixir version is now `~> 1.2`
-    - Minimum required erlang version is now `~> 18.0`
+    - Minimum required Elixir version is now `~> 1.2`
+    - Minimum required Erlang version is now `~> 18.0`
 
 ## v0.12.0 (2017-03-26)
 
