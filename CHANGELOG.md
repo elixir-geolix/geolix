@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.0-dev
+## v1.1.0 (2020-05-04)
 
 - Enhancements
     - Configuring `startup_sync: true` allows you to ensure a synchronous database load is done during startup. This may have unwanted consequences when your loading process takes longer than around 5 seconds (default startup timeout), e.g. when loading a database from a remote location
