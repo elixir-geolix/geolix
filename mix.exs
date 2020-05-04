@@ -8,7 +8,7 @@ defmodule Geolix.MixProject do
       app: :geolix,
       name: "Geolix",
       version: "2.0.0-dev",
-      elixir: "~> 1.5",
+      elixir: "~> 1.7",
       deps: deps(),
       description: "IP location lookup provider",
       dialyzer: dialyzer(),
