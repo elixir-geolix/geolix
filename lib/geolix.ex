@@ -26,10 +26,9 @@ defmodule Geolix do
 
   ### Lookup Options
 
-  There are two options you can pass to `Geolix.lookup/2` to modify the lookup
+  There are some options you can pass to `Geolix.lookup/2` to modify the lookup
   behaviour:
 
-  - `:timeout` - GenServer call timeout for the lookup. Defaults to `5_000`.
   - `:where` - Lookup information in a single registered database
 
   The adapter used can require and/or understand additional options. To
@@ -38,7 +37,6 @@ defmodule Geolix do
   """
 
   alias Geolix.Database.Loader
-  alias Geolix.Server.Pool
 
   @doc """
   Looks up IP information.
@@ -54,10 +52,10 @@ defmodule Geolix do
   end
 
   def lookup(ip, opts) when is_tuple(ip) do
-    request = {:lookup, ip, opts}
-    timeout = Keyword.get(opts, :timeout, 5000)
-
-    :poolboy.transaction(Pool, &GenServer.call(&1, request, timeout))
+    case opts[:where] do
+      nil -> lookup_all(ip, opts)
+      where -> lookup_single(ip, opts, where)
+    end
   end
 
   @doc """
@@ -65,10 +63,10 @@ defmodule Geolix do
   """
   @spec metadata(opts :: Keyword.t()) :: map | nil
   def metadata(opts \\ []) do
-    request = {:metadata, opts}
-    timeout = Keyword.get(opts, :timeout, 5000)
-
-    :poolboy.transaction(Pool, &GenServer.call(&1, request, timeout))
+    case opts[:where] do
+      nil -> metadata_all()
+      where -> metadata_single(where)
+    end
   end
 
   @doc """
@@ -96,4 +94,50 @@ defmodule Geolix do
   """
   @spec unload_database(atom) :: :ok
   def unload_database(id), do: GenServer.call(Loader, {:unload_database, id})
+
+  defp lookup_all(ip, opts) do
+    lookup_all(ip, opts, Loader.loaded_databases())
+  end
+
+  defp lookup_all(_, _, []), do: %{}
+
+  defp lookup_all(ip, opts, databases) do
+    databases
+    |> Task.async_stream(
+      fn database ->
+        {database, lookup_single(ip, opts, database)}
+      end,
+      ordered: false
+    )
+    |> Enum.into(%{}, fn {:ok, result} -> result end)
+  end
+
+  defp lookup_single(ip, opts, where) do
+    case Loader.get_database(where) do
+      nil -> nil
+      %{adapter: adapter} = database -> adapter.lookup(ip, opts, database)
+    end
+  end
+
+  defp metadata_all do
+    metadata_all(Loader.loaded_databases())
+  end
+
+  defp metadata_all(databases) do
+    databases
+    |> Task.async_stream(
+      fn database ->
+        {database, metadata_single(database)}
+      end,
+      ordered: false
+    )
+    |> Enum.into(%{}, fn {:ok, result} -> result end)
+  end
+
+  defp metadata_single(where) do
+    case Loader.get_database(where) do
+      nil -> nil
+      %{adapter: adapter} = database -> adapter.metadata(database)
+    end
+  end
 end

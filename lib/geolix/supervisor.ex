@@ -45,7 +45,6 @@ defmodule Geolix.Supervisor do
       end
 
     children = [
-      Geolix.Server.Pool,
       Geolix.Database.Supervisor,
       Geolix.Database.Loader
     ]
