@@ -10,7 +10,7 @@ defmodule Geolix.MixProject do
       version: "2.0.0-dev",
       elixir: "~> 1.7",
       deps: deps(),
-      description: "IP location lookup provider",
+      description: "IP information lookup provider",
       dialyzer: dialyzer(),
       docs: docs(),
       elixirc_paths: elixirc_paths(Mix.env()),
