@@ -1,15 +1,15 @@
 defmodule Geolix.Database.Supervisor do
   @moduledoc false
 
-  use Supervisor
+  use DynamicSupervisor
 
   @doc false
   def start_link(default \\ []) do
-    Supervisor.start_link(__MODULE__, default, name: __MODULE__)
+    DynamicSupervisor.start_link(__MODULE__, default, name: __MODULE__)
   end
 
   @doc false
-  def init(_default), do: Supervisor.init([], strategy: :one_for_all)
+  def init(_default), do: DynamicSupervisor.init(strategy: :one_for_one)
 
   @doc """
   Starts the worker processes of a database if not already under supervision.
@@ -18,7 +18,7 @@ defmodule Geolix.Database.Supervisor do
   def start_database(database) do
     database
     |> database_workers()
-    |> Enum.each(&Supervisor.start_child(__MODULE__, &1))
+    |> Enum.each(&DynamicSupervisor.start_child(__MODULE__, &1))
   end
 
   defp database_workers(%{adapter: adapter} = database) do

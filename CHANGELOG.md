@@ -2,6 +2,9 @@
 
 ## v2.0.0-dev
 
+- Enhancements
+    - Database worker supervision is now done using a `DynamicSupervisor`
+
 - Backwards incompatible changes
     - Internal adapter process pooling has been removed
     - Minimum required Elixir version is now `~> 1.7`
