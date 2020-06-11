@@ -53,8 +53,7 @@ defmodule Geolix.MixProject do
 
   defp docs do
     [
-      extras: ["CHANGELOG.md", "README.md"],
-      main: "readme",
+      main: "Geolix",
       source_ref: "master",
       source_url: @url_github
     ]
