@@ -162,13 +162,15 @@ config :geolix,
     %{
       id: :country,
       adapter: Geolix.Adapter.Fake,
-      data:
-        %{}
-        |> Map.put({1, 1, 1, 1}, %{country: %{iso_code: "US"}})
-        |> Map.put({2, 2, 2, 2}, %{country: %{iso_code: "GB"}})
+      data: %{
+        {1, 1, 1, 1} => %{country: %{iso_code: "US"}},
+        {2, 2, 2, 2} => %{country: %{iso_code: "GB"}}
+      }
     }
   ]
 ```
+
+Please refer to the inline documentation of the `Geolix.Adapter.Fake` module for more details.
 
 ### Custom Adapters
 
