@@ -25,8 +25,8 @@ defmodule Geolix.LookupTest do
   end
 
   test "single database lookup" do
-    assert @result_first == Geolix.lookup(@ip, where: :test_lookup_first)
-    assert @result_second == Geolix.lookup(@ip, where: :test_lookup_second)
+    assert @result_first = Geolix.lookup(@ip, where: :test_lookup_first)
+    assert @result_second = Geolix.lookup(@ip, where: :test_lookup_second)
   end
 
   test "multi database lookup" do

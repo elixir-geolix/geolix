@@ -32,14 +32,14 @@ defmodule Geolix.Database.LoaderTest do
     id = :missing_adapter
     db = %{id: id}
 
-    assert Geolix.load_database(db) == {:error, {:config, :missing_adapter}}
+    assert {:error, {:config, :missing_adapter}} = Geolix.load_database(db)
   end
 
   test "error if configured with unknown (not loaded) adapter" do
     id = :unknown_adapter
     db = %{id: id, adapter: __MODULE__.Missing}
 
-    assert Geolix.load_database(db) == {:error, {:config, :unknown_adapter}}
+    assert {:error, {:config, :unknown_adapter}} = Geolix.load_database(db)
   end
 
   test "load/unload lifecycle" do

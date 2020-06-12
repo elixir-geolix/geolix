@@ -26,7 +26,7 @@ defmodule Geolix.SupervisorTest do
     :ok = Application.put_env(:geolix, :init, {Initializer, :call_init})
     _ = Geolix.Supervisor.init([])
 
-    assert :ok_empty == Initializer.get_init()
+    assert :ok_empty = Initializer.get_init()
   end
 
   test "init {mod, fun, args} called upon supervisor (re-) start" do
@@ -35,6 +35,6 @@ defmodule Geolix.SupervisorTest do
     :ok = Application.put_env(:geolix, :init, {Initializer, :call_init, [:ok_passed]})
     _ = Geolix.Supervisor.init([])
 
-    assert :ok_passed == Initializer.get_init()
+    assert :ok_passed = Initializer.get_init()
   end
 end

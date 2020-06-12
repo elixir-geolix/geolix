@@ -29,7 +29,7 @@ defmodule Geolix.Database.SupervisorInitTest do
     :ok = Application.put_env(:geolix, :databases, databases)
     :ok = DatabaseSupervisor.restart()
 
-    assert %{test: :empty} == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
+    assert %{test: :empty} = Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
   end
 
   test "per-database init {mod, fun, args} called upon supervisor (re-) start" do
@@ -39,6 +39,6 @@ defmodule Geolix.Database.SupervisorInitTest do
     :ok = Application.put_env(:geolix, :databases, databases)
     :ok = DatabaseSupervisor.restart()
 
-    assert result == Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
+    assert ^result = Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
   end
 end

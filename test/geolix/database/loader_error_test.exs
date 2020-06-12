@@ -29,9 +29,7 @@ defmodule Geolix.Database.LoaderErrorTest do
     assert log =~ "missing adapter"
     assert log =~ "unknown adapter"
 
-    Enum.each(databases, fn db ->
-      id = db[:id]
-
+    Enum.each(databases, fn %{id: id} ->
       assert %{id: ^id, state: {:error, _}} = Loader.get_database(id)
 
       assert id in Loader.registered_databases()

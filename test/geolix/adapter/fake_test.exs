@@ -19,7 +19,7 @@ defmodule Geolix.Adapter.FakeTest do
 
     Geolix.load_database(lifecycle_db)
 
-    assert result == Geolix.lookup(ip, where: lifecycle_id)
+    assert ^result = Geolix.lookup(ip, where: lifecycle_id)
     assert %{load_epoch: _} = Geolix.metadata(where: lifecycle_id)
 
     Geolix.unload_database(lifecycle_id)
