@@ -11,15 +11,15 @@ defmodule Geolix.Adapter.Fake do
       ...>   id: :fake_sample,
       ...>   adapter: Geolix.Adapter.Fake,
       ...>   data: %{
-      ...>     {127, 0, 0, 1} => "IPv4",
-      ...>     {0, 0, 0, 0, 0, 0, 0, 1} => "IPv6"
+      ...>     {127, 0, 0, 1} => %{"type" => "IPv4"},
+      ...>     {0, 0, 0, 0, 0, 0, 0, 1} => %{"type" => "IPv6"}
       ...>   }
       ...> })
       :ok
       iex> Geolix.lookup("127.0.0.1", where: :fake_sample)
-      "IPv4"
+      %{"type" => "IPv4"}
       iex> Geolix.lookup("::1", where: :fake_sample)
-      "IPv6"
+      %{"type" => "IPv6"}
       iex> Geolix.lookup("255.255.255.255", where: :fake_sample)
       nil
 
