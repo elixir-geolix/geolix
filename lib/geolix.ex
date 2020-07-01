@@ -135,9 +135,11 @@ defmodule Geolix do
   end
 
   defp metadata_single(where) do
-    case Loader.get_database(where) do
-      nil -> nil
-      %{adapter: adapter} = database -> adapter.metadata(database)
+    with %{adapter: adapter} = database <- Loader.get_database(where),
+         true <- function_exported?(adapter, :metadata, 1) do
+      adapter.metadata(database)
+    else
+      _ -> nil
     end
   end
 end

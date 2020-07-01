@@ -5,6 +5,9 @@
 - Enhancements
     - Database worker supervision is now done using a `DynamicSupervisor`
 
+- Bug fixes
+    - The optional `metadata/1` callback for adapters is now properly treated as optional
+
 - Backwards incompatible changes
     - Internal adapter process pooling has been removed
     - Minimum required Elixir version is now `~> 1.7`
