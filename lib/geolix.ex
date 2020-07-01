@@ -99,8 +99,6 @@ defmodule Geolix do
     lookup_all(ip, opts, Loader.loaded_databases())
   end
 
-  defp lookup_all(_, _, []), do: %{}
-
   defp lookup_all(ip, opts, databases) do
     databases
     |> Task.async_stream(
