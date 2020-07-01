@@ -42,6 +42,7 @@ defmodule Geolix.Database.Loader do
     |> Map.get(:state)
     |> case do
       :loaded -> {:reply, :ok, state}
+      :delayed -> {:reply, :delayed, state}
       {:error, _} = err -> {:reply, err, state}
     end
   end
