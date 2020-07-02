@@ -1,4 +1,4 @@
-defmodule Geolix.Database.SupervisorInitTest do
+defmodule Geolix.Database.SupervisorTest do
   use ExUnit.Case, async: false
 
   alias Geolix.Database.Loader
