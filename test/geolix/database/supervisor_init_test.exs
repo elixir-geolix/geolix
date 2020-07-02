@@ -1,12 +1,14 @@
 defmodule Geolix.Database.SupervisorInitTest do
   use ExUnit.Case, async: false
 
-  alias Geolix.TestHelpers.DatabaseSupervisor
+  alias Geolix.Database.Loader
 
   defmodule Initializer do
     def adapter(database), do: adapter(database, %{test: :empty})
 
-    def adapter(_config, result) do
+    def adapter(%{notify: pid}, result) do
+      send(pid, result)
+
       %{
         id: :per_database_init,
         adapter: Geolix.Adapter.Fake,
@@ -24,21 +26,23 @@ defmodule Geolix.Database.SupervisorInitTest do
   end
 
   test "per-database init {mod, fun} called upon supervisor (re-) start" do
-    databases = [%{init: {Initializer, :adapter}}]
+    databases = [%{init: {Initializer, :adapter}, notify: self()}]
 
     :ok = Application.put_env(:geolix, :databases, databases)
-    :ok = DatabaseSupervisor.restart()
+    :ok = Supervisor.terminate_child(Geolix.Supervisor, Loader)
+    {:ok, _} = Supervisor.restart_child(Geolix.Supervisor, Loader)
 
-    assert %{test: :empty} = Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
+    assert_receive %{test: :empty}
   end
 
   test "per-database init {mod, fun, args} called upon supervisor (re-) start" do
     result = %{test: :result}
-    databases = [%{init: {Initializer, :adapter, [result]}}]
+    databases = [%{init: {Initializer, :adapter, [result]}, notify: self()}]
 
     :ok = Application.put_env(:geolix, :databases, databases)
-    :ok = DatabaseSupervisor.restart()
+    :ok = Supervisor.terminate_child(Geolix.Supervisor, Loader)
+    {:ok, _} = Supervisor.restart_child(Geolix.Supervisor, Loader)
 
-    assert ^result = Geolix.lookup({1, 2, 3, 4}, where: :per_database_init)
+    assert_receive ^result
   end
 end
