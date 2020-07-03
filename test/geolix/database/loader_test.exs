@@ -50,7 +50,7 @@ defmodule Geolix.Database.LoaderTest do
     assert id in Loader.registered_databases()
     assert id in Loader.loaded_databases()
 
-    assert :ok = Geolix.unload_database(id)
+    assert :ok = Geolix.unload_database(db)
 
     assert_receive :unload_database
   end

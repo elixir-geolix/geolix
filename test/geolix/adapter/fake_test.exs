@@ -29,7 +29,7 @@ defmodule Geolix.Adapter.FakeTest do
     assert ^result = Geolix.lookup(ip, where: lifecycle_id)
     assert %{load_epoch: _} = Geolix.metadata(where: lifecycle_id)
 
-    Geolix.unload_database(lifecycle_id)
+    Geolix.unload_database(lifecycle_db)
 
     refute Geolix.lookup(ip, where: lifecycle_id)
     refute Geolix.metadata(where: lifecycle_id)
@@ -46,7 +46,7 @@ defmodule Geolix.Adapter.FakeTest do
     }
 
     Geolix.load_database(database)
-    Geolix.unload_database(test)
+    Geolix.unload_database(database)
 
     assert_receive %{id: ^test}
     assert_receive %{id: ^test}
@@ -63,7 +63,7 @@ defmodule Geolix.Adapter.FakeTest do
     }
 
     Geolix.load_database(database)
-    Geolix.unload_database(test)
+    Geolix.unload_database(database)
 
     assert_receive :load_database
     assert_receive :unload_database

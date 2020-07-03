@@ -26,6 +26,6 @@ defmodule Geolix.Database.LoaderDelayedTest do
     assert id in Loader.registered_databases()
     refute id in Loader.loaded_databases()
 
-    assert :ok = Geolix.unload_database(id)
+    assert :ok = Geolix.unload_database(db)
   end
 end

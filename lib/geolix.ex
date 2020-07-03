@@ -92,8 +92,9 @@ defmodule Geolix do
   This operation is lazy. The database will stay loaded but won't be reloaded
   or used for lookups.
   """
-  @spec unload_database(atom) :: :ok
-  def unload_database(id), do: GenServer.call(Loader, {:unload_database, id})
+  @spec unload_database(atom | map) :: :ok
+  def unload_database(id) when is_atom(id), do: GenServer.call(Loader, {:unload_database, id})
+  def unload_database(%{id: id}), do: unload_database(id)
 
   defp lookup_all(ip, opts) do
     lookup_all(ip, opts, Loader.loaded_databases())

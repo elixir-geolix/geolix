@@ -4,6 +4,7 @@
 
 - Enhancements
     - Database worker supervision is now done using a `DynamicSupervisor`
+    - Unloading a database can now be done by passing the complete database configuration instead of only the `:id`
 
 - Bug fixes
     - The optional `metadata/1` callback for adapters is now properly treated as optional
