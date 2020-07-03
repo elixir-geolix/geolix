@@ -43,8 +43,10 @@ defmodule Geolix.Adapter.Fake do
   end
 
   @impl Geolix.Adapter
-  def load_database(%{data: data, id: id}) do
-    Storage.set(id, {data, %{load_epoch: System.os_time(:second)}})
+  def load_database(%{data: data, id: id} = database) do
+    :ok = Storage.set(id, {data, %{load_epoch: System.os_time(:second)}})
+
+    maybe_apply_mfargs(database, :mfargs_load_database)
   end
 
   @impl Geolix.Adapter
@@ -58,5 +60,20 @@ defmodule Geolix.Adapter.Fake do
   def metadata(%{id: id}), do: Storage.get_meta(id)
 
   @impl Geolix.Adapter
-  def unload_database(%{id: id}), do: Storage.set(id, {nil, nil})
+  def unload_database(%{id: id} = database) do
+    :ok = Storage.set(id, {nil, nil})
+
+    maybe_apply_mfargs(database, :mfargs_unload_database)
+  end
+
+  defp maybe_apply_mfargs(database, key) do
+    _ =
+      case Map.get(database, key) do
+        {mod, fun, extra_args} -> apply(mod, fun, [database | extra_args])
+        {mod, fun} -> apply(mod, fun, [database])
+        nil -> :ok
+      end
+
+    :ok
+  end
 end
