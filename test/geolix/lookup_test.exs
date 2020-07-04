@@ -1,38 +1,29 @@
 defmodule Geolix.LookupTest do
   use ExUnit.Case, async: true
 
-  @ip {42, 42, 42, 42}
+  alias Geolix.Adapter.Fake
 
-  @result_first %{test: :first}
-  @result_second %{test: :second}
+  test "database lookup" do
+    ip = {42, 42, 42, 42}
 
-  @db_first %{
-    id: :test_lookup_first,
-    adapter: Geolix.Adapter.Fake,
-    data: %{@ip => @result_first}
-  }
+    result_first = %{test: :first}
+    result_second = %{test: :second}
 
-  @db_second %{
-    id: :test_lookup_second,
-    adapter: Geolix.Adapter.Fake,
-    data: %{@ip => @result_second}
-  }
+    db_first = %{id: :test_lookup_first, adapter: Fake, data: %{ip => result_first}}
+    db_second = %{id: :test_lookup_second, adapter: Fake, data: %{ip => result_second}}
 
-  setup do
-    :ok = Geolix.load_database(@db_first)
-    :ok = Geolix.load_database(@db_second)
-    :ok
-  end
+    :ok = Geolix.load_database(db_first)
+    :ok = Geolix.load_database(db_second)
 
-  test "single database lookup" do
-    assert @result_first = Geolix.lookup(@ip, where: :test_lookup_first)
-    assert @result_second = Geolix.lookup(@ip, where: :test_lookup_second)
-  end
+    assert ^result_first = Geolix.lookup(ip, where: :test_lookup_first)
+    assert ^result_second = Geolix.lookup(ip, where: :test_lookup_second)
 
-  test "multi database lookup" do
     assert %{
-             test_lookup_first: @result_first,
-             test_lookup_second: @result_second
-           } = Geolix.lookup(@ip)
+             test_lookup_first: ^result_first,
+             test_lookup_second: ^result_second
+           } = Geolix.lookup(ip)
+
+    Geolix.unload_database(db_first)
+    Geolix.unload_database(db_second)
   end
 end
