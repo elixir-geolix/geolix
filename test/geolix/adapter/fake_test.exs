@@ -35,7 +35,7 @@ defmodule Geolix.Adapter.FakeTest do
     refute Geolix.metadata(where: lifecycle_id)
   end
 
-  test "fake adpater mfargs using {mod, fun}", %{test: test} do
+  test "fake adapter mfargs using {mod, fun}", %{test: test} do
     database = %{
       id: test,
       adapter: Fake,
@@ -52,7 +52,7 @@ defmodule Geolix.Adapter.FakeTest do
     assert_receive %{id: ^test}
   end
 
-  test "fake adpater mfargs using {mod, fun, extra_args}", %{test: test} do
+  test "fake adapter mfargs using {mod, fun, extra_args}", %{test: test} do
     database = %{
       id: test,
       adapter: Fake,
