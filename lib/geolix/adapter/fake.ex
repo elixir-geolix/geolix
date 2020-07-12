@@ -38,7 +38,9 @@ defmodule Geolix.Adapter.Fake do
   @behaviour Geolix.Adapter
 
   @impl Geolix.Adapter
-  def database_workers(_database) do
+  def database_workers(database) do
+    :ok = maybe_apply_mfargs(database, :mfargs_database_workers)
+
     [Storage.child_spec(%{})]
   end
 
@@ -50,14 +52,20 @@ defmodule Geolix.Adapter.Fake do
   end
 
   @impl Geolix.Adapter
-  def lookup(ip, _opts, %{id: id}) do
+  def lookup(ip, _opts, %{id: id} = database) do
+    :ok = maybe_apply_mfargs(database, :mfargs_lookup)
+
     id
     |> Storage.get_data()
     |> Map.get(ip, nil)
   end
 
   @impl Geolix.Adapter
-  def metadata(%{id: id}), do: Storage.get_meta(id)
+  def metadata(%{id: id} = database) do
+    :ok = maybe_apply_mfargs(database, :mfargs_metadata)
+
+    Storage.get_meta(id)
+  end
 
   @impl Geolix.Adapter
   def unload_database(%{id: id} = database) do

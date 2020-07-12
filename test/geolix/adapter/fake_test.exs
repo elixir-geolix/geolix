@@ -40,14 +40,22 @@ defmodule Geolix.Adapter.FakeTest do
       id: test,
       adapter: Fake,
       data: %{},
+      mfargs_database_workers: {MFArgsSender, :notify},
       mfargs_load_database: {MFArgsSender, :notify},
+      mfargs_lookup: {MFArgsSender, :notify},
+      mfargs_metadata: {MFArgsSender, :notify},
       mfargs_unload_database: {MFArgsSender, :notify},
       notify: self()
     }
 
     Geolix.load_database(database)
+    Geolix.metadata(where: test)
+    Geolix.lookup({1, 1, 1, 1}, where: test)
     Geolix.unload_database(database)
 
+    assert_receive %{id: ^test}
+    assert_receive %{id: ^test}
+    assert_receive %{id: ^test}
     assert_receive %{id: ^test}
     assert_receive %{id: ^test}
   end
@@ -57,15 +65,23 @@ defmodule Geolix.Adapter.FakeTest do
       id: test,
       adapter: Fake,
       data: %{},
+      mfargs_database_workers: {MFArgsSender, :notify, [:database_workers]},
       mfargs_load_database: {MFArgsSender, :notify, [:load_database]},
+      mfargs_lookup: {MFArgsSender, :notify, [:lookup]},
+      mfargs_metadata: {MFArgsSender, :notify, [:metadata]},
       mfargs_unload_database: {MFArgsSender, :notify, [:unload_database]},
       notify: self()
     }
 
     Geolix.load_database(database)
+    Geolix.metadata(where: test)
+    Geolix.lookup({1, 1, 1, 1}, where: test)
     Geolix.unload_database(database)
 
+    assert_receive :database_workers
     assert_receive :load_database
+    assert_receive :metadata
+    assert_receive :lookup
     assert_receive :unload_database
   end
 end
