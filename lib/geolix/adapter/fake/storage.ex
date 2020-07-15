@@ -5,8 +5,8 @@ defmodule Geolix.Adapter.Fake.Storage do
 
   @doc false
   @spec start_link(map) :: Agent.on_start()
-  def start_link(initial_value \\ %{}) do
-    Agent.start_link(fn -> initial_value end, name: __MODULE__)
+  def start_link(init_arg) when is_map(init_arg) do
+    Agent.start_link(fn -> init_arg end, name: __MODULE__)
   end
 
   @doc """

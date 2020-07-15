@@ -29,12 +29,12 @@ defmodule Geolix.Supervisor do
   use Supervisor
 
   @doc false
-  def start_link(default \\ []) do
-    Supervisor.start_link(__MODULE__, default, name: __MODULE__)
+  def start_link(init_arg) do
+    Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
   end
 
   @doc false
-  def init(_default) do
+  def init(_) do
     :ok =
       case Application.get_env(:geolix, :init) do
         {mod, fun, args} -> apply(mod, fun, args)

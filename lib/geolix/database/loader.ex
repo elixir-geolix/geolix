@@ -14,11 +14,11 @@ defmodule Geolix.Database.Loader do
   @ets_state_opts [:named_table, :protected, :set, read_concurrency: true]
 
   @doc false
-  def start_link(default \\ []) do
-    GenServer.start_link(__MODULE__, default, name: __MODULE__)
+  def start_link(init_arg) do
+    GenServer.start_link(__MODULE__, init_arg, name: __MODULE__)
   end
 
-  def init(_default) do
+  def init(state) do
     @ets_state_name = :ets.new(@ets_state_name, @ets_state_opts)
 
     :ok =
@@ -32,7 +32,7 @@ defmodule Geolix.Database.Loader do
         _ -> GenServer.cast(__MODULE__, :reload_databases)
       end
 
-    {:ok, nil}
+    {:ok, state}
   end
 
   def handle_call({:load_database, db}, _, state) do
