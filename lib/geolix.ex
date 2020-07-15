@@ -22,7 +22,7 @@ defmodule Geolix do
       iex> Geolix.lookup({127, 0, 0, 1}, where: :my_database)
       %{...}
 
-  The result structured of each database is specific to the adapter used.
+  The result structure of each database is specific to the adapter used.
 
   ### Lookup Options
 
@@ -32,8 +32,8 @@ defmodule Geolix do
   - `:where` - Lookup information in a single registered database
 
   The adapter used can require and/or understand additional options. To
-  accommodate this the options are passed unmodified to the adapter's on lookup
-  function.
+  accommodate this the options are passed unmodified to the adapter's own
+  lookup function.
   """
 
   alias Geolix.Database.Loader
