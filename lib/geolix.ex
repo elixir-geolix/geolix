@@ -13,10 +13,10 @@ defmodule Geolix do
         country: %{...}
       }
 
-  The response will be a map with the `:id` of each configured database as the
-  key and the database response as the value.
+  The result will be a map with the `:id` of each configured database as the
+  key and the lookup result as the value.
 
-  If you are only interested in the response of a specific database you can use
+  If you are only interested in the result of a specific database you can use
   `Geolix.lookup/2`:
 
       iex> Geolix.lookup({127, 0, 0, 1}, where: :my_database)

@@ -4,10 +4,8 @@ defmodule Geolix.Supervisor do
   processes. It is automatically started with the `:geolix` application.
 
   If you do not want to automatically start the application itself you can
-  adapt your configuration for a more manual supervision approach.
-
-  Instead of adding `:geolix` to your `:applications` list or using the
-  automatic discovery you need to add it to your `:included_applications`:
+  adapt your configuration for a manual supervision approach by adding it
+  to your `:included_applications`:
 
       def application do
         [
@@ -19,7 +17,7 @@ defmodule Geolix.Supervisor do
         ]
       end
 
-  That done you can add `Geolix.Supervisor` to your hierarchy:
+  That done you can add `Geolix.Supervisor` to your supervision hierarchy:
 
       children = [
         # ...
