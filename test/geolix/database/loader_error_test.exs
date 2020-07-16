@@ -34,8 +34,8 @@ defmodule Geolix.Database.LoaderErrorTest do
     log =
       capture_log(fn ->
         :ok = Application.put_env(:geolix, :databases, databases)
-        :ok = Supervisor.terminate_child(Geolix.Supervisor, Geolix.Database.Loader)
-        {:ok, _} = Supervisor.restart_child(Geolix.Supervisor, Geolix.Database.Loader)
+        :ok = Supervisor.terminate_child(Geolix.Supervisor, Loader)
+        {:ok, _} = Supervisor.restart_child(Geolix.Supervisor, Loader)
 
         assert_receive :initialized
       end)

@@ -1,6 +1,7 @@
 defmodule Geolix.Database.SupervisorTest do
   use ExUnit.Case, async: false
 
+  alias Geolix.Adapter.Fake
   alias Geolix.Database.Loader
 
   defmodule Initializer do
@@ -11,7 +12,7 @@ defmodule Geolix.Database.SupervisorTest do
 
       %{
         id: :per_database_init,
-        adapter: Geolix.Adapter.Fake,
+        adapter: Fake,
         data: Map.put(%{}, {1, 2, 3, 4}, result)
       }
     end
