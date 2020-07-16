@@ -7,7 +7,6 @@ defmodule Geolix.Database.Loader do
 
   require Logger
 
-  alias Geolix.Database.Fetcher
   alias Geolix.Database.Supervisor, as: DatabaseSupervisor
 
   @ets_state_name :geolix_database_loader
@@ -22,7 +21,9 @@ defmodule Geolix.Database.Loader do
     @ets_state_name = :ets.new(@ets_state_name, @ets_state_opts)
 
     :ok =
-      Fetcher.databases()
+      :geolix
+      |> Application.get_env(:databases, [])
+      |> Enum.map(&preconfigure_database/1)
       |> Enum.filter(&Map.has_key?(&1, :id))
       |> Enum.each(&register_state(:registered, &1))
 
@@ -136,6 +137,16 @@ defmodule Geolix.Database.Loader do
   end
 
   defp maybe_log_error(db), do: db
+
+  defp preconfigure_database(%{init: {mod, fun, extra_args}} = config) do
+    apply(mod, fun, [config | extra_args])
+  end
+
+  defp preconfigure_database(%{init: {mod, fun}} = config) do
+    apply(mod, fun, [config])
+  end
+
+  defp preconfigure_database(config), do: config
 
   defp register_state(:ok, db), do: register_state(:loaded, db)
 
