@@ -22,16 +22,7 @@ If you want to use a manual supervision approach (without starting the applicati
 
 ## Application Configuration
 
-To get started you need to define one or more `:databases` to use for lookups. Each database definition is a map with at least two fields:
-
-- `:id` - an identifier for this database, usable to limit lookups to a single database if you have defined more than one
-- `:adapter` - the adapter module used to handle lookup requests. See the part "Adapters" in this document for additional information
-
-Depending on the adapter you may need to provide additional values.
-
-### Configuration (static)
-
-One option for configuration is using a static configuration, i.e. for two databases handled by the adapter `MyAdapter`:
+Every lookup request is passed to all configured databases:
 
 ```elixir
 config :geolix,
@@ -49,96 +40,9 @@ config :geolix,
   ]
 ```
 
-### Configuration (dynamic)
+Above configuration will use the adapter `MyAdapter` and return a result for an example `:city` and `:country` database. The exact configuration values you need to provide are defined by the adapter you are using.
 
-If there are any reasons you cannot use a pre-defined configuration you can also configure an initializer module to be called before starting the top-level suprevisor or alternatively for each individual database.
-
-This may be the most suitable configuration if you have the database located in the `:priv_dir` of your application.
-
-```elixir
-# {mod, fun}
-config :geolix,
-  init: {MyInitModule, :my_init_mf_toplevel}
-
-config :geolix,
-  databases: [
-    %{
-      id: :dynamic_country,
-      adapter: MyAdapter,
-      init: {MyInitModule, :my_init_mf_database}
-    }
-  ]
-
-# {mod, fun, args}
-config :geolix,
-  init: {MyInitModule, :my_init_mfargs_toplevel, [:foo, :bar]}
-
-config :geolix,
-  databases: [
-    %{
-      id: :dynamic_country,
-      adapter: MyAdapter,
-      init: {MyInitModule, :my_init_mfargs_database, [:foo, :bar]}
-    }
-  ]
-
-# initializer module
-defmodule MyInitModule do
-  @spec my_init_mf_toplevel() :: :ok
-  def my_init_mf_toplevel(), do: my_init_mfargs_toplevel(:foo, :bar)
-
-  @spec my_init_mfargs_toplevel(atom, atom) :: :ok
-  def my_init_mfargs_toplevel(:foo, :bar) do
-    priv_dir = Application.app_dir(:my_app, "priv")
-
-    databases = [
-      %{
-        id: :dynamic_city,
-        adapter: MyAdapter,
-        source: Path.join([priv_dir, "city.db"])
-      }
-      | Application.get_env(:geolix, :databases, [])
-    ]
-
-    Application.put_env(:geolix, :databases, databases)
-  end
-
-  @spec my_init_mf_database(map) :: map
-  def my_init_mf_database(database) do
-    my_init_mfargs_database(database, :foo, :bar)
-  end
-
-  @spec my_init_mfargs_database(map, atom, atom) :: map
-  def my_init_mfargs_database(%{id: :dynamic_country} = database, :foo, :bar) do
-    priv_dir = Application.app_dir(:my_app, "priv")
-
-    %{database | source: Path.join([priv_dir, "country.db"])}
-  end
-end
-```
-
-Above example illustrates both types of dynamic initialization.
-
-The top-level initializer is called as defined (`{mod, fun}` or `{mod, fun, args}`) and expected to always return `:ok`. At the database level the current database configuration is passed as the first parameter with optional `{m, f, a}` parameters following. It is expected that this function return the new, complete configuration.
-
-If you choose to use the dynamic database initialization the only requirement for your config file is a plain `%{init: {MyInitModule, :my_init_fun}}` entry. Every additional field in the example is only used for illustration and only required for the complete return value.
-
-### Configuration (runtime)
-
-If you do not want to use a pre-defined or dynamically initialized configuration you can also define adapters at runtime. This may be useful in a testing environment.
-
-```elixir
-iex(1)> Geolix.load_database(%{
-...(1)>   id: :runtime_city,
-...(1)>   adapter: MyAdapter,
-...(1)>   source: "/absolute/path/to/city.db"
-...(1)> })
-:ok
-```
-
-Please be aware that these databases will not be reloaded if, for any reason, the supervisor/application is restarted.
-
-Running `load_database/1` on an already configured database (matched by `:id`) will reload/replace it without persisting the configuration. On success a result of `:ok` will be returned otherwise a tuple in the style of `{:error, message}`. The individual errors are defined by the adapter.
+More details on database configuration can be found inline at the main `Geolix` module.
 
 ## Adapters
 
