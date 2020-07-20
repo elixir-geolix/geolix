@@ -18,14 +18,6 @@ defmodule Geolix.Database.SupervisorTest do
     end
   end
 
-  setup_all do
-    databases = Application.get_env(:geolix, :databases, [])
-
-    on_exit(fn ->
-      :ok = Application.put_env(:geolix, :databases, databases)
-    end)
-  end
-
   test "per-database init {mod, fun} called upon supervisor (re-) start" do
     databases = [%{init: {Initializer, :adapter}, notify: self()}]
 
@@ -34,6 +26,8 @@ defmodule Geolix.Database.SupervisorTest do
     {:ok, _} = Supervisor.restart_child(Geolix.Supervisor, Loader)
 
     assert_receive %{test: :empty}
+  after
+    Application.delete_env(:geolix, :databases)
   end
 
   test "per-database init {mod, fun, args} called upon supervisor (re-) start" do
@@ -45,5 +39,7 @@ defmodule Geolix.Database.SupervisorTest do
     {:ok, _} = Supervisor.restart_child(Geolix.Supervisor, Loader)
 
     assert_receive ^result
+  after
+    Application.delete_env(:geolix, :databases)
   end
 end

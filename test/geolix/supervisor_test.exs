@@ -12,14 +12,6 @@ defmodule Geolix.SupervisorTest do
     def get_init, do: Agent.get(__MODULE__, & &1)
   end
 
-  setup_all do
-    init = Application.get_env(:geolix, :init)
-
-    on_exit(fn ->
-      :ok = Application.put_env(:geolix, :init, init)
-    end)
-  end
-
   test "init {mod, fun} called upon supervisor (re-) start" do
     {:ok, _} = start_supervised(Initializer)
 
@@ -27,6 +19,8 @@ defmodule Geolix.SupervisorTest do
     _ = Geolix.Supervisor.init([])
 
     assert :ok_empty = Initializer.get_init()
+  after
+    :ok = Application.delete_env(:geolix, :init)
   end
 
   test "init {mod, fun, args} called upon supervisor (re-) start" do
@@ -36,5 +30,7 @@ defmodule Geolix.SupervisorTest do
     _ = Geolix.Supervisor.init([])
 
     assert :ok_passed = Initializer.get_init()
+  after
+    :ok = Application.delete_env(:geolix, :init)
   end
 end

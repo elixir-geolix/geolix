@@ -16,14 +16,6 @@ defmodule Geolix.Database.LoaderErrorTest do
     def lookup(_, _, _), do: nil
   end
 
-  setup do
-    databases = Application.get_env(:geolix, :databases, [])
-
-    on_exit(fn ->
-      :ok = Application.put_env(:geolix, :databases, databases)
-    end)
-  end
-
   test "(re-) loading databases at start logs errors (kept as state)" do
     databases = [
       %{id: :error_missing_adapter},
@@ -53,5 +45,7 @@ defmodule Geolix.Database.LoaderErrorTest do
         assert id in Loader.registered_databases()
         refute id in Loader.loaded_databases()
     end)
+  after
+    Application.delete_env(:geolix, :databases)
   end
 end
