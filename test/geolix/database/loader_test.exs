@@ -19,27 +19,11 @@ defmodule Geolix.Database.LoaderTest do
     def lookup(_, _, _), do: nil
   end
 
-  test "fetching un-registered database information" do
-    refute Loader.get_database(:database_not_loaded)
-  end
-
-  test "error if configured without adapter" do
-    id = :missing_adapter
-    db = %{id: id}
-
-    assert {:error, {:config, :missing_adapter}} = Geolix.load_database(db)
-  end
-
-  test "error if configured with unknown (not loaded) adapter" do
-    id = :unknown_adapter
-    db = %{id: id, adapter: __MODULE__.Missing}
-
-    assert {:error, {:config, :unknown_adapter}} = Geolix.load_database(db)
-  end
-
   test "load/unload lifecycle" do
     id = :loader_lifecycle
     db = %{id: id, adapter: LifecycleAdapter, notify: self()}
+
+    refute Loader.get_database(:database_not_loaded)
 
     assert :ok = Geolix.load_database(db)
 
