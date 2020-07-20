@@ -21,6 +21,7 @@ defmodule Geolix.Database.LoaderErrorTest do
     db = %{id: id}
 
     assert {:error, {:config, :missing_adapter}} = Geolix.load_database(db)
+    assert :ok = Geolix.unload_database(db)
   end
 
   test "error if configured with unknown (not loaded) adapter" do
@@ -28,6 +29,7 @@ defmodule Geolix.Database.LoaderErrorTest do
     db = %{id: id, adapter: __MODULE__.Missing}
 
     assert {:error, {:config, :unknown_adapter}} = Geolix.load_database(db)
+    assert :ok = Geolix.unload_database(db)
   end
 
   test "(re-) loading databases at start logs errors (kept as state)" do
@@ -58,6 +60,8 @@ defmodule Geolix.Database.LoaderErrorTest do
 
         assert id in Loader.registered_databases()
         refute id in Loader.loaded_databases()
+
+        :ok = Geolix.unload_database(id)
     end)
   after
     Application.delete_env(:geolix, :databases)

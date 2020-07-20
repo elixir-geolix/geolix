@@ -168,15 +168,19 @@ defmodule Geolix.Database.Loader do
     end)
   end
 
-  defp unload_database(nil), do: :ok
-
   defp unload_database(%{adapter: adapter, id: id} = database) do
     if Code.ensure_loaded?(adapter) and function_exported?(adapter, :unload_database, 1) do
       :ok = adapter.unload_database(database)
     end
 
     true = :ets.delete(@ets_state_name, id)
-
     :ok
   end
+
+  defp unload_database(%{id: id}) do
+    true = :ets.delete(@ets_state_name, id)
+    :ok
+  end
+
+  defp unload_database(_), do: :ok
 end

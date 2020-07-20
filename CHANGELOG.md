@@ -7,6 +7,7 @@
     - Unloading a database can now be done by passing the complete database configuration instead of only the `:id`
 
 - Bug fixes
+    - Databases loaded without an adapter configuration can now be properly unloaded to prevent repeated error messages from `Geolix.reload_databases/0`
     - The optional `metadata/1` callback for adapters is now properly treated as optional
 
 - Backwards incompatible changes
