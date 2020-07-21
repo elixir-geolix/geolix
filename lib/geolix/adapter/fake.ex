@@ -41,7 +41,7 @@ defmodule Geolix.Adapter.Fake do
   def database_workers(database) do
     :ok = maybe_apply_mfargs(database, :mfargs_database_workers)
 
-    [Storage.child_spec(%{})]
+    [{Storage, %{}}]
   end
 
   @impl Geolix.Adapter
