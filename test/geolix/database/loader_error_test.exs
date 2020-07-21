@@ -24,6 +24,10 @@ defmodule Geolix.Database.LoaderErrorTest do
     assert :ok = Geolix.unload_database(db)
   end
 
+  test "error if configured without id" do
+    assert {:error, {:config, :missing_id}} = Geolix.load_database(%{})
+  end
+
   test "error if configured with unknown (not loaded) adapter" do
     id = :unknown_adapter
     db = %{id: id, adapter: __MODULE__.Missing}

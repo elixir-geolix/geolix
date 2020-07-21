@@ -118,11 +118,10 @@ defmodule Geolix.Database.Loader do
   end
 
   defp load_database(%{id: _}), do: {:error, {:config, :missing_adapter}}
-  defp load_database(_), do: {:error, {:config, :invalid}}
+  defp load_database(_), do: {:error, {:config, :missing_id}}
 
   defp load_error_message(:missing_adapter), do: "missing adapter configuration"
   defp load_error_message(:unknown_adapter), do: "unknown adapter configuration"
-  defp load_error_message(reason), do: inspect(reason)
 
   defp maybe_log_error(%{id: id, state: {:error, {:config, reason}}} = db) do
     _ =
@@ -156,6 +155,8 @@ defmodule Geolix.Database.Loader do
 
     db
   end
+
+  defp register_state(state, db), do: Map.put(db, :state, state)
 
   defp reload_databases do
     @ets_state_name
