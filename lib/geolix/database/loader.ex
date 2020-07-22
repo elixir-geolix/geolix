@@ -69,7 +69,7 @@ defmodule Geolix.Database.Loader do
   @spec get_database(atom) :: map | nil
   def get_database(which) do
     case :ets.lookup(@ets_state_name, which) do
-      [{^which, db}] -> db
+      [{^which, _state, db}] -> db
       _ -> nil
     end
   rescue
@@ -81,10 +81,7 @@ defmodule Geolix.Database.Loader do
   """
   @spec loaded_databases() :: [atom]
   def loaded_databases do
-    @ets_state_name
-    |> :ets.tab2list()
-    |> Enum.filter(fn {_id, db} -> :loaded == Map.get(db, :state) end)
-    |> Enum.map(fn {id, _db} -> id end)
+    :ets.select(@ets_state_name, [{{:"$1", :loaded, :_}, [], [:"$1"]}])
   rescue
     _ -> []
   end
@@ -96,7 +93,7 @@ defmodule Geolix.Database.Loader do
   """
   @spec registered_databases() :: [atom]
   def registered_databases do
-    :ets.select(@ets_state_name, [{{:"$1", :_}, [], [:"$1"]}])
+    :ets.select(@ets_state_name, [{{:"$1", :_, :_}, [], [:"$1"]}])
   rescue
     _ -> []
   end
@@ -149,7 +146,7 @@ defmodule Geolix.Database.Loader do
 
   defp register_state(state, %{id: id} = db) do
     db = Map.put(db, :state, state)
-    true = :ets.insert(@ets_state_name, {id, db})
+    true = :ets.insert(@ets_state_name, {id, state, db})
 
     db
   end
@@ -159,7 +156,7 @@ defmodule Geolix.Database.Loader do
   defp reload_databases do
     @ets_state_name
     |> :ets.tab2list()
-    |> Enum.each(fn {_id, db} ->
+    |> Enum.each(fn {_id, _state, db} ->
       db
       |> load_database()
       |> register_state(db)
