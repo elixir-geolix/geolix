@@ -96,9 +96,7 @@ defmodule Geolix.Database.Loader do
   """
   @spec registered_databases() :: [atom]
   def registered_databases do
-    @ets_state_name
-    |> :ets.tab2list()
-    |> Enum.map(fn {id, _db} -> id end)
+    :ets.select(@ets_state_name, [{{:"$1", :_}, [], [:"$1"]}])
   rescue
     _ -> []
   end
