@@ -9,7 +9,7 @@ defmodule Geolix.Database.Loader do
 
   alias Geolix.Database.Supervisor, as: DatabaseSupervisor
 
-  @ets_state_name :geolix_database_loader
+  @ets_state_name __MODULE__
   @ets_state_opts [:named_table, :protected, :set, read_concurrency: true]
 
   @doc false
