@@ -46,7 +46,7 @@ More details on database configuration can be found inline at the main `Geolix` 
 
 ## Adapters
 
-All the work done by geolix is handled using adapters. These adapters can use a database, a webservice or any other means available to handle your lookup requests.
+All the work done by Geolix is handled using adapters. These adapters can use a database, a webservice or any other means available to handle your lookup requests.
 
 Known adapters:
 
@@ -78,9 +78,7 @@ Please refer to the inline documentation of the `Geolix.Adapter.Fake` module for
 
 ### Custom Adapters
 
-If you need a different database or have other special needs for lookups you can write your own adapter. The only requirement is the usage of the `Geolix.Adapter` behaviour.
-
-As a starting point you can take a close look at the aforementioned `Geolix.Adapter.Fake` implementation.
+Adapters are expected to adhere to the `Geolix.Adapter` behaviour. As a starting point for writing a custom adapter you can look at the packaged `Geolix.Adapter.Fake`.
 
 ## Database Loading
 

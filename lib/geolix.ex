@@ -167,6 +167,27 @@ defmodule Geolix do
   will reload/replace it without persisting the configuration. On success a
   result of `:ok` will be returned otherwise a tuple in the style of
   `{:error, message}`. The individual errors are defined by the adapter.
+
+  ## Adapters
+
+  All the work done by Geolix is handled using adapters. These adapters can
+  use a database, a webservice or any other means available to handle your
+  lookup requests.
+
+  Known adapters:
+
+  - `Geolix.Adapter.Fake`
+  - [`Geolix.Adapter.LookupCache`](https://github.com/elixir-geolix/adapter_lookup_cache)
+  - [`Geolix.Adapter.MMDB2`](https://github.com/elixir-geolix/adapter_mmdb2)
+
+  For detailed information how to configure the adapter of your choice please
+  read the adapter's configuration.
+
+  ### Custom Adapters
+
+  Adapters are expected to adhere to the `Geolix.Adapter` behaviour.
+  As a starting point for writing a custom adapter you can look at the
+  packaged `Geolix.Adapter.Fake`.
   """
 
   alias Geolix.Database.Loader
