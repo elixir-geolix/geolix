@@ -1,5 +1,6 @@
+os: linux
+dist: xenial
 language: elixir
-sudo: false
 
 cache:
   directories:
@@ -9,6 +10,7 @@ cache:
 jobs:
   include:
     - &test
+      stage: test
       elixir: 1.7.4
       otp_release: 19.3
     - <<: *test
