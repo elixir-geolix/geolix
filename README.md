@@ -80,36 +80,6 @@ Please refer to the inline documentation of the `Geolix.Adapter.Fake` module for
 
 Adapters are expected to adhere to the `Geolix.Adapter` behaviour. As a starting point for writing a custom adapter you can look at the packaged `Geolix.Adapter.Fake`.
 
-## Database Loading
-
-### Loading Errors
-
-If the configuration is erroneous a message will be sent to `Logger` with the level `:error`. Any other error during the load process is expected to be defined and logged by the adapter itself.
-
-### State Retrieval
-
-All databases are loaded, unless you called `Geolix.load_database/1`, asynchronously. This includes configured databases loaded upon application start.
-
-The database loader allows you to access the current state of loading:
-
-```elixir
-iex(1)> Geolix.Database.Loader.loaded_databases()
-[:city]
-
-iex(2)> Geolix.Database.Loader.registered_databases()
-[:city, :country]
-```
-
-Above example demonstrates a state where the database `:country` is known but not completely loaded yet. Please be aware that both lists are unsorted.
-
-### Reloading
-
-To trigger a forceful reload of all databases configured in the application environment you can use `Geolix.reload_databases/0` to do so. This uses an internal `GenServer.cast/2` so a slight delay will occur.
-
-### Unloading
-
-Calling `Geolix.unload_database/1` with a database id will unload this database. As this is done in a lazy fashion it will still be kept in memory while not being reloaded or used for lookups. If the database is configured via application environment it will still be reloaded as usual in case of a supervisor or application restart.
-
 ## Basic Usage
 
 Lookups are done using `Geolix.lookup/1,2`:
