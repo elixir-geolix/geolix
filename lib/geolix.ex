@@ -191,6 +191,16 @@ defmodule Geolix do
 
   ## Database Loading
 
+  Currently databases are loaded asynchronously upon startup. This behaviour
+  can be changed via configuration:
+
+      config :geolix, startup_sync: true
+
+  Configuring a synchronous startup can prevent potential "no data found"
+  lookup results. If your adapter configuration requires more time than
+  expected (think of downloading a database from a remote location via HTTP)
+  this might result in application startup delays and/or failures.
+
   ### Loading Errors
 
   If the configuration is erroneous a message will be sent to `Logger` with
