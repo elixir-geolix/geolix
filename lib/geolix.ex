@@ -241,6 +241,17 @@ defmodule Geolix do
 
   alias Geolix.Database.Loader
 
+  @typedoc """
+  Minimal type specification for a database.
+
+  Every adapter can require additional values to be set.
+  """
+  @type database :: %{
+          required(:id) => atom,
+          required(:adapter) => module,
+          optional(term) => term
+        }
+
   @doc """
   Looks up IP information.
   """
@@ -278,7 +289,7 @@ defmodule Geolix do
   Requires at least the fields `:id` and `:adapter`. Any other required
   fields depend on the adapter's requirements.
   """
-  @spec load_database(map) :: :ok | {:error, term}
+  @spec load_database(database) :: :ok | {:error, term}
   def load_database(database) do
     GenServer.call(Loader, {:load_database, database}, :infinity)
   end
@@ -295,7 +306,7 @@ defmodule Geolix do
   This operation is lazy. The database will stay loaded but won't be reloaded
   or used for lookups.
   """
-  @spec unload_database(atom | map) :: :ok
+  @spec unload_database(atom | database) :: :ok
   def unload_database(id) when is_atom(id), do: GenServer.call(Loader, {:unload_database, id})
   def unload_database(%{id: id}), do: unload_database(id)
 

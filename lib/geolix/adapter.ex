@@ -17,7 +17,7 @@ defmodule Geolix.Adapter do
   adapter specific supervisor (e.g. using the application config) this callback
   should be either unimplemented or return an empty list.
   """
-  @callback database_workers(database :: map) :: [
+  @callback database_workers(database :: Geolix.database()) :: [
               :supervisor.child_spec() | {module, term} | module
             ]
 
@@ -27,20 +27,21 @@ defmodule Geolix.Adapter do
   Requires at least the fields `:id` and `:adapter`. Any other required
   fields depend on the adapter's requirements.
   """
-  @callback load_database(database :: map) :: :ok | {:error, term}
+  @callback load_database(database :: Geolix.database()) :: :ok | {:error, term}
 
   @doc """
   Looks up IP information.
   """
-  @callback lookup(ip :: :inet.ip_address(), opts :: Keyword.t(), database :: map) :: map | nil
+  @callback lookup(ip :: :inet.ip_address(), opts :: Keyword.t(), database :: Geolix.database()) ::
+              map | nil
 
   @doc """
   Returns metadata information for a database if available.
   """
-  @callback metadata(database :: map) :: map | nil
+  @callback metadata(database :: Geolix.database()) :: map | nil
 
   @doc """
   Unloads a given database from Geolix.
   """
-  @callback unload_database(database :: map) :: :ok
+  @callback unload_database(database :: Geolix.database()) :: :ok
 end

@@ -14,7 +14,7 @@ defmodule Geolix.Database.Supervisor do
   @doc """
   Starts the worker processes of a database if not already under supervision.
   """
-  @spec start_database(map) :: :ok
+  @spec start_database(Geolix.database()) :: :ok
   def start_database(database) do
     database
     |> database_workers()
