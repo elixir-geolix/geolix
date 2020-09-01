@@ -6,8 +6,11 @@ defmodule Geolix.Adapter.FakeTest do
   doctest Fake
 
   defmodule MFArgsSender do
-    def notify(%{notify: pid} = database), do: send(pid, database)
-    def notify(%{notify: pid}, extra_arg), do: send(pid, extra_arg)
+    def notify(%{notify: pid} = database), do: send(pid, [database])
+    def notify(%{notify: pid} = database, extra_arg), do: send(pid, [database, extra_arg])
+
+    def notify(%{notify: pid} = database, cb_arg, extra_arg),
+      do: send(pid, [database, cb_arg, extra_arg])
   end
 
   test "fake adapter (loading) lifecycle" do
@@ -53,11 +56,11 @@ defmodule Geolix.Adapter.FakeTest do
     Geolix.lookup({1, 1, 1, 1}, where: test)
     Geolix.unload_database(database)
 
-    assert_receive %{id: ^test}
-    assert_receive %{id: ^test}
-    assert_receive %{id: ^test}
-    assert_receive %{id: ^test}
-    assert_receive %{id: ^test}
+    assert_receive [%{id: ^test}]
+    assert_receive [%{id: ^test}]
+    assert_receive [%{id: ^test}, {1, 1, 1, 1}]
+    assert_receive [%{id: ^test}]
+    assert_receive [%{id: ^test}]
   end
 
   test "fake adapter mfargs using {mod, fun, extra_args}", %{test: test} do
@@ -78,10 +81,10 @@ defmodule Geolix.Adapter.FakeTest do
     Geolix.lookup({1, 1, 1, 1}, where: test)
     Geolix.unload_database(database)
 
-    assert_receive :database_workers
-    assert_receive :load_database
-    assert_receive :metadata
-    assert_receive :lookup
-    assert_receive :unload_database
+    assert_receive [%{id: ^test}, :database_workers]
+    assert_receive [%{id: ^test}, :load_database]
+    assert_receive [%{id: ^test}, :metadata]
+    assert_receive [%{id: ^test}, {1, 1, 1, 1}, :lookup]
+    assert_receive [%{id: ^test}, :unload_database]
   end
 end

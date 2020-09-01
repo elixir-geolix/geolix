@@ -39,6 +39,9 @@ defmodule Geolix.Adapter.Fake do
   `{mod, fun}` or `{mod, fun, extra_args}` with the database configuration
   always being passed as the first argument.
 
+  The callback for `lookup/3` (`:mfargs_lookup`) receives the requested `ip`
+  as the second parameter before the `extra_args` (if any).
+
   Available Hooks:
 
   - `:mfargs_database_workers`
@@ -54,21 +57,21 @@ defmodule Geolix.Adapter.Fake do
 
   @impl Geolix.Adapter
   def database_workers(database) do
-    :ok = maybe_apply_mfargs(database, :mfargs_database_workers)
+    :ok = maybe_apply_mfargs(database, :mfargs_database_workers, [database])
 
     [{Storage, %{}}]
   end
 
   @impl Geolix.Adapter
   def load_database(%{data: data, id: id} = database) do
-    :ok = maybe_apply_mfargs(database, :mfargs_load_database)
+    :ok = maybe_apply_mfargs(database, :mfargs_load_database, [database])
     :ok = Storage.set(id, {data, %{load_epoch: System.os_time(:second)}})
     :ok
   end
 
   @impl Geolix.Adapter
   def lookup(ip, _opts, %{id: id} = database) do
-    :ok = maybe_apply_mfargs(database, :mfargs_lookup)
+    :ok = maybe_apply_mfargs(database, :mfargs_lookup, [database, ip])
 
     id
     |> Storage.get_data()
@@ -77,23 +80,23 @@ defmodule Geolix.Adapter.Fake do
 
   @impl Geolix.Adapter
   def metadata(%{id: id} = database) do
-    :ok = maybe_apply_mfargs(database, :mfargs_metadata)
+    :ok = maybe_apply_mfargs(database, :mfargs_metadata, [database])
 
     Storage.get_meta(id)
   end
 
   @impl Geolix.Adapter
   def unload_database(%{id: id} = database) do
-    :ok = maybe_apply_mfargs(database, :mfargs_unload_database)
+    :ok = maybe_apply_mfargs(database, :mfargs_unload_database, [database])
     :ok = Storage.set(id, {nil, nil})
     :ok
   end
 
-  defp maybe_apply_mfargs(database, key) do
+  defp maybe_apply_mfargs(database, key, cb_args) do
     _ =
       case Map.get(database, key) do
-        {mod, fun, extra_args} -> apply(mod, fun, [database | extra_args])
-        {mod, fun} -> apply(mod, fun, [database])
+        {mod, fun, extra_args} -> apply(mod, fun, cb_args ++ extra_args)
+        {mod, fun} -> apply(mod, fun, cb_args)
         nil -> :ok
       end
 
