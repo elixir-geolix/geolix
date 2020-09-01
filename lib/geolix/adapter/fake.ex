@@ -31,6 +31,21 @@ defmodule Geolix.Adapter.Fake do
   The adapter provides access to the time the database was loaded:
 
       metadata = %{load_epoch: System.os_time(:second)}
+
+  ## Hooks
+
+  To facility testing every callback has a hook available called before the
+  callback itself is executed. Every hook can be configured as either
+  `{mod, fun}` or `{mod, fun, extra_args}` with the database configuration
+  always being passed as the first argument.
+
+  Available Hooks:
+
+  - `:mfargs_database_workers`
+  - `:mfargs_load_database`
+  - `:mfargs_lookup`
+  - `:mfargs_metadata`
+  - `:mfargs_unload_database`
   """
 
   alias Geolix.Adapter.Fake.Storage
