@@ -48,6 +48,17 @@ defmodule Geolix.Database.Loader do
     end
   end
 
+  def handle_call({:set_loaded, which}, _, state) do
+    case get_database(which) do
+      nil ->
+        {:reply, {:error, :unknown_database}, state}
+
+      db ->
+        _ = register_state(:loaded, db)
+        {:reply, :ok, state}
+    end
+  end
+
   def handle_call({:unload_database, which}, _, state) do
     result =
       which
@@ -96,6 +107,14 @@ defmodule Geolix.Database.Loader do
     :ets.select(@ets_state_name, [{{:"$1", :_, :_}, [], [:"$1"]}])
   rescue
     _ -> []
+  end
+
+  @doc """
+  Sets a database's state to `:loaded`.
+  """
+  @spec set_loaded(atom) :: :ok | {:error, atom}
+  def set_loaded(which) do
+    GenServer.call(__MODULE__, {:set_loaded, which})
   end
 
   defp load_database(%{adapter: adapter} = database) do
