@@ -249,6 +249,7 @@ defmodule Geolix do
   @type database :: %{
           required(:id) => atom,
           required(:adapter) => module,
+          optional(:init) => {module, atom} | {module, atom, [term]},
           optional(term) => term
         }
 
