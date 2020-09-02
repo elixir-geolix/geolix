@@ -27,7 +27,7 @@ defmodule Geolix.Adapter do
   Requires at least the fields `:id` and `:adapter`. Any other required
   fields depend on the adapter's requirements.
   """
-  @callback load_database(database :: Geolix.database()) :: :ok | {:error, term}
+  @callback load_database(database :: Geolix.database()) :: :ok | :delayed | {:error, term}
 
   @doc """
   Looks up IP information.
