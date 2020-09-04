@@ -3,6 +3,7 @@
 ## v2.0.0-dev
 
 - Enhancements
+    - Adapters can now utilize a `:delayed` response from the `Geolix.Adapter.load_database/1` callback combined with `Geolix.Database.Loader.set_loaded/1` for a lazy initialization. The database will not be used for lookups until set to the `:loaded` state
     - Database worker supervision is now done using a `DynamicSupervisor`
     - Unloading a database can now be done by passing the complete database configuration instead of only the `:id`
 
