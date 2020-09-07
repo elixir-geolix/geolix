@@ -17,6 +17,7 @@ defmodule Geolix.Database.Loader do
     GenServer.start_link(__MODULE__, init_arg, name: __MODULE__)
   end
 
+  @doc false
   def init(state) do
     @ets_state_name = :ets.new(@ets_state_name, @ets_state_opts)
 
