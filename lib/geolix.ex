@@ -70,7 +70,7 @@ defmodule Geolix do
 
   If there are any reasons you cannot use a pre-defined configuration you can
   also configure an initializer module to be called before starting the
-  top-level suprevisor or alternatively for each individual database.
+  top-level supervisor or alternatively for each individual database.
 
   This may be the most suitable configuration if you have the database located
   in the `:priv_dir` of your application:
