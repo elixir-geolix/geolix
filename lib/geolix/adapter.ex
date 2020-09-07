@@ -11,7 +11,7 @@ defmodule Geolix.Adapter do
   ]
 
   @doc """
-  Returns the children to be supervised by `Geolix.Database.Supervisor`.
+  Returns the adapter processes to be supervised.
 
   If no automatic supervision should take place or it is intended to use an
   adapter specific supervisor (e.g. using the application config) this callback
