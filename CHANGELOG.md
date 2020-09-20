@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.0.0-dev
+## v2.0.0 (2020-09-20)
 
 - Enhancements
     - Adapters can now utilize a `:delayed` response from the `Geolix.Adapter.load_database/1` callback combined with `Geolix.Database.Loader.set_loaded/1` for a lazy initialization. The database will not be used for lookups until set to the `:loaded` state
