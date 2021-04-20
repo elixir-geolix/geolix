@@ -1,5 +1,12 @@
 # Geolix
 
+[![Test](https://github.com/elixir-geolix/geolix/actions/workflows/test.yml/badge.svg)](https://github.com/elixir-geolix/geolix/actions/workflows/test.yml)
+[![Module Version](https://img.shields.io/hexpm/v/geolix.svg)](https://hex.pm/packages/geolix)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/geolix/)
+[![Total Download](https://img.shields.io/hexpm/dt/geolix.svg)](https://hex.pm/packages/geolix)
+[![License](https://img.shields.io/hexpm/l/geolix.svg)](https://github.com/elixir-geolix/geolix/blob/master/LICENSE)
+[![Last Updated](https://img.shields.io/github/last-commit/elixir-geolix/geolix.svg)](https://github.com/elixir-geolix/geolix/commits/master)
+
 IP information lookup provider.
 
 ## Package Setup
@@ -95,6 +102,16 @@ iex(2)> Geolix.lookup({127, 0, 0, 1}, where: :my_database)
 
 Full documentation is available inline in the `Geolix` module and at [https://hexdocs.pm/geolix](https://hexdocs.pm/geolix).
 
-## License
+## Copyright and License
 
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+Copyright (c) 2016 Marc Neudert
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
