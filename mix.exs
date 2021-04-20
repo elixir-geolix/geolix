@@ -10,7 +10,6 @@ defmodule Geolix.MixProject do
       version: "2.1.0-dev",
       elixir: "~> 1.7",
       deps: deps(),
-      description: "IP information lookup provider",
       dialyzer: dialyzer(),
       docs: docs(),
       package: package(),
@@ -53,17 +52,23 @@ defmodule Geolix.MixProject do
 
   defp docs do
     [
-      main: "Geolix",
+      extras: ["CHANGELOG.md", "README.md"],
+      main: "readme",
       source_ref: "master",
-      source_url: @url_github
+      source_url: @url_github,
+      formatters: ["html"]
     ]
   end
 
   defp package do
-    %{
+    [
+      description: "IP information lookup provider",
       files: ["CHANGELOG.md", "LICENSE", "mix.exs", "README.md", "lib"],
-      licenses: ["Apache 2.0"],
-      links: %{"GitHub" => @url_github}
-    }
+      licenses: ["Apache-2.0"],
+      links: %{
+        "Changelog" => "https://hexdocs.pm/geolix/changelog.html",
+        "GitHub" => @url_github
+      }
+    ]
   end
 end
