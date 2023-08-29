@@ -43,9 +43,9 @@ defmodule Geolix.Database.Loader do
     |> register_state(db)
     |> Map.get(:state)
     |> case do
-      :loaded -> {:reply, :ok, state}
-      :delayed -> {:reply, :delayed, state}
-      {:error, _} = err -> {:reply, err, state}
+      :loaded -> {:reply, :ok, state, :hibernate}
+      :delayed -> {:reply, :delayed, state, :hibernate}
+      {:error, _} = err -> {:reply, err, state, :hibernate}
     end
   end
 
@@ -66,13 +66,13 @@ defmodule Geolix.Database.Loader do
       |> get_database()
       |> unload_database()
 
-    {:reply, result, state}
+    {:reply, result, state, :hibernate}
   end
 
   def handle_cast(:reload_databases, state) do
     :ok = reload_databases()
 
-    {:noreply, state}
+    {:noreply, state, :hibernate}
   end
 
   @doc """
