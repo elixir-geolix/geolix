@@ -4,35 +4,19 @@ on: [push, pull_request]
 
 jobs:
   test:
+    runs-on: ubuntu-24.04
+
     strategy:
       matrix:
         include:
-          - elixir: '1.7.4'
-            otp: '19.3'
-            runs-on: ubuntu-18.04
-          - elixir: '1.8.2'
-            otp: '20.3'
-            runs-on: ubuntu-latest
-          - elixir: '1.9.4'
-            otp: '20.3'
-            runs-on: ubuntu-latest
-          - elixir: '1.10.4'
-            otp: '21.3'
-            runs-on: ubuntu-latest
           - elixir: '1.11.4'
-            otp: '22.3'
-            runs-on: ubuntu-latest
+            otp: '24.3'
           - elixir: '1.12.3'
-            otp: '23.3'
-            runs-on: ubuntu-latest
+            otp: '24.3'
           - elixir: '1.13.4'
             otp: '24.3'
-            runs-on: ubuntu-latest
           - elixir: '1.13.4'
             otp: '25.0'
-            runs-on: ubuntu-latest
-
-    runs-on: ${{ matrix.runs-on }}
 
     env:
       MIX_ENV: test
