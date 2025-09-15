@@ -7,7 +7,9 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
 
     - name: setup
       id: setup
@@ -17,7 +19,7 @@ jobs:
         otp-version: '25.0'
 
     - name: mix-cache
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       id: mix-cache
       with:
         path: deps
