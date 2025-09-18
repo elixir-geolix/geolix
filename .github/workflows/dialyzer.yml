@@ -1,6 +1,14 @@
 name: Dialyzer
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - test
+    tags:
+      - '*'
+  workflow_dispatch:
 
 jobs:
   check:
