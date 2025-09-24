@@ -59,6 +59,17 @@ jobs:
     - name: dialyzer
       run: mix dialyzer
 
+  quality_actions:
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
+
+    - run: yamllint .
+      working-directory: .github
+
   quality_elixir:
     runs-on: ubuntu-24.04
 
