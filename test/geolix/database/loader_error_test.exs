@@ -9,7 +9,7 @@ defmodule Geolix.Database.LoaderErrorTest do
     @behaviour Geolix.Adapter
 
     def load_database(%{notify: pid}) do
-      send(pid, :initialized)
+      Process.send_after(pid, :initialized, 50)
       :ok
     end
 
