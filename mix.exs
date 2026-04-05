@@ -2,12 +2,13 @@ defmodule Geolix.MixProject do
   use Mix.Project
 
   @url_github "https://github.com/elixir-geolix/geolix"
+  @version "2.1.0-dev"
 
   def project do
     [
       app: :geolix,
       name: "Geolix",
-      version: "2.1.0-dev",
+      version: @version,
       elixir: "~> 1.7",
       deps: deps(),
       description: "IP information lookup provider",
@@ -53,7 +54,7 @@ defmodule Geolix.MixProject do
   defp docs do
     [
       main: "Geolix",
-      source_ref: "master",
+      source_ref: "v#{@version}",
       source_url: @url_github
     ]
   end
