@@ -3,7 +3,7 @@
 ## v2.1.0 (2026-04-06)
 
 - Enhancements
-    - Lower memory consumption by hibernating the storage server ([#33](https://github.com/elixir-geolix/geolix/pull/33)
+    - Lower memory consumption by hibernating the storage server ([#33](https://github.com/elixir-geolix/geolix/pull/33))
 
 ## v2.0.0 (2020-09-20)
 
