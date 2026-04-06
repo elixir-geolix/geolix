@@ -3,7 +3,7 @@ defmodule Geolix.MixProject do
 
   @url_changelog "https://hexdocs.pm/geolix/changelog.html"
   @url_github "https://github.com/elixir-geolix/geolix"
-  @version "2.1.0"
+  @version "3.0.0-dev"
 
   def project do
     [
