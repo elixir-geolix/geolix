@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.1.0-dev
+## v2.1.0 (2026-04-06)
 
 - Enhancements
     - Lower memory consumption by hibernating the storage server ([#33](https://github.com/elixir-geolix/geolix/pull/33)
