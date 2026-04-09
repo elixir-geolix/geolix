@@ -16,10 +16,6 @@ defmodule Geolix.MixProject do
       dialyzer: dialyzer(),
       docs: docs(),
       package: package(),
-      preferred_cli_env: [
-        coveralls: :test,
-        "coveralls.detail": :test
-      ],
       test_coverage: [tool: ExCoveralls]
     ]
   end
@@ -28,6 +24,15 @@ defmodule Geolix.MixProject do
     [
       extra_applications: [:logger],
       mod: {Geolix.Application, []}
+    ]
+  end
+
+  def cli do
+    [
+      preferred_envs: [
+        coveralls: :test,
+        "coveralls.detail": :test
+      ]
     ]
   end
 
